@@ -3,6 +3,7 @@
 namespace Phpactor\MapResolver;
 
 use Phpactor\MapResolver\Resolver;
+use Phpactor\MapResolver\InvalidMap;
 
 class Resolver
 {
@@ -41,8 +42,8 @@ class Resolver
         $allowedKeys = array_merge(array_keys($this->defaults), $this->required);
 
         if ($diff = array_diff(array_keys($config), $allowedKeys)) {
-            throw new InvalidConfig(sprintf(
-                'Keys "%s" are not known, known keys: "%s"',
+            throw new InvalidMap(sprintf(
+                'Key(s) "%s" are not known, known keys: "%s"',
                 implode('", "', ($diff)),
                 implode('", "', $allowedKeys)
             ));
@@ -51,7 +52,7 @@ class Resolver
         $config = array_merge($this->defaults, $config);
 
         if ($diff = array_diff($this->required, array_keys($config))) {
-            throw new InvalidConfig(sprintf(
+            throw new InvalidMap(sprintf(
                 'Key(s) "%s" are required',
                 implode('", "', $diff)
             ));
@@ -73,7 +74,7 @@ class Resolver
                 }
 
                 if (false === $valid) {
-                    throw new InvalidConfig(sprintf(
+                    throw new InvalidMap(sprintf(
                         'Type for "%s" expected to be "%s", got "%s"',
                         $key,
                         $this->types[$key],
