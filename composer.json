@@ -1,0 +1,16 @@
+{
+    "name": "phpactor/map-resolver",
+    "description": "Map Resolver",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^7.3"
+    }
+}
