@@ -19,17 +19,11 @@ use Phpactor\Completion\Bridge\WorseReflection\Formatter\ParameterFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\PropertyFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypeFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypesFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\VariableWithNodeFormatter;
 use Phpactor\Completion\Core\ChainCompletor;
-use Phpactor\Completion\Core\Completor;
 use Phpactor\Container\Extension;
 use Phpactor\Container\ContainerBuilder;
-use Phpactor\Extension\Completion\LanguageServer\CompletionHandler;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Container\Container;
-use Phpactor\Extension\Completion\Command\CompleteCommand;
-use Phpactor\Extension\Completion\Application\Complete;
-use Phpactor\Extension\Completion\LanguageServer\CompletionLanguageExtension;
 
 class CompletionExtension implements Extension
 {
@@ -41,9 +35,6 @@ class CompletionExtension implements Extension
     public function load(ContainerBuilder $container)
     {
         $this->registerCompletion($container);
-        $this->registerCommands($container);
-        $this->registerLanguageServer($container);
-        $this->registerApplicationServices($container);
     }
 
     /**
@@ -142,36 +133,5 @@ class CompletionExtension implements Extension
                 new VariableFormatter(),
             ]);
         });
-    }
-
-    private function registerCommands(ContainerBuilder $container)
-    {
-        $container->register('command.complete', function (Container $container) {
-            return new CompleteCommand(
-                $container->get('application.complete'),
-                $container->get('console.dumper_registry')
-            );
-        }, [ 'ui.console.command' => []]);
-    }
-
-    private function registerApplicationServices(ContainerBuilder $container)
-    {
-        $container->register('application.complete', function (Container $container) {
-            return new Complete(
-                $container->get('completion.completor')
-            );
-        });
-    }
-
-    private function registerLanguageServer(ContainerBuilder $container)
-    {
-        $container->register('completion.language_server.completion', function (Container $container) {
-            return new CompletionLanguageExtension(
-                $container->get('language_server.session_manager'),
-                $container->get('completion.completor'),
-                $container->get('reflection.reflector')
-            );
-        }, [ 'language_server.extension' => [] ]);
-
     }
 }
