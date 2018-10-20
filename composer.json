@@ -3,6 +3,7 @@
     "description": "Phpactor Code Completion Extension",
     "minimum-stability": "dev",
     "license": "MIT",
+    "type": "phpactor-extension",
     "authors": [
         {
             "name": "Daniel Leech",
