@@ -1,6 +1,7 @@
 {
     "name": "phpactor/completion-extension",
     "description": "Phpactor Code Completion Extension",
+    "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
         {
@@ -9,6 +10,7 @@
         }
     ],
     "require": {
+        "phpactor/container": "^1.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.4",
