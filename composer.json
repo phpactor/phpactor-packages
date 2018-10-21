@@ -2,6 +2,7 @@
     "name": "phpactor/logging-extension",
     "description": "PSR logging extension",
     "license": "MIT",
+    "type": "phpactor-extension",
     "authors": [
         {
             "name": "Daniel Leech",
@@ -9,6 +10,8 @@
         }
     ],
     "require": {
+        "monolog/monolog": "^1.23",
+        "phpactor/container": "^1.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.5",
@@ -26,6 +29,7 @@
         }
     },
     "extra": {
+        "phpactor.extension_class": "Phpactor\\Exension\\Logger\\LoggingExtension",
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
