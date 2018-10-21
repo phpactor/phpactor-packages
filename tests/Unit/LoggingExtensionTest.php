@@ -16,7 +16,7 @@ class LoggingExtensionTest extends TestCase
     public function testLoggingDisabled()
     {
         $container = $this->create([
-            LoggingExtension::LOGGING_ENABLED => false,
+            LoggingExtension::PARAM_ENABLED => false,
         ]);
         $logger = $container->get('logging.logger');
         assert($logger instanceof Logger);
@@ -28,7 +28,7 @@ class LoggingExtensionTest extends TestCase
     public function testLoggingEnabled()
     {
         $container = $this->create([
-            LoggingExtension::LOGGING_ENABLED => true,
+            LoggingExtension::PARAM_ENABLED => true,
         ]);
         $logger = $container->get('logging.logger');
         assert($logger instanceof Logger);
@@ -40,8 +40,8 @@ class LoggingExtensionTest extends TestCase
     public function testFingersCrossed()
     {
         $container = $this->create([
-            LoggingExtension::LOGGING_ENABLED => true,
-            LoggingExtension::LOGGING_FINGERS_CROSSED => true,
+            LoggingExtension::PARAM_ENABLED => true,
+            LoggingExtension::PARAM_FINGERS_CROSSED => true,
         ]);
         $logger = $container->get('logging.logger');
         assert($logger instanceof Logger);
