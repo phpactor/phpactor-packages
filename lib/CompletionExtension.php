@@ -27,7 +27,18 @@ use Phpactor\Container\Container;
 
 class CompletionExtension implements Extension
 {
-    const CLASS_COMPLETOR_LIMIT = 'completion.completor.class.limit';
+    const TAG_COMPLETOR = 'completion.completor';
+    const TAG_FORMATTER = 'completion.formatter';
+
+    const SERVICE_COMPLETOR = 'completion.completor';
+    const SERVICE_FORMATTER = 'completion.formatter';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(Resolver $schema)
+    {
+    }
 
     /**
      * {@inheritDoc}
@@ -37,101 +48,28 @@ class CompletionExtension implements Extension
         $this->registerCompletion($container);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function configure(Resolver $schema)
-    {
-        $schema->setDefaults([
-            self::CLASS_COMPLETOR_LIMIT => 100,
-        ]);
-    }
-
     private function registerCompletion(ContainerBuilder $container)
     {
-        $container->register('completion.completor', function (Container $container) {
+        $container->register(self::SERVICE_COMPLETOR, function (Container $container) {
             $completors = [];
-            foreach (array_keys($container->getServiceIdsForTag('completion.completor')) as $serviceId) {
+            foreach (array_keys($container->getServiceIdsForTag(self::TAG_COMPLETOR)) as $serviceId) {
                 $completors[] = $container->get($serviceId);
             }
             return new ChainCompletor($completors);
         });
 
-        $container->register('completion.completor.tolerant.chain', function (Container $container) {
-            $completors = [];
-            foreach (array_keys($container->getServiceIdsForTag('completion.tolerant_completor')) as $serviceId) {
-                $completors[] = $container->get($serviceId);
+        $container->register('completion.formatter', function (Container $container) {
+            $formatters = [];
+            foreach (array_keys($container->getServiceIdsForTag(self::TAG_FORMATTER)) as $serviceId) {
+                $taggedFormatters = $container->get($serviceId);
+                $taggedFormatters = is_array($taggedFormatters) ? $taggedFormatters : [ $taggedFormatters ];
+
+                foreach ($taggedFormatters as $taggedFormatter) {
+                    $formatters[] = $taggedFormatter;
+                }
             }
 
-            return new ChainTolerantCompletor(
-                $completors,
-                $container->get('reflection.tolerant_parser')
-            );
-        }, [ 'completion.completor' => []]);
-
-        $container->register('completion.completor.parameter', function (Container $container) {
-            return new WorseParameterCompletor(
-                $container->get('reflection.reflector'),
-                $container->get('completion.formatter')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.constructor', function (Container $container) {
-            return new WorseConstructorCompletor(
-                $container->get('reflection.reflector'),
-                $container->get('completion.formatter')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-        
-        $container->register('completion.completor.tolerant.class_member', function (Container $container) {
-            return new WorseClassMemberCompletor(
-                $container->get('reflection.reflector'),
-                $container->get('completion.formatter')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.tolerant.class', function (Container $container) {
-            return new ScfClassCompletor(
-                $container->get('source_code_filesystem.registry')->get('composer'),
-                $container->get('class_to_file.file_to_class'),
-                $container->getParameter(self::CLASS_COMPLETOR_LIMIT)
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.local_variable', function (Container $container) {
-            return new WorseLocalVariableCompletor(
-                $container->get('reflection.reflector'),
-                $container->get('completion.formatter')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.function', function (Container $container) {
-            return new WorseFunctionCompletor(
-                $container->get('reflection.reflector'),
-                $container->get('completion.formatter')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.constant', function (Container $container) {
-            return new WorseConstantCompletor();
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.completor.class_alias', function (Container $container) {
-            return new WorseClassAliasCompletor(
-                $container->get('reflection.reflector')
-            );
-        }, [ 'completion.tolerant_completor' => []]);
-
-        $container->register('completion.formatter', function (Container $container) {
-            return new ObjectFormatter([
-                new TypeFormatter(),
-                new TypesFormatter(),
-                new MethodFormatter(),
-                new ParameterFormatter(),
-                new PropertyFormatter(),
-                new FunctionFormatter(),
-                new VariableFormatter(),
-            ]);
+            return new ObjectFormatter($formatters);
         });
     }
 }
