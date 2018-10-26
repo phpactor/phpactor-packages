@@ -67,4 +67,19 @@ class ResolverTest extends TestCase
         ]);
         $resolver->resolve(['one' => new stdClass]);
     }
+
+    public function testCallback()
+    {
+        $resolver = new Resolver();
+        $resolver->setDefaults([
+            'one' => 'hello',
+            'bar' => null,
+        ]);
+        $resolver->setCallback('bar', function (array $config) {
+            return $config['one'];
+        });
+
+        $config = $resolver->resolve([]);
+        $this->assertEquals('hello', $config['bar']);
+    }
 }

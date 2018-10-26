@@ -2,8 +2,8 @@
 
 namespace Phpactor\MapResolver;
 
+use Closure;
 use Phpactor\MapResolver\Resolver;
-use Phpactor\MapResolver\InvalidMap;
 
 class Resolver
 {
@@ -21,6 +21,16 @@ class Resolver
      * @var array
      */
     private $types = [];
+
+    /**
+     * @var array
+     */
+    private $callbacks = [];
+
+    public function setCallback(string $field, Closure $callable)
+    {
+        $this->callbacks[$field] = $callable;
+    }
 
     public function setRequired(array $fields)
     {
@@ -84,6 +94,14 @@ class Resolver
             }
         }
 
+        foreach ($config as $key => $value) {
+            if (!isset($this->callbacks[$key])) {
+                continue;
+            }
+            $callback = $this->callbacks[$key];
+            $config[$key] = $callback($config);
+        }
+
         return $config;
     }
 
@@ -99,6 +117,10 @@ class Resolver
 
         foreach ($schema->types as $key => $types) {
             $this->types[$key] = $types;
+        }
+
+        foreach ($schema->callbacks as $key => $callback) {
+            $this->callbacks[$key] = $callback;
         }
 
         return $this;
