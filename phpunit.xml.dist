@@ -7,7 +7,7 @@
     >
 
     <testsuites>
-        <testsuite name="Class <=> File Converter Extension">
+        <testsuite name="Class to File Converter Extension">
             <directory>./tests</directory>
         </testsuite>
     </testsuites>
