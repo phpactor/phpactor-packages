@@ -2,7 +2,6 @@
 
 namespace Phpactor\FilePathResolver\Tests\Unit\Expander;
 
-use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Expander;
 use Phpactor\FilePathResolver\Expander\ValueExpander;
 

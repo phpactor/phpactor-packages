@@ -3,7 +3,6 @@
 namespace Phpactor\FilePathResolver\Tests\Unit\Expander;
 
 use PHPUnit\Framework\TestCase;
-use PhpCsFixer\Fixer\LanguageConstruct\ExplicitIndirectVariableFixer;
 use Phpactor\FilePathResolver\Expander;
 use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
 

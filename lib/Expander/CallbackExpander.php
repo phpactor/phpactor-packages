@@ -36,7 +36,8 @@ class CallbackExpander implements Expander
 
         if (!is_string($return)) {
             throw new RuntimeException(sprintf(
-                'Closure in callback expander must return a string, got "%s"', gettype($return)
+                'Closure in callback expander must return a string, got "%s"',
+                gettype($return)
             ));
         }
 

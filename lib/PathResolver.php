@@ -2,8 +2,6 @@
 
 namespace Phpactor\FilePathResolver;
 
-use Webmozart\PathUtil\Path;
-
 class PathResolver
 {
     /**
