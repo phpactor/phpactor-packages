@@ -1,8 +1,8 @@
 <?php
 
-namespace Phpactor\BasePathResolver\Filter;
+namespace Phpactor\FilePathResolver\Filter;
 
-use Phpactor\BasePathResolver\Filter;
+use Phpactor\FilePathResolver\Filter;
 use Webmozart\PathUtil\Path;
 
 class CanonicalizingPathFilter implements Filter

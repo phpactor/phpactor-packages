@@ -1,10 +1,10 @@
 <?php
 
-namespace Phpactor\BasePathResolver\Tests\Unit;
+namespace Phpactor\FilePathResolver\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Phpactor\BasePathResolver\Filter;
-use Phpactor\BasePathResolver\PathResolver;
+use Phpactor\FilePathResolver\Filter;
+use Phpactor\FilePathResolver\PathResolver;
 
 class PathResolverTest extends TestCase
 {

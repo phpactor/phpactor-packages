@@ -1,9 +1,9 @@
 <?php
 
-namespace Phpactor\BasePathResolver\Tests\Unit\Filter;
+namespace Phpactor\FilePathResolver\Tests\Unit\Filter;
 
-use Phpactor\BasePathResolver\Filter;
-use Phpactor\BasePathResolver\Filter\CanonicalizingPathFilter;
+use Phpactor\FilePathResolver\Filter;
+use Phpactor\FilePathResolver\Filter\CanonicalizingPathFilter;
 
 class CanonicalizingPathFilterTest extends FilterTestCase
 {

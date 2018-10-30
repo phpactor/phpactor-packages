@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\BasePathResolver;
+namespace Phpactor\FilePathResolver;
 
 interface Filter
 {
