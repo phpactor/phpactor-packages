@@ -19,7 +19,7 @@ abstract class AbstractXdgExpander implements Expander
 
     public function __construct(string $name, Xdg $xdg = null)
     {
-        $this->xdg = $xdg;
+        $this->xdg = $xdg ?: new Xdg();
         $this->name = $name;
     }
 

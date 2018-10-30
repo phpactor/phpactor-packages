@@ -8,6 +8,10 @@ Resolves file paths by filtering and replacing tokens with values.
 - Canonicalization support via `webmozart/path-util`
 - XDG directory expansion via `dnoegel/php-xdg-base-dir`
 
+This package can be used in, for example, a CLI application such as
+[Phpactor](https://github.com/phpactor/phpactor') to resolve application
+paths.
+
 Usage
 -----
 
