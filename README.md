@@ -1,7 +1,7 @@
 File Path Resolver
 ==================
 
-[![Build Status](https://travis-ci.org/phpactor/app-path-resolver.svg?branch=master)](https://travis-ci.org/phpactor/app-path-resolver)
+[![Build Status](https://travis-ci.org/phpactor/file-path-resolver.svg?branch=master)](https://travis-ci.org/phpactor/file-path-resolver)
 
 Resolves file paths by filtering and replacing tokens with values.
 
