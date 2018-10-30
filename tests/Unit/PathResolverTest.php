@@ -1,0 +1,32 @@
+<?php
+
+namespace Phpactor\BasePathResolver\Tests\Unit;
+
+use PHPUnit\Framework\TestCase;
+use Phpactor\BasePathResolver\Filter;
+use Phpactor\BasePathResolver\PathResolver;
+
+class PathResolverTest extends TestCase
+{
+    public function testIdentity()
+    {
+        $resolver = new PathResolver();
+        $this->assertEquals('/foo/bar', $resolver->resolve('/foo/bar'));
+    }
+
+    public function testAppliesFilters()
+    {
+        $filter1 = $this->prophesize(Filter::class);
+        $filter2 = $this->prophesize(Filter::class);
+
+        $filter1->apply('foo')->willReturn('bar');
+        $filter2->apply('bar')->willReturn('baz');
+
+        $resolver = new PathResolver([
+            $filter1->reveal(),
+            $filter2->reveal()
+        ]);
+
+        $this->assertEquals('baz', $resolver->resolve('foo'));
+    }
+}
