@@ -10,7 +10,9 @@
     ],
     "require": {
         "phpactor/container": "^1.2",
-        "phpactor/logging-extension": "^0.1.0"
+        "phpactor/logging-extension": "^0.1.0",
+        "phpactor/file-path-resolver-extension": "@dev",
+        "phpactor/file-path-resolver": "~0.3"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.5",

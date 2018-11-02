@@ -8,6 +8,7 @@ use Phpactor\Container\PhpactorContainer;
 use Phpactor\Exension\Logger\LoggingExtension;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
 use Composer\Autoload\ClassLoader;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 
 class ComposerAutoloaderExtensionTest extends TestCase
 {
@@ -32,7 +33,7 @@ class ComposerAutoloaderExtensionTest extends TestCase
     public function testWithCustomProjectRoot()
     {
         $autoloaders = $this->create([
-            ComposerAutoloaderExtension::PARAM_PROJECT_ROOT => __DIR__ . '/../../',
+            FilePathResolverExtension::PARAM_PROJECT_ROOT => __DIR__ . '/../../',
         ])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
         $this->assertCount(1, $autoloaders);
         $autoloader = reset($autoloaders);
@@ -52,6 +53,7 @@ class ComposerAutoloaderExtensionTest extends TestCase
     {
         return PhpactorContainer::fromExtensions([
             ComposerAutoloaderExtension::class,
+            FilePathResolverExtension::class,
             LoggingExtension::class
         ], $config);
     }

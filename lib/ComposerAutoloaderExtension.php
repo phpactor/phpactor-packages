@@ -6,15 +6,16 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Exension\Logger\LoggingExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Composer\Autoload\ClassLoader;
 use RuntimeException;
+use Webmozart\PathUtil\Path;
 
 class ComposerAutoloaderExtension implements Extension
 {
     const SERVICE_AUTOLOADERS = 'composer.class_loaders';
 
-    const PARAM_PROJECT_ROOT = 'composer.working_directory';
     const PARAM_AUTOLOADER_PATH = 'composer.autoloader_path';
     const PARAM_AUTOLOAD_DEREGISTER = 'composer.autoload_deregister';
 
@@ -24,7 +25,6 @@ class ComposerAutoloaderExtension implements Extension
     public function configure(Resolver $resolver)
     {
         $resolver->setDefaults([
-            self::PARAM_PROJECT_ROOT => getcwd(),
             self::PARAM_AUTOLOADER_PATH => 'vendor/autoload.php',
             self::PARAM_AUTOLOAD_DEREGISTER => true,
         ]);
@@ -45,7 +45,11 @@ class ComposerAutoloaderExtension implements Extension
                     return $path;
                 }
 
-                return $container->getParameter(self::PARAM_PROJECT_ROOT) . '/' . $path;
+                $projectRoot = $container->get(
+                    FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER
+                )->resolve('%project_root%');
+
+                return Path::join([ $projectRoot, $path ]);
             }, $autoloaderPaths);
 
             foreach ($autoloaderPaths as $autoloaderPath) {
