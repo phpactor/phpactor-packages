@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "phpactor/class-to-file": "^0.1",
+        "phpactor/class-to-file": "dev-master",
         "phpactor/composer-autoloader-extension": "dev-master",
         "phpactor/file-path-resolver-extension": "dev-master",
         "phpactor/container": "^1.0"
