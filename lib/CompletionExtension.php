@@ -2,23 +2,7 @@
 
 namespace Phpactor\Extension\Completion;
 
-use Phpactor\Completion\Bridge\TolerantParser\SourceCodeFilesystem\ScfClassCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassAliasCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstantCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstructorCompletor;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\FunctionFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\MethodFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\VariableFormatter;
-use Phpactor\Completion\Bridge\TolerantParser\ChainTolerantCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassMemberCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseFunctionCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseParameterCompletor;
-use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseLocalVariableCompletor;
 use Phpactor\Completion\Core\Formatter\ObjectFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\ParameterFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\PropertyFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypeFormatter;
-use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypesFormatter;
 use Phpactor\Completion\Core\ChainCompletor;
 use Phpactor\Container\Extension;
 use Phpactor\Container\ContainerBuilder;
