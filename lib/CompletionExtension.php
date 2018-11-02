@@ -58,7 +58,7 @@ class CompletionExtension implements Extension
             return new ChainCompletor($completors);
         });
 
-        $container->register('completion.formatter', function (Container $container) {
+        $container->register(self::SERVICE_FORMATTER, function (Container $container) {
             $formatters = [];
             foreach (array_keys($container->getServiceIdsForTag(self::TAG_FORMATTER)) as $serviceId) {
                 $taggedFormatters = $container->get($serviceId);
