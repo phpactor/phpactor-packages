@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\Extension\CompletionRpc\Tests\Handler;
+namespace Phpactor\Extension\CompletionRpc\Tests\Unit\Handler;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Completor;
