@@ -47,9 +47,9 @@ class ClassToFileExtensionTest extends TestCase
         ], $params);
     }
 
-    private function createConverter(): ClassToFileFileToClass
+    private function createConverter(array $config = []): ClassToFileFileToClass
     {
-        $converter = $this->create([])->get(ClassToFileExtension::SERVICE_CONVERTER);
+        $converter = $this->create($config)->get(ClassToFileExtension::SERVICE_CONVERTER);
         return $converter;
     }
 }
