@@ -7,6 +7,7 @@ use Phpactor\ClassFileConverter\Domain\ClassName;
 use Phpactor\ClassFileConverter\Domain\ClassToFileFileToClass;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
+use Phpactor\Exension\Logger\LoggingExtension;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
@@ -29,7 +30,7 @@ class ClassToFileExtensionTest extends TestCase
     public function testCreatesConverterWithoutComposer()
     {
         $converter = $this->createConverter([
-            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => __DIR__
+            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => __DIR__ . '/autoload.php'
         ]);
         $candidates = $converter->classToFileCandidates(ClassName::fromString(__CLASS__));
         $this->assertCount(1, $candidates);
@@ -44,6 +45,7 @@ class ClassToFileExtensionTest extends TestCase
             ClassToFileExtension::class,
             ComposerAutoloaderExtension::class,
             FilePathResolverExtension::class,
+            LoggingExtension::class,
         ], $params);
     }
 
