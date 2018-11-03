@@ -1,0 +1,131 @@
+<?php
+
+namespace Phpactor\Extension\CompletionWorse;
+
+use Phpactor\Completion\Bridge\TolerantParser\SourceCodeFilesystem\ScfClassCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassAliasCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstantCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstructorCompletor;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\ClassFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\FunctionFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\MethodFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\ParametersFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\VariableFormatter;
+use Phpactor\Completion\Bridge\TolerantParser\ChainTolerantCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassMemberCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseFunctionCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseParameterCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseLocalVariableCompletor;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\ParameterFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\PropertyFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypeFormatter;
+use Phpactor\Completion\Bridge\WorseReflection\Formatter\TypesFormatter;
+use Phpactor\Container\Extension;
+use Phpactor\Container\ContainerBuilder;
+use Phpactor\Extension\Completion\CompletionExtension;
+use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
+use Phpactor\Extension\WorseReflection\WorseReflectionExtension;
+use Phpactor\MapResolver\Resolver;
+use Phpactor\Container\Container;
+
+class CompletionWorseExtension implements Extension
+{
+    const CLASS_COMPLETOR_LIMIT = 'completion_worse.completor.class.limit';
+    const TAG_TOLERANT_COMPLETOR = 'completion_worse.tolerant_completor';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ContainerBuilder $container)
+    {
+        $this->registerCompletion($container);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(Resolver $schema)
+    {
+    }
+
+    private function registerCompletion(ContainerBuilder $container)
+    {
+        $container->register('completion_worse.completor.tolerant.chain', function (Container $container) {
+            $completors = [];
+            foreach (array_keys($container->getServiceIdsForTag(self::TAG_TOLERANT_COMPLETOR)) as $serviceId) {
+                $completors[] = $container->get($serviceId);
+            }
+
+            return new ChainTolerantCompletor(
+                $completors,
+                $container->get('worse_reflection.tolerant_parser')
+            );
+        }, [ CompletionExtension::TAG_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.parameter', function (Container $container) {
+            return new WorseParameterCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.constructor', function (Container $container) {
+            return new WorseConstructorCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+        
+        $container->register('completion_worse.completor.tolerant.class_member', function (Container $container) {
+            return new WorseClassMemberCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.tolerant.class', function (Container $container) {
+            return new ScfClassCompletor(
+                $container->get(SourceCodeFilesystemExtension::SERVICE_REGISTRY)->get('composer'),
+                $container->get('class_to_file.file_to_class')
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.local_variable', function (Container $container) {
+            return new WorseLocalVariableCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.function', function (Container $container) {
+            return new WorseFunctionCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.constant', function (Container $container) {
+            return new WorseConstantCompletor();
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.class_alias', function (Container $container) {
+            return new WorseClassAliasCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.formatters', function (Container $container) {
+            return [
+                new TypeFormatter(),
+                new TypesFormatter(),
+                new MethodFormatter(),
+                new ParameterFormatter(),
+                new ParametersFormatter(),
+                new ClassFormatter(),
+                new PropertyFormatter(),
+                new FunctionFormatter(),
+                new VariableFormatter(),
+            ];
+        }, [ CompletionExtension::TAG_FORMATTER => []]);
+    }
+}

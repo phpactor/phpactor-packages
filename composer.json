@@ -1,0 +1,36 @@
+{
+    "name": "phpactor/completion-worse-extension",
+    "description": "Collection of completors based on Worse Reflection and the Tolerant PHP Parser",
+    "minimum-stability": "dev",
+    "license": "MIT",
+    "type": "phpactor-extension",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {
+        "phpactor/completion-extension": "dev-master",
+        "phpactor/worse-reflection-extension": "dev-master",
+        "phpactor/source-code-filesystem-extension": "dev-master"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.10.4",
+        "phpunit/phpunit": "^7.4",
+        "friendsofphp/php-cs-fixer": "^2.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\Extension\\CompletionWorse\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\Extension\\CompletionWorse\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "phpactor.extension_class": "Phpactor\\Extension\\CompletionWorse\\CompletionWorseExtension"
+    }
+}
