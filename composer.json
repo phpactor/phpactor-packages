@@ -2,6 +2,7 @@
     "name": "phpactor/composer-autoloader-extension",
     "description": "Composer Autoloader provider",
     "license": "MIT",
+    "type": "phpactor-extension",
     "authors": [
         {
             "name": "Daniel Leech",
@@ -30,8 +31,6 @@
         }
     },
     "extra": {
-        "branch-alias": {
-            "dev-master": "1.0-dev"
-        }
+        "phpactor.extension_class": "Phpactor\\Extension\\ComposerAutoloader\\ComposerAutoloaderExtension"
     }
 }
