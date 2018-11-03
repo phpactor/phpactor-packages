@@ -21,7 +21,6 @@ class ClassToFileExtensionTest extends TestCase
     {
         $converter = $this->createConverter();
         $candidates = $converter->classToFileCandidates(ClassName::fromString(__CLASS__));
-        $this->assertCount(1, $candidates);
         $file = $candidates->best();
         $candidates = $converter->fileToClassCandidates($file);
         $this->assertEquals('ClassToFileExtensionTest', $candidates->best()->name());
@@ -30,7 +29,8 @@ class ClassToFileExtensionTest extends TestCase
     public function testCreatesConverterWithoutComposer()
     {
         $converter = $this->createConverter([
-            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => __DIR__ . '/autoload.php'
+            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => __DIR__ . '/autoload.php',
+            FilePathResolverExtension::PARAM_PROJECT_ROOT => __DIR__
         ]);
         $candidates = $converter->classToFileCandidates(ClassName::fromString(__CLASS__));
         $this->assertCount(1, $candidates);
