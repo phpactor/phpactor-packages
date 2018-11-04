@@ -11,7 +11,8 @@
     ],
 
     "require": {
-        "phpactor/container": "^1.0"
+        "phpactor/container": "^1.0",
+        "symfony/console": "^4.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.5",
@@ -29,6 +30,6 @@
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Extension\\Console\\Console ExtensionExtension"
+        "phpactor.extension_class": "Phpactor\\Extension\\Console\\ConsoleExtension"
     }
 }
