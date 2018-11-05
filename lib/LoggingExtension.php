@@ -2,26 +2,11 @@
 
 namespace Phpactor\Extension\Logger;
 
-use Composer\Autoload\ClassLoader;
 use Monolog\Handler\NullHandler;
-use Phpactor\Extension\Core\Application\Helper\ClassFileNormalizer;
-use Phpactor\Filesystem\Domain\Cwd;
-use Phpactor\Extension\Core\Console\Dumper\DumperRegistry;
-use Phpactor\Extension\Core\Console\Dumper\IndentedDumper;
-use Phpactor\Extension\Core\Console\Dumper\JsonDumper;
-use Phpactor\Extension\Core\Console\Dumper\TableDumper;
-use Phpactor\Extension\Core\Console\Prompt\BashPrompt;
-use Phpactor\Extension\Core\Console\Prompt\ChainPrompt;
-use Symfony\Component\Console\Application;
-use Phpactor\Extension\Core\Command\ConfigDumpCommand;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FingersCrossedHandler;
-use Phpactor\Extension\Core\Application\CacheClear;
-use Phpactor\Extension\Core\Command\CacheClearCommand;
-use Phpactor\Extension\Core\Application\Status;
-use Phpactor\Extension\Core\Command\StatusCommand;
 use Phpactor\Container\Container;
 use Phpactor\Container\Extension;
 use Phpactor\MapResolver\Resolver;
