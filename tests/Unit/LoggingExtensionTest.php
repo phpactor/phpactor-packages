@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\Exension\Logger\Tests\Unit;
+namespace Phpactor\Extension\Logger\Tests\Unit;
 
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\NullHandler;
@@ -9,7 +9,7 @@ use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
-use Phpactor\Exension\Logger\LoggingExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
 
 class LoggingExtensionTest extends TestCase
 {

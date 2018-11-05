@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\Exension\Logger;
+namespace Phpactor\Extension\Logger;
 
 use Composer\Autoload\ClassLoader;
 use Monolog\Handler\NullHandler;

@@ -20,12 +20,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Phpactor\\Exension\\Logger\\": "lib/"
+            "Phpactor\\Extension\\Logger\\": "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Phpactor\\Exension\\Logger\\Tests\\": "tests/"
+            "Phpactor\\Extension\\Logger\\Tests\\": "tests/"
         }
     },
     "extra": {
