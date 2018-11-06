@@ -9,7 +9,6 @@ use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Symfony\Component\Console\Application;
 
-
 $container = PhpactorContainer::fromExtensions([
     ExtensionManagerExtension::class,
     ConsoleExtension::class,
@@ -17,5 +16,7 @@ $container = PhpactorContainer::fromExtensions([
 ]);
 
 $application = new Application();
-$application->setCommandLoader($container->get(ConsoleExtension::SERVICE_COMMAND_LOADER));
+$application->setCommandLoader(
+    $container->get(ConsoleExtension::SERVICE_COMMAND_LOADER)
+);
 $application->run();
