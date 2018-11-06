@@ -44,6 +44,9 @@ class CompleteHandler implements Handler
             return $suggestion->toArray();
         }, iterator_to_array($suggestions));
 
-        return ReturnResponse::fromValue($suggestions);
+        return ReturnResponse::fromValue([
+            'suggestions' => $suggestions,
+            'issues' => [],
+        ]);
     }
 }
