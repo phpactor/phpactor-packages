@@ -1,17 +1,21 @@
 {
     "name": "phpactor/extension-manager-extension",
-    "description": "Install / Remove / Update Extensions",
+    "description": "Install, remove and otherwise manage extensions",
     "license": "MIT",
     "type": "phpactor-extension",
+    "minimum-stability": "dev",
     "authors": [
         {
-            "name": "Daniel Leceh",
+            "name": "Daniel Leech",
             "email": "daniel@dantleech.com"
         }
     ],
 
     "require": {
-        "phpactor/container": "^1.0"
+        "phpactor/container": "^1.0",
+        "phpactor/console-extension": "dev-master",
+        "phpactor/file-path-resolver-extension": "dev-master",
+        "composer/composer": "^1.7"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.5",
