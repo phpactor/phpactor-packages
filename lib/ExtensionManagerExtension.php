@@ -25,23 +25,28 @@ use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\StreamOutput;
+use Webmozart\PathUtil\Path;
 
 class ExtensionManagerExtension implements Extension
 {
-    const PARAM_EXTENSION_PATH = 'extension_manager.extension_dirname';
-    const PARAM_EXTENSION_LIST_PATH = 'extension_manager.extension_list_path';
+    const PARAM_EXTENSION_REPOSITORY_FILE = 'extension_manager.extension_dirname';
+    const PARAM_INSTALLED_EXTENSIONS_FILE = 'extension_manager.extension_list_path';
     const PARAM_EXTENSION_VENDOR_DIR = 'extension_manager.extension_vendor_dir';
     const PARAM_ROOT_PACKAGE_NAME = 'extension_manager.root_package_name';
-    const PARAM_EXTENSION_CONFIG_PATH = 'extension_manager.config_path';
+    const PARAM_EXTENSION_CONFIG_FILE = 'extension_manager.config_path';
+    const PARAM_VENDOR_DIR = 'extension_manager.vendor_dir';
 
     public function configure(Resolver $resolver): void
     {
+        $resolver->setRequired([
+            self::PARAM_EXTENSION_VENDOR_DIR,
+            self::PARAM_VENDOR_DIR,
+            self::PARAM_EXTENSION_CONFIG_FILE,
+            self::PARAM_INSTALLED_EXTENSIONS_FILE,
+        ]);
+
         $resolver->setDefaults([
-            self::PARAM_EXTENSION_CONFIG_PATH => '%project_root%/extensions.json',
-            self::PARAM_EXTENSION_PATH => '%project_root%/vendor-ext/composer/installed.json',
-            self::PARAM_EXTENSION_VENDOR_DIR => '%project_root%/vendor-ext',
-            self::PARAM_EXTENSION_LIST_PATH => '%cache%/phpactor-extensions.php',
-            self::PARAM_ROOT_PACKAGE_NAME => 'extension-manager',
+            self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
         ]);
     }
 
@@ -69,10 +74,10 @@ class ExtensionManagerExtension implements Extension
 
             $composer = Factory::create(
                 $container->get('extension_manager.io'),
-                $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_PATH)
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
             );
             $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
-                new ExtensionWriter($this->resolvePath($container, self::PARAM_EXTENSION_LIST_PATH))
+                new ExtensionWriter($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
             ));
 
             return $composer;
@@ -110,25 +115,22 @@ class ExtensionManagerExtension implements Extension
         });
 
         $container->register('extension_manager.repository.local', function (Container $container) {
-            return new InstalledFilesystemRepository(new JsonFile(
-                __DIR__ . '/../vendor/composer/installed.json'
-            ));
+            return new InstalledFilesystemRepository(new JsonFile($this->repositoryFile($container)));
         });
 
         $container->register('extension_manager.repository.combined', function (Container $container) {
             return new CompositeRepository([
                 $container->get('extension_manager.repository.local'),
-                new InstalledFilesystemRepository(new JsonFile(
-                    $this->resolvePath($container, self::PARAM_EXTENSION_PATH)
-                ))
+                new InstalledFilesystemRepository(new JsonFile($this->extensionRepositoryFile($container)))
             ]);
         });
     }
 
     private function initialize(Container $container): void
     {
-        $path = $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_PATH);
+        $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
         
+        var_dump($path);
         if (file_exists($path)) {
             return;
         }
@@ -140,15 +142,26 @@ class ExtensionManagerExtension implements Extension
         file_put_contents($path, json_encode([
             'config' => [
                 'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
-                'vendor-dir' => $this->resolvePath($container, self::PARAM_EXTENSION_PATH),
+                'vendor-dir' => $this->extensionRepositoryFile($container),
             ]
         ], JSON_PRETTY_PRINT));
     }
 
-    private function resolvePath(Container $container, string $param)
+    private function repositoryFile(Container $container)
     {
-        $resolver = $container->get(FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER);
+        return Path::join([
+            $container->getParameter(self::PARAM_VENDOR_DIR),
+            'composer',
+            'installed.json'
+        ]);
+    }
 
-        return $resolver->resolve($container->getParameter($param));
+    private function extensionRepositoryFile(Container $container)
+    {
+        return Path::join([
+            $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
+            'composer',
+            'installed.json'
+        ]);
     }
 }

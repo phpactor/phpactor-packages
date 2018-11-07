@@ -12,7 +12,11 @@ use Symfony\Component\Console\Application;
 $container = PhpactorContainer::fromExtensions([
     ExtensionManagerExtension::class,
     ConsoleExtension::class,
-    FilePathResolverExtension::class,
+], [
+    ExtensionManagerExtension::PARAM_EXTENSION_CONFIG_FILE => __DIR__ . '/../extensions.json',
+    ExtensionManagerExtension::PARAM_VENDOR_DIR => __DIR__ . '/../vendor',
+    ExtensionManagerExtension::PARAM_EXTENSION_VENDOR_DIR => __DIR__ . '/../vendor-extension',
+    ExtensionManagerExtension::PARAM_INSTALLED_EXTENSIONS_FILE => __DIR__ . '/../vendor-extension/installed.cache.php',
 ]);
 
 $application = new Application();
