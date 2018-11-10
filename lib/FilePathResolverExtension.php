@@ -5,25 +5,31 @@ namespace Phpactor\FilePathResolverExtension;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
+use Phpactor\FilePathResolver\CachingPathResolver;
 use Phpactor\FilePathResolver\Expander\ValueExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\SuffixExpanderDecorator;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgCacheExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgConfigExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgDataExpander;
+use Phpactor\FilePathResolver\Expanders;
 use Phpactor\FilePathResolver\Filter\CanonicalizingPathFilter;
 use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
+use Phpactor\FilePathResolver\FilteringPathResolver;
 use Phpactor\FilePathResolver\PathResolver;
 use Phpactor\MapResolver\Resolver;
 
 class FilePathResolverExtension implements Extension
 {
     const SERVICE_FILE_PATH_RESOLVER = 'file_path_resolver.resolver';
+    const SERVICE_EXPANDERS = 'file_path_resolver.expanders';
 
     const TAG_FILTER = 'file_path_resolver.filter';
     const TAG_EXPANDER = 'file_path_resolver.expander';
 
     const PARAM_PROJECT_ROOT = 'file_path_resolver.project_root';
     const PARAM_APP_NAME = 'file_path_resolver.app_name';
+    const PARAM_ENABLE_CACHE = 'file_path_resolver.enable_cache';
+    const PARAM_APPLICATION_ROOT = 'file_path_resolver.application_root';
 
     /**
      * {@inheritDoc}
@@ -33,6 +39,8 @@ class FilePathResolverExtension implements Extension
         $schema->setDefaults([
             self::PARAM_PROJECT_ROOT => getcwd(),
             self::PARAM_APP_NAME => 'phpactor',
+            self::PARAM_APPLICATION_ROOT => null,
+            self::PARAM_ENABLE_CACHE => true,
         ]);
     }
 
@@ -53,7 +61,13 @@ class FilePathResolverExtension implements Extension
                 $filters[] = $container->get($serviceId);
             }
         
-            return new PathResolver($filters);
+            $resolver = new FilteringPathResolver($filters);
+
+            if ($container->getParameter(self::PARAM_ENABLE_CACHE)) {
+                $resolver = new CachingPathResolver($resolver);
+            }
+
+            return $resolver;
         });
     }
 
@@ -64,6 +78,11 @@ class FilePathResolverExtension implements Extension
         }, [ self::TAG_FILTER => [] ]);
 
         $container->register('file_path_resolver.filter.token_expanding', function (Container $container) {
+
+            return new TokenExpandingFilter($container->get(self::SERVICE_EXPANDERS));
+        }, [ self::TAG_FILTER => [] ]);
+
+        $container->register(self::SERVICE_EXPANDERS, function (Container $container) {
             $suffix = DIRECTORY_SEPARATOR . $container->getParameter(self::PARAM_APP_NAME);
 
             $expanders = [
@@ -73,11 +92,15 @@ class FilePathResolverExtension implements Extension
                 new SuffixExpanderDecorator(new XdgDataExpander('%data%'), $suffix),
             ];
 
+            if (null !== $applicationRoot = $container->getParameter(self::PARAM_APPLICATION_ROOT)) {
+                $expanders[] = new ValueExpander('%application_root%', $container->getParameter(self::PARAM_APPLICATION_ROOT));
+            }
+
             foreach (array_keys($container->getServiceIdsForTag(self::TAG_EXPANDER)) as $serviceId) {
                 $expanders[] = $container->get($serviceId);
             }
 
-            return new TokenExpandingFilter($expanders);
-        }, [ self::TAG_FILTER => [] ]);
+            return new Expanders($expanders);
+        });
     }
 }
