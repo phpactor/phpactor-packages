@@ -2,21 +2,19 @@
 
 namespace Phpactor\FilePathResolver\Filter;
 
-use Phpactor\FilePathResolver\Expander;
+use Phpactor\FilePathResolver\Expanders;
 use Phpactor\FilePathResolver\Filter;
 
 class TokenExpandingFilter implements Filter
 {
     /**
-     * @var Expander[]
+     * @var Expanders
      */
-    private $expanders = [];
+    private $expanders;
 
-    public function __construct(array $expanders = [])
+    public function __construct(Expanders $expanders)
     {
-        foreach ($expanders as $expander) {
-            $this->add($expander);
-        }
+        $this->expanders = $expanders;
     }
 
     public function apply(string $path): string
@@ -30,10 +28,5 @@ class TokenExpandingFilter implements Filter
         }
 
         return $path;
-    }
-
-    private function add(Expander $expander)
-    {
-        $this->expanders[$expander->tokenName()] = $expander;
     }
 }

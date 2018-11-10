@@ -4,6 +4,7 @@ namespace Phpactor\FilePathResolver\Tests\Unit\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Expander;
+use Phpactor\FilePathResolver\Expanders;
 use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
 
 class TokenExpandingFilterTest extends TestCase
@@ -39,6 +40,6 @@ class TokenExpandingFilterTest extends TestCase
 
     private function create(array $expanders = []): TokenExpandingFilter
     {
-        return new TokenExpandingFilter($expanders);
+        return new TokenExpandingFilter(new Expanders($expanders));
     }
 }

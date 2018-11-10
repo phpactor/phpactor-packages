@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgCacheExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgConfigExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\XdgDataExpander;
+use Phpactor\FilePathResolver\Expanders;
 use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
 use XdgBaseDir\Xdg;
 
@@ -28,11 +29,11 @@ class XdgExpanderTest extends TestCase
         $this->xdg->getHomeConfigDir()->willReturn('/home/config');
         $this->xdg->getHomeCacheDir()->willReturn('/home/cache');
 
-        $this->expander = new TokenExpandingFilter([
+        $this->expander = new TokenExpandingFilter(new Expanders([
             new XdgCacheExpander('%cache%', $this->xdg->reveal()),
             new XdgDataExpander('%data%', $this->xdg->reveal()),
             new XdgConfigExpander('%config%', $this->xdg->reveal()),
-        ]);
+        ]));
     }
 
     public function testExpandXdgDirs()
