@@ -2,24 +2,7 @@
 
 namespace Phpactor\FilePathResolver;
 
-class PathResolver
+interface PathResolver
 {
-    /**
-     * @var Filter[]
-     */
-    private $filters;
-
-    public function __construct(array $filters = [])
-    {
-        $this->filters = $filters;
-    }
-
-    public function resolve(string $path): string
-    {
-        foreach ($this->filters as $filter) {
-            $path = $filter->apply($path);
-        }
-
-        return $path;
-    }
+    public function resolve(string $path): string;
 }

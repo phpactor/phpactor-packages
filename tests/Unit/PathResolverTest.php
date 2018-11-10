@@ -4,13 +4,13 @@ namespace Phpactor\FilePathResolver\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Filter;
-use Phpactor\FilePathResolver\PathResolver;
+use Phpactor\FilePathResolver\FilteringPathResolver;
 
 class PathResolverTest extends TestCase
 {
     public function testIdentity()
     {
-        $resolver = new PathResolver();
+        $resolver = new FilteringPathResolver();
         $this->assertEquals('/foo/bar', $resolver->resolve('/foo/bar'));
     }
 
@@ -22,7 +22,7 @@ class PathResolverTest extends TestCase
         $filter1->apply('foo')->willReturn('bar');
         $filter2->apply('bar')->willReturn('baz');
 
-        $resolver = new PathResolver([
+        $resolver = new FilteringPathResolver([
             $filter1->reveal(),
             $filter2->reveal()
         ]);

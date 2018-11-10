@@ -4,7 +4,7 @@ namespace Phpactor\FilePathResolver\Tests\Unit\Filter;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Filter;
-use Phpactor\FilePathResolver\PathResolver;
+use Phpactor\FilePathResolver\FilteringPathResolver;
 
 abstract class FilterTestCase extends TestCase
 {
@@ -12,6 +12,6 @@ abstract class FilterTestCase extends TestCase
 
     public function apply(string $path): string
     {
-        return (new PathResolver([ $this->createFilter() ]))->resolve($path);
+        return (new FilteringPathResolver([ $this->createFilter() ]))->resolve($path);
     }
 }
