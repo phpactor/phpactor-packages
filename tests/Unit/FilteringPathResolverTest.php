@@ -5,12 +5,14 @@ namespace Phpactor\FilePathResolver\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Phpactor\FilePathResolver\Filter;
 use Phpactor\FilePathResolver\FilteringPathResolver;
+use Phpactor\FilePathResolver\PathResolver;
 
-class PathResolverTest extends TestCase
+class FilteringPathResolverTest extends TestCase
 {
     public function testIdentity()
     {
         $resolver = new FilteringPathResolver();
+        $this->assertInstanceOf(PathResolver::class, $resolver);
         $this->assertEquals('/foo/bar', $resolver->resolve('/foo/bar'));
     }
 

@@ -2,7 +2,7 @@
 
 namespace Phpactor\FilePathResolver;
 
-class FilteringPathResolver
+class FilteringPathResolver implements PathResolver
 {
     /**
      * @var Filter[]
