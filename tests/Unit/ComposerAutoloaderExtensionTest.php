@@ -9,12 +9,14 @@ use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
 use Composer\Autoload\ClassLoader;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
+use RuntimeException;
 
 class ComposerAutoloaderExtensionTest extends TestCase
 {
     public function testProvidesAutoloaders()
     {
-        $autoloaders = $this->create([])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
+        $autoloaders = $this->create([
+        ])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
         $this->assertCount(1, $autoloaders);
         $autoloader = reset($autoloaders);
         $this->assertInstanceOf(ClassLoader::class, $autoloader);
@@ -33,7 +35,6 @@ class ComposerAutoloaderExtensionTest extends TestCase
     public function testWithCustomProjectRoot()
     {
         $autoloaders = $this->create([
-            FilePathResolverExtension::PARAM_PROJECT_ROOT => __DIR__ . '/../../',
         ])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
         $this->assertCount(1, $autoloaders);
         $autoloader = reset($autoloaders);
@@ -49,11 +50,30 @@ class ComposerAutoloaderExtensionTest extends TestCase
         $this->assertCount(0, $autoloaders);
     }
 
+    public function testWhenAutoloaderIsntAutoloader()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Autoloader is not');
+        $autoloaders = $this->create([
+            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => __DIR__ . '/not-an-autoloader.php',
+        ])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
+    }
+
+    public function testMultipleAutoloaders()
+    {
+        $autoloaders = $this->create([
+            ComposerAutoloaderExtension::PARAM_AUTOLOADER_PATH => [
+                __DIR__ . '/../../vendor/autoload.php',
+                __DIR__ . '/../../vendor/autoload.php',
+            ],
+        ])->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS);
+        $this->assertCount(2, $autoloaders);
+    }
+
     private function create(array $config): Container
     {
         return PhpactorContainer::fromExtensions([
             ComposerAutoloaderExtension::class,
-            FilePathResolverExtension::class,
             LoggingExtension::class
         ], $config);
     }

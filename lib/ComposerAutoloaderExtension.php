@@ -18,6 +18,7 @@ class ComposerAutoloaderExtension implements Extension
 
     const PARAM_AUTOLOADER_PATH = 'composer.autoloader_path';
     const PARAM_AUTOLOAD_DEREGISTER = 'composer.autoload_deregister';
+    const PARAM_PROJECT_ROOT = 'composer_autoloader.project_root';
 
     /**
      * {@inheritDoc}
@@ -25,8 +26,8 @@ class ComposerAutoloaderExtension implements Extension
     public function configure(Resolver $resolver)
     {
         $resolver->setDefaults([
-            self::PARAM_AUTOLOADER_PATH => 'vendor/autoload.php',
             self::PARAM_AUTOLOAD_DEREGISTER => true,
+            self::PARAM_AUTOLOADER_PATH => 'vendor/autoload.php',
         ]);
     }
 
@@ -40,17 +41,6 @@ class ComposerAutoloaderExtension implements Extension
             $autoloaders = [];
 
             $autoloaderPaths = (array) $container->getParameter(self::PARAM_AUTOLOADER_PATH);
-            $autoloaderPaths = array_map(function ($path) use ($container) {
-                if (substr($path, 0, 1) == '/') {
-                    return $path;
-                }
-
-                $projectRoot = $container->get(
-                    FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER
-                )->resolve('%project_root%');
-
-                return Path::join([ $projectRoot, $path ]);
-            }, $autoloaderPaths);
 
             foreach ($autoloaderPaths as $autoloaderPath) {
                 if (false === file_exists($autoloaderPath)) {
