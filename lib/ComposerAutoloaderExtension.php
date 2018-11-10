@@ -10,7 +10,6 @@ use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Composer\Autoload\ClassLoader;
 use RuntimeException;
-use Webmozart\PathUtil\Path;
 
 class ComposerAutoloaderExtension implements Extension
 {
@@ -18,7 +17,6 @@ class ComposerAutoloaderExtension implements Extension
 
     const PARAM_AUTOLOADER_PATH = 'composer.autoloader_path';
     const PARAM_AUTOLOAD_DEREGISTER = 'composer.autoload_deregister';
-    const PARAM_PROJECT_ROOT = 'composer_autoloader.project_root';
 
     /**
      * {@inheritDoc}
@@ -26,8 +24,8 @@ class ComposerAutoloaderExtension implements Extension
     public function configure(Resolver $resolver)
     {
         $resolver->setDefaults([
+            self::PARAM_AUTOLOADER_PATH => '%project_root%/vendor/autoload.php',
             self::PARAM_AUTOLOAD_DEREGISTER => true,
-            self::PARAM_AUTOLOADER_PATH => 'vendor/autoload.php',
         ]);
     }
 
@@ -41,6 +39,11 @@ class ComposerAutoloaderExtension implements Extension
             $autoloaders = [];
 
             $autoloaderPaths = (array) $container->getParameter(self::PARAM_AUTOLOADER_PATH);
+            $autoloaderPaths = array_map(function ($path) use ($container) {
+                return $container->get(
+                    FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER
+                )->resolve($path);
+            }, $autoloaderPaths);
 
             foreach ($autoloaderPaths as $autoloaderPath) {
                 if (false === file_exists($autoloaderPath)) {

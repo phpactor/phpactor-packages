@@ -74,7 +74,8 @@ class ComposerAutoloaderExtensionTest extends TestCase
     {
         return PhpactorContainer::fromExtensions([
             ComposerAutoloaderExtension::class,
-            LoggingExtension::class
+            LoggingExtension::class,
+            FilePathResolverExtension::class
         ], $config);
     }
 }
