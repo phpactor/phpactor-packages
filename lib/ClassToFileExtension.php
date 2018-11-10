@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ClassToFile;
 use Phpactor\Container\Extension;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\ClassFileConverter\Domain\ClassToFileFileToClass;
 use Phpactor\ClassFileConverter\Adapter\Composer\ComposerClassToFile;
@@ -18,6 +19,7 @@ use Phpactor\ClassFileConverter\Domain\ChainFileToClass;
 class ClassToFileExtension implements Extension
 {
     const SERVICE_CONVERTER = 'class_to_file.converter';
+    const PARAM_CLASS_LOADERS = 'composer.class_loaders';
     const PARAM_PROJECT_ROOT = 'class_to_file.project_root';
 
     /**
@@ -26,7 +28,7 @@ class ClassToFileExtension implements Extension
     public function configure(Resolver $schema)
     {
         $schema->setDefaults([
-            self::PARAM_PROJECT_ROOT => getcwd(),
+            self::PARAM_PROJECT_ROOT => '%project_root%',
         ]);
     }
 
@@ -44,12 +46,12 @@ class ClassToFileExtension implements Extension
 
         $container->register('class_to_file.class_to_file', function (Container $container) {
             $classToFiles = [];
-            foreach ($container->get(ComposerAutoloaderExtension::SERVICE_AUTOLOADERS) as $classLoader) {
+            foreach ($container->get(self::PARAM_CLASS_LOADERS) as $classLoader) {
                 $classToFiles[] = new ComposerClassToFile($classLoader);
             }
 
             if (empty($classToFiles)) {
-                $projectDir = $container->getParameter(self::PARAM_PROJECT_ROOT);
+                $projectDir = $container->get(FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER)->resolve($container->getParameter(self::PARAM_PROJECT_ROOT));
                 $classToFiles[] = new SimpleClassToFile($projectDir);
             }
 
