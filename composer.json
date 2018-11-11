@@ -29,6 +29,6 @@
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Exension\\Logger\\LoggingExtension"
+        "phpactor.extension_class": "Phpactor\\Extension\\Logger\\LoggingExtension"
     }
 }
