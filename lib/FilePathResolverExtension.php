@@ -86,14 +86,14 @@ class FilePathResolverExtension implements Extension
             $suffix = DIRECTORY_SEPARATOR . $container->getParameter(self::PARAM_APP_NAME);
 
             $expanders = [
-                new ValueExpander('%project_root%', $container->getParameter(self::PARAM_PROJECT_ROOT)),
-                new SuffixExpanderDecorator(new XdgCacheExpander('%cache%'), $suffix),
-                new SuffixExpanderDecorator(new XdgConfigExpander('%config%'), $suffix),
-                new SuffixExpanderDecorator(new XdgDataExpander('%data%'), $suffix),
+                new ValueExpander('project_root', $container->getParameter(self::PARAM_PROJECT_ROOT)),
+                new SuffixExpanderDecorator(new XdgCacheExpander('cache'), $suffix),
+                new SuffixExpanderDecorator(new XdgConfigExpander('config'), $suffix),
+                new SuffixExpanderDecorator(new XdgDataExpander('data'), $suffix),
             ];
 
             if (null !== $applicationRoot = $container->getParameter(self::PARAM_APPLICATION_ROOT)) {
-                $expanders[] = new ValueExpander('%application_root%', $container->getParameter(self::PARAM_APPLICATION_ROOT));
+                $expanders[] = new ValueExpander('application_root', $container->getParameter(self::PARAM_APPLICATION_ROOT));
             }
 
             foreach (array_keys($container->getServiceIdsForTag(self::TAG_EXPANDER)) as $serviceId) {
