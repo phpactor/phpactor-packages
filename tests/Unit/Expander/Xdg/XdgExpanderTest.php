@@ -30,9 +30,9 @@ class XdgExpanderTest extends TestCase
         $this->xdg->getHomeCacheDir()->willReturn('/home/cache');
 
         $this->expander = new TokenExpandingFilter(new Expanders([
-            new XdgCacheExpander('%cache%', $this->xdg->reveal()),
-            new XdgDataExpander('%data%', $this->xdg->reveal()),
-            new XdgConfigExpander('%config%', $this->xdg->reveal()),
+            new XdgCacheExpander('cache', $this->xdg->reveal()),
+            new XdgDataExpander('data', $this->xdg->reveal()),
+            new XdgConfigExpander('config', $this->xdg->reveal()),
         ]));
     }
 

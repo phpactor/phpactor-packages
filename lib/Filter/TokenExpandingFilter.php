@@ -20,6 +20,7 @@ class TokenExpandingFilter implements Filter
     public function apply(string $path): string
     {
         foreach ($this->expanders as $key => $expander) {
+            $key = '%' . $key . '%';
             if (false === strpos($path, $key)) {
                 continue;
             }

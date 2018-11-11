@@ -33,7 +33,7 @@ class TokenExpandingFilterTest extends TestCase
             $expander1->reveal(),
             $expander2->reveal(),
             $expander3->reveal(),
-        ])->apply('/start/foo/bar/end');
+        ])->apply('/start/%foo%/%bar%/end');
 
         $this->assertEquals('/start/baz/fab/end', $path);
     }

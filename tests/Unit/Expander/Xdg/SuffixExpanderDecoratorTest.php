@@ -27,6 +27,6 @@ class SuffixExpanderDecoratorTest extends ExpanderTestCase
     {
         $this->expander->tokenName()->willReturn('bar');
         $this->expander->replacementValue()->willReturn('bar');
-        $this->assertEquals('/bar/foo', $this->expand('/bar'));
+        $this->assertEquals('/bar/foo', $this->expand('/%bar%'));
     }
 }

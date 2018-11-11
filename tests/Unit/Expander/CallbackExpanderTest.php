@@ -17,7 +17,7 @@ class CallbackExpanderTest extends ExpanderTestCase
     
     public function testExpandsCallbackValue()
     {
-        $this->assertEquals('bar', $this->expand('foo'));
+        $this->assertEquals('bar', $this->expand('%foo%'));
     }
 
     public function testThrowsExeceptionWhenCallbackReturnsNonString()
