@@ -11,7 +11,7 @@
     ],
     "require": {
         "phpactor/container": "^1.2",
-        "phpactor/logging-extension": "~0.2.0",
+        "phpactor/logging-extension": "~0.2",
         "phpactor/file-path-resolver-extension": "dev-master"
     },
     "require-dev": {
