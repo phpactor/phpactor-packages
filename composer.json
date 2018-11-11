@@ -10,10 +10,10 @@
     ],
     "require": {
         "dnoegel/php-xdg-base-dir": "^0.1.0",
-        "webmozart/path-util": "^2.3",
-        "phpbench/phpbench": "^0.14.0"
+        "webmozart/path-util": "^2.3"
     },
     "require-dev": {
+        "phpbench/phpbench": "^0.14.0",
         "phpstan/phpstan": "^0.10.5",
         "phpunit/phpunit": "^7.4",
         "friendsofphp/php-cs-fixer": "^2.13"
