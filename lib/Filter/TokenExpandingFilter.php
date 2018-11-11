@@ -12,19 +12,17 @@ class TokenExpandingFilter implements Filter
      */
     private $expanders;
 
-    /**
-     * @var string
-     */
-    private $delimiter;
-
-    public function __construct(Expanders $expanders, string $delimiter = '%')
+    public function __construct(Expanders $expanders)
     {
         $this->expanders = $expanders;
-        $this->delimiter = $delimiter;
     }
 
     public function apply(string $path): string
     {
+        if (false === strpos($path, '%')) {
+            return $path;
+        }
+
         if (!preg_match_all('{%(.*?)%}', $path, $matches)) {
             return $path;
         }
