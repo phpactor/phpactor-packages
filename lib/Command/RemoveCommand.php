@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class InstallCommand extends Command
+class RemoveCommand extends Command
 {
     /**
      * @var Container
@@ -26,13 +26,13 @@ class InstallCommand extends Command
 
     protected function configure()
     {
-        $this->setDescription('Install extensions');
+        $this->setDescription('Remove extensions');
         $this->addArgument('extension', InputArgument::OPTIONAL|InputArgument::IS_ARRAY);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->requireExtensions($input, $output);
+        $this->removeExtensions($input, $output);
 
         $installer = $this->container->get('extension_manager.installer');
 
@@ -43,13 +43,12 @@ class InstallCommand extends Command
         $installer->run();
     }
 
-    private function requireExtensions(InputInterface $input, OutputInterface $output)
+    private function removeExtensions(InputInterface $input, OutputInterface $output)
     {
         $addExtension = $this->container->get('extension_manager.model.add_extension');
         
         foreach ($input->getArgument('extension') as $extension) {
-            $version = $addExtension->add($extension);
-            $output->writeln(sprintf('Using version <info>%s</> of %s', $version, $extension));
+            $addExtension->remove($extension);
         }
     }
 }

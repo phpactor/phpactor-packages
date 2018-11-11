@@ -28,6 +28,7 @@ class PostInstallSubscriber implements EventSubscriberInterface
     {
         return [
             ScriptEvents::POST_INSTALL_CMD => 'handlePostPackageInstall',
+            ScriptEvents::POST_UPDATE_CMD => 'handlePostPackageInstall',
         ];
     }
 

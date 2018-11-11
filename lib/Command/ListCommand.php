@@ -27,7 +27,6 @@ class ListCommand extends Command
 
     protected function configure()
     {
-        $this->setName('extension:list');
         $this->setDescription('List extensions');
     }
 

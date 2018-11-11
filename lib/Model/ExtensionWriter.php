@@ -5,9 +5,12 @@ namespace Phpactor\Extension\ExtensionManager\Model;
 use Composer\EventDispatcher\ScriptExecutionException;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
 
 class ExtensionWriter
 {
+    const EXTENSION_CLASS_PROPERTY = 'phpactor.extension_class';
+
     /**
      * @var string
      */
@@ -23,7 +26,7 @@ class ExtensionWriter
      */
     public function writeExtensionList(iterable $packages)
     {
-        $packages = PhpactorExtensionPackage::filter($packages);
+        $packages = PackageFilter::filter($packages);
 
         $code = [
             '<?php',
@@ -51,14 +54,14 @@ class ExtensionWriter
     {
         $extra = $package->getExtra();
 
-        if (!isset($extra[PhpactorExtensionPackage::EXTRA_EXTENSION_CLASS])) {
+        if (!isset($extra[self::EXTENSION_CLASS_PROPERTY])) {
             throw new ScriptExecutionException(sprintf(
                 'Phpactor Package "%s" has no "%s" in the extra section. This parameter must define the extensions class',
                 $package->getName(),
-                PhpactorExtensionPackage::EXTRA_EXTENSION_CLASS
+                self::EXTENSION_CLASS_PROPERTY
             ));
         }
 
-        return $extra[PhpactorExtensionPackage::EXTRA_EXTENSION_CLASS];
+        return $extra[self::EXTENSION_CLASS_PROPERTY];
     }
 }

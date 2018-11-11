@@ -2,10 +2,13 @@
 
 namespace Phpactor\Extension\ExtensionManager;
 
+use Composer\Composer;
+use Composer\DependencyResolver\Pool;
 use Composer\Factory;
 use Composer\IO\ConsoleIO;
 use Composer\Installer;
 use Composer\Json\JsonFile;
+use Composer\Package\Version\VersionSelector;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\FilesystemRepository;
 use Composer\Repository\InstalledFilesystemRepository;
@@ -15,7 +18,10 @@ use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
 use Phpactor\Extension\ExtensionManager\Command\ListCommand;
+use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
+use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
+use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionWriter;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
@@ -54,40 +60,47 @@ class ExtensionManagerExtension implements Extension
     {
         $this->registerCommands($container);
         $this->registerComposer($container);
+        $this->registerModel($container);
     }
 
     private function registerCommands(ContainerBuilder $container)
     {
         $container->register('extension_manager.command.install-extension', function (Container $container) {
-            return new InstallCommand($container->get('extension_manager.installer'));
+            return new InstallCommand($container);
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:install' ] ]);
 
         $container->register('extension_manager.command.list', function (Container $container) {
             return new ListCommand($container->get('extension_manager.repository.combined'));
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:list' ] ]);
+
+        $container->register('extension_manager.command.update', function (Container $container) {
+            return new UpdateCommand($container->get('extension_manager.installer'));
+        }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:update' ] ]);
+
+        $container->register('extension_manager.command.update', function (Container $container) {
+            return new RemoveCommand($container);
+        }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:remove' ] ]);
     }
 
     private function registerComposer(ContainerBuilder $container)
     {
         $container->register('extension_manager.composer', function (Container $container) {
-            $this->initialize($container);
+            return $this->createComposer($container);
+        });
 
-            $composer = Factory::create(
-                $container->get('extension_manager.io'),
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
-            );
-            $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
-                new ExtensionWriter($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
-            ));
-
-            return $composer;
+        $container->register('extension_manager.composer_for_installer', function (Container $container) {
+            // after modifying the config file, it is necessary to re-initialize composer in order
+            // that it takes notice of the modifications. instead of doing this we simply provide the
+            // installer with a new instance of composer (rather than the original instance which we need
+            // to instantiate earlier).
+            return $this->createComposer($container);
         });
         
         $container->register('extension_manager.installer', function (Container $container) {
             $composer = $container->get('extension_manager.composer');
             $installer = Installer::create(
                 $container->get('extension_manager.io'),
-                $container->get('extension_manager.composer')
+                $container->get('extension_manager.composer_for_installer')
             );
             $installer->setAdditionalInstalledRepository($container->get('extension_manager.repository.local'));
 
@@ -124,13 +137,28 @@ class ExtensionManagerExtension implements Extension
                 new InstalledFilesystemRepository(new JsonFile($this->extensionRepositoryFile($container)))
             ]);
         });
+
+        $container->register('extension_manager.repository.pool', function (Container $container) {
+            $pool = new Pool('dev');
+
+            $repositoryManager = $container->get('extension_manager.composer')->getRepositoryManager();
+
+            foreach ($repositoryManager->getRepositories() as $repository) {
+                $pool->addRepository($repository);
+            }
+
+            return $pool;
+        });
+
+        $container->register('extension_manager.version_selector', function (Container $container) {
+            return new VersionSelector($container->get('extension_manager.repository.pool'));
+        });
     }
 
     private function initialize(Container $container): void
     {
         $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
         
-        var_dump($path);
         if (file_exists($path)) {
             return;
         }
@@ -142,7 +170,7 @@ class ExtensionManagerExtension implements Extension
         file_put_contents($path, json_encode([
             'config' => [
                 'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
-                'vendor-dir' => $this->extensionRepositoryFile($container),
+                'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
             ]
         ], JSON_PRETTY_PRINT));
     }
@@ -163,5 +191,31 @@ class ExtensionManagerExtension implements Extension
             'composer',
             'installed.json'
         ]);
+    }
+
+    private function registerModel(ContainerBuilder $container)
+    {
+        $container->register('extension_manager.model.add_extension', function (Container $container) {
+            return new AddExtension(
+                $container->get('extension_manager.repository.local'),
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
+                $container->get('extension_manager.version_selector')
+            );
+        });
+    }
+
+    private function createComposer(Container $container): Composer
+    {
+        $this->initialize($container);
+        
+        $composer = Factory::create(
+            $container->get('extension_manager.io'),
+            $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
+        );
+        
+        $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
+            new ExtensionWriter($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
+        ));
+        return $composer;
     }
 }
