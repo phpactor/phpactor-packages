@@ -4,6 +4,7 @@ namespace Phpactor\FilePathResolver;
 
 use ArrayIterator;
 use IteratorAggregate;
+use Phpactor\FilePathResolver\Exception\UnknownToken;
 
 class Expanders implements IteratorAggregate
 {
@@ -27,6 +28,15 @@ class Expanders implements IteratorAggregate
         foreach ($expanders as $expander) {
             $this->add($expander);
         }
+    }
+
+    public function get(string $tokenName)
+    {
+        if (!isset($this->expanders[$tokenName])) {
+            throw new UnknownToken($tokenName, array_keys($this->expanders));
+        }
+
+        return $this->expanders[$tokenName];
     }
 
     /**
