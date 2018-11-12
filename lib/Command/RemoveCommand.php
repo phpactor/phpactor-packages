@@ -6,49 +6,92 @@ use Composer\Composer;
 use Composer\Installer;
 use Phpactor\Container\Container;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
+use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class RemoveCommand extends Command
 {
+    const ARG_EXTENSION_NAME = 'extension';
+
     /**
      * @var Container
      */
     private $container;
 
-    public function __construct(Container $container)
+    /**
+     * @var RemoveExtension
+     */
+    private $removeExtension;
+
+
+    public function __construct(Container $container, RemoveExtension $removeExtension)
     {
         parent::__construct();
         $this->container = $container;
+        $this->removeExtension = $removeExtension;
     }
 
     protected function configure()
     {
         $this->setDescription('Remove extensions');
-        $this->addArgument('extension', InputArgument::OPTIONAL|InputArgument::IS_ARRAY);
+        $this->addArgument(self::ARG_EXTENSION_NAME, InputArgument::OPTIONAL|InputArgument::IS_ARRAY);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->removeExtensions($input, $output);
+        $style = new SymfonyStyle($input, $output);
 
-        $installer = $this->container->get('extension_manager.installer');
+        $extensionNames = $this->resolveExtensionNamesToRemove($input, $style);
 
-        if (count($input->getArgument('extension'))) {
-            $installer->setUpdate(true);
+        if (null === $extensionNames) {
+            return 0;
         }
 
+        $this->removeExtensions($extensionNames, $output);
+        $this->runInstall($input);
+    }
+
+    private function removeExtensions(array $extensions, OutputInterface $output)
+    {
+        foreach ($extensions as $extension) {
+            $output->writeln(sprintf('<info>Removing:</> %s', $extension));
+            $this->removeExtension->remove($extension);
+        }
+    }
+
+    private function runInstall(InputInterface $input)
+    {
+        $installer = $this->container->get('extension_manager.installer');
+        
+        if (count($input->getArgument(self::ARG_EXTENSION_NAME))) {
+            $installer->setUpdate(true);
+        }
+        
         $installer->run();
     }
 
-    private function removeExtensions(InputInterface $input, OutputInterface $output)
+    private function resolveExtensionNamesToRemove(InputInterface $input, SymfonyStyle $style): ?array
     {
-        $addExtension = $this->container->get('extension_manager.model.add_extension');
+        $extensionNames = $input->getArgument(self::ARG_EXTENSION_NAME);
+        $dependents = $this->removeExtension->findDependentExtensions($extensionNames);
         
-        foreach ($input->getArgument('extension') as $extension) {
-            $addExtension->remove($extension);
+        if ($dependents) {
+            $style->text(sprintf('Package(s) "<info>%s</>" depends on the following packages:', implode('</>", "<info>', $extensionNames)));
+            $style->listing($dependents);
+            $response = $style->confirm('Remove all of the above packages?', false);
+        
+            if (false === $response) {
+                return null;
+            }
         }
+        
+        return array_merge($extensionNames, $dependents);
     }
 }

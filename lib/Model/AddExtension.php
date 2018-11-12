@@ -57,25 +57,5 @@ class AddExtension
 
         return $version->getPrettyVersion();
     }
-
-    public function remove(string $extension): void
-    {
-        $package = $this->repository->findPackage($extension, '*');
-        var_dump($package);
-        $this->originalFile = file_get_contents($this->configFilePath);
-
-        $config = json_decode($this->originalFile, true);
-
-        if (!isset($config['require'])) {
-            return;
-        }
-
-        unset($config['require'][$extension]);
-        if (empty($config['require'])) {
-            unset($config['require']);
-        }
-
-        file_put_contents($this->configFilePath, json_encode($config, JSON_PRETTY_PRINT));
-    }
 }
 

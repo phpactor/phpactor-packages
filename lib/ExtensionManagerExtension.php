@@ -23,6 +23,7 @@ use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionWriter;
+use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Application;
@@ -78,7 +79,7 @@ class ExtensionManagerExtension implements Extension
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:update' ] ]);
 
         $container->register('extension_manager.command.update', function (Container $container) {
-            return new RemoveCommand($container);
+            return new RemoveCommand($container, $container->get('extension_manager.model.remove_extension'));
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:remove' ] ]);
     }
 
@@ -197,9 +198,15 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.model.add_extension', function (Container $container) {
             return new AddExtension(
-                $container->get('extension_manager.repository.local'),
+                $container->get('extension_manager.repository.combined'),
                 $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->get('extension_manager.version_selector')
+            );
+        });
+        $container->register('extension_manager.model.remove_extension', function (Container $container) {
+            return new RemoveExtension(
+                $container->get('extension_manager.repository.combined'),
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
             );
         });
     }

@@ -1,0 +1,102 @@
+<?php
+
+namespace Phpactor\Extension\ExtensionManager\Model;
+
+use Composer\Package\PackageInterface;
+use Composer\Package\Version\VersionSelector;
+use Composer\Repository\RepositoryInterface;
+use RuntimeException;
+
+class RemoveExtension
+{
+    /**
+     * @var RepositoryInterface
+     */
+    private $repository;
+
+    /**
+     * @var string
+     */
+    private $configFilePath;
+
+    /**
+     * @var VersionSelector
+     */
+    private $versionSelector;
+
+    /**
+     * @var string
+     */
+    private $originalFile;
+
+    public function __construct(RepositoryInterface $repository, string $configFilePath)
+    {
+        $this->repository = $repository;
+        $this->configFilePath = $configFilePath;
+    }
+
+    public function remove(string $extension): bool
+    {
+        return $this->removeExtensionFromConfig($extension);
+    }
+
+    public function findDependentExtensions(array $extensions)
+    {
+        return $this->findDependentPackages(array_map(function (string $extensionName) {
+            return $this->findPackage($extensionName)->getName();
+        }, $extensions));
+    }
+
+    private function removeExtensionFromConfig(string $extension): bool
+    {
+        $this->originalFile = file_get_contents($this->configFilePath);
+        
+        $config = json_decode($this->originalFile, true);
+        
+        if (!isset($config['require'])) {
+            return false;
+        }
+        
+        unset($config['require'][$extension]);
+        if (empty($config['require'])) {
+            unset($config['require']);
+        }
+        
+        file_put_contents($this->configFilePath, json_encode($config, JSON_PRETTY_PRINT));
+
+        return true;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function findDependentPackages(array $sourcePackages): array
+    {
+        $dependents = [];
+        foreach ($this->repository->getPackages() as $package) {
+            foreach ($package->getRequires() as $require) {
+                if (!in_array($require->getTarget(), $sourcePackages)) {
+                    continue;
+                }
+
+                $dependents[$package->getName()] = $package->getName();
+                $dependents = array_merge($dependents, $this->findDependentPackages([$package->getName()]));
+            }
+        }
+
+        return $dependents;
+    }
+
+    private function findPackage(string $extension): PackageInterface
+    {
+        $package = $this->repository->findPackage($extension, '*');
+
+        if (null === $package) {
+            throw new RuntimeException(sprintf(
+                'Could not find extension "%s"', $extension
+            ));
+        }
+
+        return $package;
+    }
+}
