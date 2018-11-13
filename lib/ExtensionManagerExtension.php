@@ -10,7 +10,6 @@ use Composer\Installer;
 use Composer\Json\JsonFile;
 use Composer\Package\Version\VersionSelector;
 use Composer\Repository\CompositeRepository;
-use Composer\Repository\FilesystemRepository;
 use Composer\Repository\InstalledFilesystemRepository;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
@@ -25,20 +24,15 @@ use Phpactor\Extension\ExtensionManager\Command\ListCommand;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
 use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
-use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
-use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
-use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\StreamOutput;
 use Webmozart\PathUtil\Path;
 
 class ExtensionManagerExtension implements Extension
@@ -129,7 +123,6 @@ class ExtensionManagerExtension implements Extension
                 $container->get('extension_manager.console.output'),
                 $helperSet
             );
-            
         });
 
         $container->register('extension_manager.console.input', function () {

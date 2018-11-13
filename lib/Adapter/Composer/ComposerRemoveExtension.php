@@ -2,11 +2,9 @@
 
 namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 
-use Composer\Package\PackageInterface;
 use Composer\Package\Version\VersionSelector;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
-use RuntimeException;
 
 class ComposerRemoveExtension implements RemoveExtension
 {

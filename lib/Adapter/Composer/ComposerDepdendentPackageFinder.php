@@ -53,7 +53,8 @@ class ComposerDepdendentPackageFinder implements DependentExtensionFinder
 
         if (null === $package) {
             throw new RuntimeException(sprintf(
-                'Could not find extension "%s"', $extension
+                'Could not find extension "%s"',
+                $extension
             ));
         }
 

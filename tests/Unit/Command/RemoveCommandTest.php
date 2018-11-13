@@ -3,9 +3,7 @@
 namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
-use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Symfony\Component\Console\Tester\CommandTester;
 

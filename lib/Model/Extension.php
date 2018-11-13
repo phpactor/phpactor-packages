@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Model;
 
 use Composer\Package\CompletePackageInterface;
-use Composer\Package\PackageInterface;
 
 class Extension
 {

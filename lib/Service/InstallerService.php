@@ -4,7 +4,6 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
-use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 
 class InstallerService
 {

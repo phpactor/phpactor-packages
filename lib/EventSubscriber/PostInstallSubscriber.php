@@ -3,10 +3,8 @@
 namespace Phpactor\Extension\ExtensionManager\EventSubscriber;
 
 use Composer\EventDispatcher\EventSubscriberInterface;
-use Composer\Installer\PackageEvents;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
-use Phpactor\Composer\PhpactorExtensionPackage;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 
 class PostInstallSubscriber implements EventSubscriberInterface

@@ -4,8 +4,8 @@ namespace Phpactor\Extension\ExtensionManager\Model;
 
 interface DependentExtensionFinder
 {
-     /**
-      * @return string[]
-      */
+    /**
+     * @return string[]
+     */
     public function findDependentExtensions(array $extensions): array;
 }

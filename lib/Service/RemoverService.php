@@ -27,8 +27,7 @@ class RemoverService
         Installer $installer,
         DependentExtensionFinder $finder,
         RemoveExtension $removeExtension
-    )
-    {
+    ) {
         $this->removeExtension = $removeExtension;
         $this->installer = $installer;
         $this->finder = $finder;

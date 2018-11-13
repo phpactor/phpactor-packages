@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Phpactor\Container\Container;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Symfony\Component\Console\Command\Command;

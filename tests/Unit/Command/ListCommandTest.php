@@ -45,5 +45,4 @@ class ListCommandTest extends TestCase
 EOT
         , $this->tester->getDisplay());
     }
-
 }

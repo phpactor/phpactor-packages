@@ -10,7 +10,6 @@ use Phpactor\TestUtils\Workspace;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class CommandsTest extends TestCase
 {

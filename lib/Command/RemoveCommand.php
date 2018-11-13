@@ -2,19 +2,11 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Phpactor\Container\Container;
-use Phpactor\Extension\ExtensionManager\Model\AddExtension;
-use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
-use Phpactor\Extension\ExtensionManager\Model\Installer;
-use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class RemoveCommand extends Command

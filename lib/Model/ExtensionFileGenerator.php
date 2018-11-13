@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Model;
 
 use Composer\EventDispatcher\ScriptExecutionException;
-use Composer\Package\Package;
 use Composer\Package\PackageInterface;
 use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
 

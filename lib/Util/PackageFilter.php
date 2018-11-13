@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Util;
 
 use Composer\Package\AliasPackage;
-use Composer\Package\Package;
 use Composer\Package\PackageInterface;
 
 class PackageFilter

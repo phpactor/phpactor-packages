@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Composer\Composer;
 use Composer\Installer;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
