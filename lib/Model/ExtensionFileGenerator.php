@@ -7,7 +7,7 @@ use Composer\Package\Package;
 use Composer\Package\PackageInterface;
 use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
 
-class ExtensionWriter
+class ExtensionFileGenerator
 {
     const EXTENSION_CLASS_PROPERTY = 'phpactor.extension_class';
 

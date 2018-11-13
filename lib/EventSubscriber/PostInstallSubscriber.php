@@ -7,7 +7,7 @@ use Composer\Installer\PackageEvents;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use Phpactor\Composer\PhpactorExtensionPackage;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionWriter;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 
 class PostInstallSubscriber implements EventSubscriberInterface
 {
@@ -16,7 +16,7 @@ class PostInstallSubscriber implements EventSubscriberInterface
      */
     private $extensionWriter;
 
-    public function __construct(ExtensionWriter $extensionWriter)
+    public function __construct(ExtensionFileGenerator $extensionWriter)
     {
         $this->extensionWriter = $extensionWriter;
     }

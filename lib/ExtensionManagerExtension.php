@@ -16,14 +16,20 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerAddExtension;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerDepdendentPackageFinder;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerRemoveExtension;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\LazyComposerInstaller;
 use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
 use Phpactor\Extension\ExtensionManager\Command\ListCommand;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
 use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionWriter;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
+use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
+use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Application;
@@ -62,16 +68,19 @@ class ExtensionManagerExtension implements Extension
         $this->registerCommands($container);
         $this->registerComposer($container);
         $this->registerModel($container);
+        $this->registerService($container);
     }
 
     private function registerCommands(ContainerBuilder $container)
     {
         $container->register('extension_manager.command.install-extension', function (Container $container) {
-            return new InstallCommand($container);
+            return new InstallCommand(
+                $container->get('extension_manager.service.installer')
+            );
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:install' ] ]);
 
         $container->register('extension_manager.command.list', function (Container $container) {
-            return new ListCommand($container->get('extension_manager.repository.combined'));
+            return new ListCommand($container->get('extension_manager.service.lister'));
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:list' ] ]);
 
         $container->register('extension_manager.command.update', function (Container $container) {
@@ -79,7 +88,11 @@ class ExtensionManagerExtension implements Extension
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:update' ] ]);
 
         $container->register('extension_manager.command.update', function (Container $container) {
-            return new RemoveCommand($container, $container->get('extension_manager.model.remove_extension'));
+            return new RemoveCommand(
+                $container->get('extension_manager.model.installer'),
+                $container->get('extension_manager.model.dependency_finder'),
+                $container->get('extension_manager.model.remove_extension')
+            );
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:remove' ] ]);
     }
 
@@ -197,17 +210,23 @@ class ExtensionManagerExtension implements Extension
     private function registerModel(ContainerBuilder $container)
     {
         $container->register('extension_manager.model.add_extension', function (Container $container) {
-            return new AddExtension(
+            return new ComposerAddExtension(
                 $container->get('extension_manager.repository.combined'),
                 $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->get('extension_manager.version_selector')
             );
         });
         $container->register('extension_manager.model.remove_extension', function (Container $container) {
-            return new RemoveExtension(
+            return new ComposerRemoveExtension(
                 $container->get('extension_manager.repository.combined'),
                 $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
             );
+        });
+        $container->register('extension_manager.model.installer', function (Container $container) {
+            return new LazyComposerInstaller($container);
+        });
+        $container->register('extension_manager.model.dependency_finder', function (Container $container) {
+            return new ComposerDepdendentPackageFinder($container->get('extension_manager.repository.combined'));
         });
     }
 
@@ -221,8 +240,24 @@ class ExtensionManagerExtension implements Extension
         );
         
         $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
-            new ExtensionWriter($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
+            new ExtensionFileGenerator($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
         ));
         return $composer;
+    }
+
+    private function registerService(ContainerBuilder $container)
+    {
+        $container->register('extension_manager.service.installer', function (Container $container) {
+            return new InstallerService(
+                $container->get('extension_manager.model.installer'),
+                $container->get('extension_manager.model.add_extension')
+            );
+        });
+
+        $container->register('extension_manager.service.lister', function (Container $container) {
+            return new ExtensionLister(
+                $container->get('extension_manager.repository.combined')
+            );
+        });
     }
 }

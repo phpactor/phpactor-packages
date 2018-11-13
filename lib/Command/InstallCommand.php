@@ -2,10 +2,9 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Composer\Composer;
-use Composer\Installer;
 use Phpactor\Container\Container;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
+use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,14 +13,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 class InstallCommand extends Command
 {
     /**
-     * @var Container
+     * @var Installer
      */
-    private $container;
+    private $installer;
 
-    public function __construct(Container $container)
+    /**
+     * @var AddExtension
+     */
+    private $addExtension;
+
+    public function __construct(InstallerService $installer)
     {
         parent::__construct();
-        $this->container = $container;
+        $this->installer = $installer;
     }
 
     protected function configure()
@@ -34,21 +38,18 @@ class InstallCommand extends Command
     {
         $this->requireExtensions($input, $output);
 
-        $installer = $this->container->get('extension_manager.installer');
-
         if (count($input->getArgument('extension'))) {
-            $installer->setUpdate(true);
+            $this->installer->installForceUpdate();
+            return 0;
         }
 
-        $installer->run();
+        $this->installer->install();
     }
 
     private function requireExtensions(InputInterface $input, OutputInterface $output)
     {
-        $addExtension = $this->container->get('extension_manager.model.add_extension');
-        
         foreach ($input->getArgument('extension') as $extension) {
-            $version = $addExtension->add($extension);
+            $version = $this->installer->addExtension($extension);
             $output->writeln(sprintf('Using version <info>%s</> of %s', $version, $extension));
         }
     }
