@@ -30,6 +30,7 @@ use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
+use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Application;
@@ -89,9 +90,7 @@ class ExtensionManagerExtension implements Extension
 
         $container->register('extension_manager.command.update', function (Container $container) {
             return new RemoveCommand(
-                $container->get('extension_manager.model.installer'),
-                $container->get('extension_manager.model.dependency_finder'),
-                $container->get('extension_manager.model.remove_extension')
+                $container->get('extension_manager.service.remover')
             );
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:remove' ] ]);
     }
@@ -257,6 +256,14 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.service.lister', function (Container $container) {
             return new ExtensionLister(
                 $container->get('extension_manager.repository.combined')
+            );
+        });
+
+        $container->register('extension_manager.service.remover', function (Container $container) {
+            return new RemoverService(
+                $container->get('extension_manager.model.installer'),
+                $container->get('extension_manager.model.dependency_finder'),
+                $container->get('extension_manager.model.remove_extension')
             );
         });
     }

@@ -7,6 +7,7 @@ use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
+use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,31 +22,14 @@ class RemoveCommand extends Command
     const ARG_EXTENSION_NAME = 'extension';
 
     /**
-     * @var RemoveExtension
+     * @var RemoverService
      */
-    private $removeExtension;
+    private $remover;
 
-    /**
-     * @var Installer
-     */
-    private $installer;
-
-    /**
-     * @var DependentExtensionFinder
-     */
-    private $finder;
-
-
-    public function __construct(
-        Installer $installer,
-        DependentExtensionFinder $finder,
-        RemoveExtension $removeExtension
-    )
+    public function __construct(RemoverService $remover)
     {
         parent::__construct();
-        $this->removeExtension = $removeExtension;
-        $this->installer = $installer;
-        $this->finder = $finder;
+        $this->remover = $remover;
     }
 
     protected function configure()
@@ -72,24 +56,24 @@ class RemoveCommand extends Command
     {
         foreach ($extensions as $extension) {
             $output->writeln(sprintf('<info>Removing:</> %s', $extension));
-            $this->removeExtension->remove($extension);
+            $this->remover->removeExtension($extension);
         }
     }
 
     private function runInstall(InputInterface $input): void
     {
         if (count($input->getArgument(self::ARG_EXTENSION_NAME))) {
-            $this->installer->installForceUpdate();
+            $this->remover->installForceUpdate();
             return;
         }
         
-        $this->installer->install();
+        $this->remover->install();
     }
 
     private function resolveExtensionNamesToRemove(InputInterface $input, SymfonyStyle $style): ?array
     {
         $extensionNames = $input->getArgument(self::ARG_EXTENSION_NAME);
-        $dependents = $this->finder->findDependentExtensions($extensionNames);
+        $dependents = $this->remover->findDependentExtensions($extensionNames);
         
         if ($dependents) {
             $style->text(sprintf('Package(s) "<info>%s</>" depends on the following packages:', implode('</>", "<info>', $extensionNames)));
