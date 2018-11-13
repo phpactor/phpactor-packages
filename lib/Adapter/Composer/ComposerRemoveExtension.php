@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 use Composer\Package\Version\VersionSelector;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
+use RuntimeException;
 
 class ComposerRemoveExtension implements RemoveExtension
 {
@@ -41,7 +42,13 @@ class ComposerRemoveExtension implements RemoveExtension
 
     private function removeExtensionFromConfig(string $extension): bool
     {
-        $this->originalFile = file_get_contents($this->configFilePath);
+        if (!file_exists($this->configFilePath)) {
+            throw new RuntimeException(sprintf(
+                'File %s does not exist', $this->configFilePath
+            ));
+        }
+
+        $this->originalFile = (string) file_get_contents($this->configFilePath);
         
         $config = json_decode($this->originalFile, true);
         

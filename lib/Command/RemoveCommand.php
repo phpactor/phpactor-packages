@@ -54,7 +54,7 @@ class RemoveCommand extends Command
 
     private function runInstall(InputInterface $input): void
     {
-        if (count($input->getArgument(self::ARG_EXTENSION_NAME))) {
+        if (count((array) $input->getArgument(self::ARG_EXTENSION_NAME))) {
             $this->remover->installForceUpdate();
             return;
         }
@@ -64,7 +64,7 @@ class RemoveCommand extends Command
 
     private function resolveExtensionNamesToRemove(InputInterface $input, SymfonyStyle $style): ?array
     {
-        $extensionNames = $input->getArgument(self::ARG_EXTENSION_NAME);
+        $extensionNames = (array) $input->getArgument(self::ARG_EXTENSION_NAME);
         $dependents = $this->remover->findDependentExtensions($extensionNames);
         
         if ($dependents) {

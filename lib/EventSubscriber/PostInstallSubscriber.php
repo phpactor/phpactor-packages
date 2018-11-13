@@ -10,7 +10,7 @@ use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 class PostInstallSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var ExtensionWriter
+     * @var ExtensionFileGenerator
      */
     private $extensionWriter;
 

@@ -41,7 +41,7 @@ class ComposerAddExtension implements AddExtension
     {
         $version = $this->versionSelector->findBestCandidate($extension);
 
-        if (!$version) {
+        if (!$version || true === $version) {
             throw new RuntimeException(sprintf('Could not find extension "%s"', $extension));
         }
 
@@ -50,7 +50,13 @@ class ComposerAddExtension implements AddExtension
 
     private function updateFile($extension, PackageInterface $version)
     {
-        $this->originalFile = file_get_contents($this->configFilePath);
+        if (!file_exists($this->configFilePath)) {
+            throw new RuntimeException(sprintf(
+                'File %s does not exist', $this->configFilePath
+            ));
+        }
+
+        $this->originalFile = (string) file_get_contents($this->configFilePath);
         
         $config = json_decode($this->originalFile, true);
         if (!isset($config['require'])) {

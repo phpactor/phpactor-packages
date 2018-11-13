@@ -12,14 +12,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class InstallCommand extends Command
 {
     /**
-     * @var Installer
+     * @var InstallerService
      */
     private $installer;
-
-    /**
-     * @var AddExtension
-     */
-    private $addExtension;
 
     public function __construct(InstallerService $installer)
     {
@@ -37,7 +32,7 @@ class InstallCommand extends Command
     {
         $this->requireExtensions($input, $output);
 
-        if (count($input->getArgument('extension'))) {
+        if (count((array) $input->getArgument('extension'))) {
             $this->installer->installForceUpdate();
             return 0;
         }
@@ -47,7 +42,7 @@ class InstallCommand extends Command
 
     private function requireExtensions(InputInterface $input, OutputInterface $output)
     {
-        foreach ($input->getArgument('extension') as $extension) {
+        foreach ((array) $input->getArgument('extension') as $extension) {
             $version = $this->installer->addExtension($extension);
             $output->writeln(sprintf('Using version <info>%s</> of %s', $version, $extension));
         }

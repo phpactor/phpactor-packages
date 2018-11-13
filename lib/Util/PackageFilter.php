@@ -10,14 +10,24 @@ class PackageFilter
     const TYPE = 'phpactor-extension';
     const EXTRA_EXTENSION_CLASS = 'phpactor.extension_class';
 
-    public static function filter(iterable $packages)
+    /**
+     * @param PackageInterface[] $packages
+     */
+    public static function filter(iterable $packages): array
     {
-        return array_filter($packages, function (PackageInterface $package) {
+        $filtered = [];
+        foreach ($packages as $package) {
+
             if ($package instanceof AliasPackage) {
-                return false;
+                continue;
             }
 
-            return $package->getType() === self::TYPE;
-        });
+            if ($package->getType() !== self::TYPE) {
+                continue;
+            }
+            $filtered[] = $package;
+        };
+
+        return $filtered;
     }
 }

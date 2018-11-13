@@ -23,9 +23,9 @@ class InstallerService
         $this->addExtension = $addExtension;
     }
 
-    public function addExtension($extension): void
+    public function addExtension($extension)
     {
-        $this->addExtension->add($extension);
+        return $this->addExtension->add($extension);
     }
 
     public function install(): void
