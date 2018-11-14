@@ -32,10 +32,13 @@ class InstallerService
         $this->finder = $finder;
     }
 
-    public function addExtension($extension)
+    public function addExtension($extension): string
     {
         $version = $this->finder->findBestVersion($extension);
         $this->config->require($extension, $version);
+        $this->config->commit();
+
+        return $version;
     }
 
     public function install(): void

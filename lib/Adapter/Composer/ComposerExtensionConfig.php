@@ -41,9 +41,9 @@ class ComposerExtensionConfig implements ExtensionConfig
         unset($this->config['require'][$extension]);
     }
 
-    private function commit($config)
+    public function commit(): void
     {
-        file_put_contents($this->configFilePath, json_encode($config, JSON_PRETTY_PRINT));
+        file_put_contents($this->path, json_encode($this->config, JSON_PRETTY_PRINT));
     }
 
     private function read(): array
