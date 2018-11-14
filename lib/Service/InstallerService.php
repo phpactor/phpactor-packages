@@ -2,8 +2,11 @@
 
 namespace Phpactor\Extension\ExtensionManager\Service;
 
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
+use Phpactor\Extension\ExtensionManager\Model\VersionFinder;
 
 class InstallerService
 {
@@ -13,19 +16,26 @@ class InstallerService
     private $installer;
 
     /**
-     * @var AddExtension
+     * @var ExtensionConfig
      */
-    private $addExtension;
+    private $config;
 
-    public function __construct(Installer $installer, AddExtension $addExtension)
+    /**
+     * @var VersionFinder
+     */
+    private $finder;
+
+    public function __construct(Installer $installer, ExtensionConfig $config, VersionFinder $finder)
     {
         $this->installer = $installer;
-        $this->addExtension = $addExtension;
+        $this->config = $config;
+        $this->finder = $finder;
     }
 
     public function addExtension($extension)
     {
-        return $this->addExtension->add($extension);
+        $version = $this->finder->findBestVersion($extension);
+        $this->config->require($extension, $version);
     }
 
     public function install(): void

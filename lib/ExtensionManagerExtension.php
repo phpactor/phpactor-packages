@@ -15,9 +15,10 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerAddExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerDepdendentPackageFinder;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerRemoveExtension;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\LazyComposerInstaller;
 use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
 use Phpactor\Extension\ExtensionManager\Command\ListCommand;
@@ -201,17 +202,14 @@ class ExtensionManagerExtension implements Extension
 
     private function registerModel(ContainerBuilder $container)
     {
-        $container->register('extension_manager.model.add_extension', function (Container $container) {
-            return new ComposerAddExtension(
-                $container->get('extension_manager.repository.combined'),
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
-                $container->get('extension_manager.version_selector')
+        $container->register('extension_manager.adapter.composer.extension_config', function (Container $container) {
+            return new ComposerExtensionConfig(
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
             );
         });
-        $container->register('extension_manager.model.remove_extension', function (Container $container) {
-            return new ComposerRemoveExtension(
-                $container->get('extension_manager.repository.combined'),
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
+        $container->register('extension_manager.adapter.composer.version_finder', function (Container $container) {
+            return new ComposerVersionFinder(
+                $container->get('extension_manager.version_selector')
             );
         });
         $container->register('extension_manager.model.installer', function (Container $container) {
@@ -220,12 +218,16 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.model.dependency_finder', function (Container $container) {
             return new ComposerDepdendentPackageFinder($container->get('extension_manager.repository.combined'));
         });
+        $container->register('extension_manager.model.remove_extension', function (Container $container) {
+            return new ComposerRemoveExtension(
+                $container->get('extension_manager.repository.combined'),
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
+            );
+        });
     }
 
     private function createComposer(Container $container): Composer
     {
-        $this->initialize($container);
-        
         $composer = Factory::create(
             $container->get('extension_manager.io'),
             $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
@@ -240,9 +242,12 @@ class ExtensionManagerExtension implements Extension
     private function registerService(ContainerBuilder $container)
     {
         $container->register('extension_manager.service.installer', function (Container $container) {
+            $this->initialize($container);
+        
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
-                $container->get('extension_manager.model.add_extension')
+                $container->get('extension_manager.adapter.composer.extension_config'),
+                $container->get('extension_manager.adapter.composer.version_finder')
             );
         });
 
