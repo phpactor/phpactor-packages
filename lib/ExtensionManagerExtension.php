@@ -162,26 +162,6 @@ class ExtensionManagerExtension implements Extension
         });
     }
 
-    private function initialize(Container $container): void
-    {
-        $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
-        
-        if (file_exists($path)) {
-            return;
-        }
-
-        if (!file_exists(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
-        }
-
-        file_put_contents($path, json_encode([
-            'config' => [
-                'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
-                'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
-            ]
-        ], JSON_PRETTY_PRINT));
-    }
-
     private function repositoryFile(Container $container)
     {
         return Path::join([
@@ -243,7 +223,6 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.service.installer', function (Container $container) {
             $this->initialize($container);
-        
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.adapter.composer.extension_config'),
@@ -258,11 +237,32 @@ class ExtensionManagerExtension implements Extension
         });
 
         $container->register('extension_manager.service.remover', function (Container $container) {
+            $this->initialize($container);
             return new RemoverService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.model.dependency_finder'),
-                $container->get('extension_manager.model.remove_extension')
+                $container->get('extension_manager.adapter.composer.extension_config')
             );
         });
+    }
+
+    private function initialize(Container $container): void
+    {
+        $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
+        
+        if (file_exists($path)) {
+            return;
+        }
+
+        if (!file_exists(dirname($path))) {
+            mkdir(dirname($path), 0777, true);
+        }
+
+        file_put_contents($path, json_encode([
+            'config' => [
+                'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
+                'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
+            ]
+        ], JSON_PRETTY_PRINT));
     }
 }
