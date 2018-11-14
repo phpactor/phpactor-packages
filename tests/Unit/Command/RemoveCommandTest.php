@@ -39,4 +39,26 @@ class RemoveCommandTest extends TestCase
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }
+
+    public function testRemovesAnExtensionAndDependentExtensions()
+    {
+        $this->remover->findDependentExtensions(['foo'])->willReturn([
+            'bar',
+            'baz'
+        ]);
+
+        $this->remover->removeExtension('foo')->shouldBeCalled();
+        $this->remover->removeExtension('bar')->shouldBeCalled();
+        $this->remover->removeExtension('baz')->shouldBeCalled();
+        $this->remover->installForceUpdate()->shouldBeCalled();
+
+
+        $this->tester->execute([
+            'extension' => ['foo'],
+        ], [
+            'interactive' => false,
+        ]);
+
+        $this->assertEquals(0, $this->tester->getStatusCode());
+    }
 }

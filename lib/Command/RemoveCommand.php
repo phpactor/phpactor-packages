@@ -32,16 +32,13 @@ class RemoveCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $style = new SymfonyStyle($input, $output);
-
-        $extensionNames = $this->resolveExtensionNamesToRemove($input, $style);
-
-        if (null === $extensionNames) {
-            return 0;
-        }
+        $extensionNames = $this->resolveExtensionNamesToRemove(
+            $input,
+            new SymfonyStyle($input, $output)
+        );
 
         $this->removeExtensions($extensionNames, $output);
-        $this->runInstall($input);
+        $this->remover->installForceUpdate();
     }
 
     private function removeExtensions(array $extensions, OutputInterface $output)
@@ -52,15 +49,6 @@ class RemoveCommand extends Command
         }
     }
 
-    private function runInstall(InputInterface $input): void
-    {
-        if (count((array) $input->getArgument(self::ARG_EXTENSION_NAME))) {
-            $this->remover->installForceUpdate();
-            return;
-        }
-        
-        $this->remover->install();
-    }
 
     private function resolveExtensionNamesToRemove(InputInterface $input, SymfonyStyle $style): ?array
     {
@@ -70,10 +58,13 @@ class RemoveCommand extends Command
         if ($dependents) {
             $style->text(sprintf('Package(s) "<info>%s</>" depends on the following packages:', implode('</>", "<info>', $extensionNames)));
             $style->listing($dependents);
-            $response = $style->confirm('Remove all of the above packages?', false);
-        
-            if (false === $response) {
-                return null;
+
+            if ($input->isInteractive()) {
+                $response = $style->confirm('Remove all of the above packages?', false);
+            
+                if (false === $response) {
+                    return null;
+                }
             }
         }
         
