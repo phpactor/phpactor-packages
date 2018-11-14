@@ -79,10 +79,10 @@ class ExtensionManagerExtension implements Extension
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:list' ] ]);
 
         $container->register('extension_manager.command.update', function (Container $container) {
-            return new UpdateCommand($container->get('extension_manager.installer'));
+            return new UpdateCommand($container->get('extension_manager.service.installer'));
         }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'extension:update' ] ]);
 
-        $container->register('extension_manager.command.update', function (Container $container) {
+        $container->register('extension_manager.command.remove', function (Container $container) {
             return new RemoveCommand(
                 $container->get('extension_manager.service.remover')
             );

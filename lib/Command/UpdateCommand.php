@@ -2,7 +2,7 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Composer\Installer;
+use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -10,11 +10,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 class UpdateCommand extends Command
 {
     /**
-     * @var Installer
+     * @var InstallerService
      */
     private $installer;
 
-    public function __construct(Installer $installer)
+    public function __construct(InstallerService $installer)
     {
         parent::__construct();
         $this->installer = $installer;
@@ -27,7 +27,6 @@ class UpdateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->installer->setUpdate(true);
-        $this->installer->run();
+        $this->installer->installForceUpdate();
     }
 }

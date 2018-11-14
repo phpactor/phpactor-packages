@@ -50,6 +50,14 @@ class CommandsTest extends TestCase
         $this->assertEquals(0, $exit);
     }
 
+    public function testUpdate()
+    {
+        [$exit, $out] = $this->runCommand([
+            'command' => 'extension:update',
+        ]);
+        $this->assertEquals(0, $exit);
+    }
+
     private function runCommand(array $params): array
     {
         $container = PhpactorContainer::fromExtensions([
