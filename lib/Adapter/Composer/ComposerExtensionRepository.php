@@ -3,6 +3,7 @@
 namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 
 use Composer\Package\AliasPackage;
+use Composer\Package\CompletePackageInterface;
 use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
@@ -28,7 +29,7 @@ class ComposerExtensionRepository implements ExtensionRepository
      */
     public function extensions(): array
     {
-        return array_map(function (PackageInterface $package) {
+        return array_map(function (CompletePackageInterface $package) {
             return Extension::fromPackage($package);
         }, self::filter($this->repository->getPackages()));
     }
@@ -52,27 +53,27 @@ class ComposerExtensionRepository implements ExtensionRepository
             ));
         }
 
+        if (!$package instanceof CompletePackageInterface) {
+            throw new RuntimeException(sprintf(
+                'Package must be a complete package, got "%s"',
+                get_class($package)
+            ));
+        }
+
         return Extension::fromPackage($package);
     }
 
     /**
      * @param PackageInterface[] $packages
+     * @return CompletePackageInterface[]
      */
-    private static function filter(iterable $packages): array
+    private static function filter(array $packages): array
     {
-        $filtered = [];
-        foreach ($packages as $package) {
-            if ($package instanceof AliasPackage) {
-                continue;
-            }
-
-            if ($package->getType() !== self::TYPE) {
-                continue;
-            }
-
-            $filtered[] = $package;
-        };
-
-        return $filtered;
+        return array_filter($packages, function (PackageInterface $package) {
+            return
+                $package->getType() === self::TYPE &&
+                !$package instanceof AliasPackage &&
+                $package instanceof CompletePackageInterface;
+        });
     }
 }

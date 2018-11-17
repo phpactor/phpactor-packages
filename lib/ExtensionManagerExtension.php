@@ -18,7 +18,6 @@ use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerRemoveExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\LazyComposerInstaller;
 use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
@@ -210,12 +209,6 @@ class ExtensionManagerExtension implements Extension
         });
         $container->register('extension_manager.model.extension_repository', function (Container $container) {
             return new ComposerExtensionRepository($container->get('extension_manager.repository.combined'));
-        });
-        $container->register('extension_manager.model.remove_extension', function (Container $container) {
-            return new ComposerRemoveExtension(
-                $container->get('extension_manager.repository.combined'),
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
-            );
         });
     }
 

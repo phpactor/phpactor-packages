@@ -59,7 +59,7 @@ class RemoveCommand extends Command
         $dependents = $this->remover->findDependentExtensions($extensionNames);
         
         if ($dependents) {
-            $style->text(sprintf('Package(s) "<info>%s</>" is dependency of the following packages:', implode('</>", "<info>', $extensionNames)));
+            $style->text(sprintf('Package(s) "<info>%s</>" are dependencies of the following packages:', implode('</>", "<info>', $extensionNames)));
             $style->listing($dependents);
 
             if ($input->isInteractive()) {

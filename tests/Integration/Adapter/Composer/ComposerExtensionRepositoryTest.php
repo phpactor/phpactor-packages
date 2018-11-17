@@ -64,7 +64,7 @@ EOT
     public function testReturnsAllInstalledExtensions()
     {
         $extensions = $this->repository->extensions();
-        $this->assertGreaterThan(0, count($extensions));
+        $this->assertCount(1, $extensions);
         $this->assertContainsOnlyInstancesOf(Extension::class, $extensions);
     }
 
