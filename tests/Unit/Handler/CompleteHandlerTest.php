@@ -39,6 +39,6 @@ class CompleteHandlerTest extends TestCase
             [
                 'name' => 'bbb',
             ],
-        ], $action->value());
+        ], $action->value()['suggestions']);
     }
 }
