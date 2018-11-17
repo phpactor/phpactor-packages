@@ -39,6 +39,10 @@ class ComposerExtensionConfig implements ExtensionConfig
         }
 
         unset($this->config['require'][$extension]);
+
+        if (empty($this->config['require'])) {
+            unset($this->config['require']);
+        }
     }
 
     public function commit(): void
@@ -57,7 +61,7 @@ class ComposerExtensionConfig implements ExtensionConfig
         $contents = (string) file_get_contents($this->path);
         $config = json_decode($contents, true);
 
-        if (false === $config) {
+        if (null === $config) {
             throw new RuntimeException(sprintf(
                 'Invalid JSON file "%s"', $this->path
             ));

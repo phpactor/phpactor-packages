@@ -26,7 +26,7 @@ class Extension
      */
     private $dependencies;
 
-    public function __construct(string $name, string $version, string $description, array $dependencies)
+    public function __construct(string $name, string $version, string $description, array $dependencies = [])
     {
         $this->name = $name;
         $this->version = $version;
@@ -36,7 +36,7 @@ class Extension
 
     public static function fromPackage(CompletePackageInterface $package)
     {
-        return new self($package->getName(), $package->getFullPrettyVersion(), $package->getDescription());
+        return new self($package->getName(), $package->getFullPrettyVersion(), $package->getDescription(), $package->getRequires());
     }
 
     public function name(): string

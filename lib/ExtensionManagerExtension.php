@@ -15,7 +15,8 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
-use Phpactor\Extension\ExtensionManager\Model\DepdendentExtensionFinder;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerRemoveExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
@@ -196,7 +197,10 @@ class ExtensionManagerExtension implements Extension
             return new LazyComposerInstaller($container);
         });
         $container->register('extension_manager.model.dependency_finder', function (Container $container) {
-            return new DepdendentExtensionFinder($container->get('extension_manager.repository.combined'));
+            return new DependentExtensionFinder($container->get('extension_manager.model.extension_repository'));
+        });
+        $container->register('extension_manager.model.extension_repository', function (Container $container) {
+            return new ComposerExtensionRepository($container->get('extension_manager.repository.combined'));
         });
         $container->register('extension_manager.model.remove_extension', function (Container $container) {
             return new ComposerRemoveExtension(
@@ -232,7 +236,7 @@ class ExtensionManagerExtension implements Extension
 
         $container->register('extension_manager.service.lister', function (Container $container) {
             return new ExtensionLister(
-                $container->get('extension_manager.repository.combined')
+                $container->get('extension_manager.model.extension_repository')
             );
         });
 

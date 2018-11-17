@@ -5,16 +5,17 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 use Composer\Package\CompletePackageInterface;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
 
 class ExtensionLister
 {
     /**
-     * @var RepositoryInterface
+     * @var ExtensionRepository
      */
     private $repository;
 
-    public function __construct(RepositoryInterface $repository)
+    public function __construct(ExtensionRepository $repository)
     {
         $this->repository = $repository;
     }
@@ -24,8 +25,6 @@ class ExtensionLister
      */
     public function list(): array
     {
-        return array_map(function (CompletePackageInterface $package) {
-            return Extension::fromPackage($package);
-        }, PackageFilter::filter($this->repository->getPackages()));
+        return $this->repository->extensions();
     }
 }

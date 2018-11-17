@@ -2,28 +2,16 @@
 
 namespace Phpactor\Extension\ExtensionManager\Tests\Integration;
 
-use PHPUnit\Framework\TestCase;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
-use Phpactor\TestUtils\Workspace;
+use Phpactor\Extension\ExtensionManager\Tests\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class CommandsTest extends TestCase
 {
-    /**
-     * @var Workspace
-     */
-    private $workspace;
-
-    public function setUp()
-    {
-        $this->workspace = Workspace::create(__DIR__ . '/../Workspace');
-        $this->workspace->reset();
-    }
-
     public function testInstall()
     {
         [$exit, $out] = $this->runCommand([
@@ -35,18 +23,31 @@ class CommandsTest extends TestCase
     public function testRemove()
     {
         [$exit, $out] = $this->runCommand([
+            'command' => 'extension:install',
+           'extension' =>  'phpactor/logging-extension'
+       ]);
+
+        $this->assertEquals(0, $exit);
+        [$exit, $out] = $this->runCommand([
             'command' => 'extension:remove',
-            'extension' =>  [ 'phpactor/not-exist-extension' ],
+            'extension' =>  [ 'phpactor/logging-extension' ],
         ]);
-        $this->assertContains('Could not find', $out->fetch());
-        $this->assertEquals(1, $exit);
+        $this->assertEquals(0, $exit);
     }
 
     public function testList()
     {
         [$exit, $out] = $this->runCommand([
+            'command' => 'extension:install',
+           'extension' =>  'phpactor/logging-extension'
+        ]);
+        $this->assertEquals(0, $exit);
+
+        [$exit, $out] = $this->runCommand([
             'command' => 'extension:list',
         ]);
+
+        $this->assertContains('logging-extension', $out);
         $this->assertEquals(0, $exit);
     }
 
@@ -77,6 +78,6 @@ class CommandsTest extends TestCase
         $output = new BufferedOutput();
         $exit = $application->run(new ArrayInput($params), $output);
 
-        return [$exit, $output];
+        return [$exit, $output->fetch()];
     }
 }

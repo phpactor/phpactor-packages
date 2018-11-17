@@ -6,7 +6,7 @@ use Composer\Package\Link;
 use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\ExtensionManager\Model\DepdendentExtensionFinder;
+use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use RuntimeException;
@@ -33,7 +33,7 @@ class DepdendentExtensionFinderTest extends TestCase
     public function setUp()
     {
         $this->repository = $this->prophesize(ExtensionRepository::class);
-        $this->finder = new DepdendentExtensionFinder($this->repository->reveal());
+        $this->finder = new DependentExtensionFinder($this->repository->reveal());
         $this->extension = $this->prophesize(Extension::class);
         $this->extension->name()->willReturn(self::EXAMPLE_PACKAGE);
     }

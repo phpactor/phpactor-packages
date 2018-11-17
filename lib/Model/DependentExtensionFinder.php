@@ -5,7 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\Model;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use RuntimeException;
 
-class DepdendentExtensionFinder
+class DependentExtensionFinder
 {
     private $repository;
 
