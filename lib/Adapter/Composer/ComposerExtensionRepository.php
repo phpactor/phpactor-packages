@@ -39,14 +39,16 @@ class ComposerExtensionRepository implements ExtensionRepository
 
         if (!$package) {
             throw new RuntimeException(sprintf(
-                'Could not find package "%s"', $extension
+                'Could not find package "%s"',
+                $extension
             ));
         }
 
         if ($package->getType() !== self::TYPE) {
             throw new RuntimeException(sprintf(
                 'Package is not a "%s" type, it is a "%s"',
-                self::TYPE, $package->getType()
+                self::TYPE,
+                $package->getType()
             ));
         }
 
@@ -60,7 +62,6 @@ class ComposerExtensionRepository implements ExtensionRepository
     {
         $filtered = [];
         foreach ($packages as $package) {
-
             if ($package instanceof AliasPackage) {
                 continue;
             }

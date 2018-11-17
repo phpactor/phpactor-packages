@@ -24,10 +24,10 @@ class CommandsTest extends TestCase
     {
         [$exit, $out] = $this->runCommand([
             'command' => 'extension:install',
-           'extension' =>  'phpactor/logging-extension'
-       ]);
-
+            'extension' =>  'phpactor/logging-extension'
+        ]);
         $this->assertEquals(0, $exit);
+
         [$exit, $out] = $this->runCommand([
             'command' => 'extension:remove',
             'extension' =>  [ 'phpactor/logging-extension' ],
@@ -39,7 +39,7 @@ class CommandsTest extends TestCase
     {
         [$exit, $out] = $this->runCommand([
             'command' => 'extension:install',
-           'extension' =>  'phpactor/logging-extension'
+            'extension' =>  'phpactor/logging-extension'
         ]);
         $this->assertEquals(0, $exit);
 

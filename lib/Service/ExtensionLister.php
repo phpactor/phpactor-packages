@@ -2,11 +2,8 @@
 
 namespace Phpactor\Extension\ExtensionManager\Service;
 
-use Composer\Package\CompletePackageInterface;
-use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
-use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
 
 class ExtensionLister
 {

@@ -22,5 +22,4 @@ class TestCase extends PHPUnitTestCase
     {
         $this->workspace->reset();
     }
-
 }

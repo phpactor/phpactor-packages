@@ -2,14 +2,10 @@
 
 namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Model;
 
-use Composer\Package\Link;
-use Composer\Package\PackageInterface;
-use Composer\Repository\RepositoryInterface;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
-use RuntimeException;
 
 class DepdendentExtensionFinderTest extends TestCase
 {

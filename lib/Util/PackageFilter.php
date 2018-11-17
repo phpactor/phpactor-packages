@@ -17,7 +17,6 @@ class PackageFilter
     {
         $filtered = [];
         foreach ($packages as $package) {
-
             if ($package instanceof AliasPackage) {
                 continue;
             }

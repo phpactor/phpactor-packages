@@ -54,7 +54,8 @@ class ComposerExtensionConfig implements ExtensionConfig
     {
         if (!file_exists($this->path)) {
             throw new RuntimeException(sprintf(
-                'Extension config "%s" does not exist', $this->path
+                'Extension config "%s" does not exist',
+                $this->path
             ));
         }
 
@@ -63,7 +64,8 @@ class ComposerExtensionConfig implements ExtensionConfig
 
         if (null === $config) {
             throw new RuntimeException(sprintf(
-                'Invalid JSON file "%s"', $this->path
+                'Invalid JSON file "%s"',
+                $this->path
             ));
         }
 

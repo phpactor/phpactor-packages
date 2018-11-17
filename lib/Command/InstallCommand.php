@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;

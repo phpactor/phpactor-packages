@@ -24,7 +24,8 @@ class ComposerVersionFinder implements VersionFinder
 
         if (is_bool($package)) {
             throw new RuntimeException(sprintf(
-                'Could not find suitable version for extension "%s"', $extensionName
+                'Could not find suitable version for extension "%s"',
+                $extensionName
             ));
         }
 

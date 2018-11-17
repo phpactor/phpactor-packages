@@ -4,7 +4,6 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Adapter\Composer;
 
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Tests\TestCase;
-use Phpactor\TestUtils\Workspace;
 use RuntimeException;
 
 class ComposerExtensionConfigTest extends TestCase

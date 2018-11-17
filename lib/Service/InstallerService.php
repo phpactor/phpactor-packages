@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Service;
 
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
