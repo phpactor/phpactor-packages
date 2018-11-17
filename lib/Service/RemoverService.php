@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
-use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;

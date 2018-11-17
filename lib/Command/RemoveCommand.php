@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
@@ -66,7 +65,8 @@ class RemoveCommand extends Command
             if ($primaryDependents->count()) {
                 throw new RuntimeException(sprintf(
                     'Package(s) "%s" depend on "%s" and are primary extension(s) - they cannot be removed',
-                    implode('", "', $primaryDependents->names()), implode('", "', $extensionNames)
+                    implode('", "', $primaryDependents->names()),
+                    implode('", "', $extensionNames)
                 ));
             }
 
