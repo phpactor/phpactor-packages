@@ -5,8 +5,10 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
+use RuntimeException;
 
 class RemoverService
 {
@@ -25,14 +27,21 @@ class RemoverService
      */
     private $config;
 
+    /**
+     * @var ExtensionRepository
+     */
+    private $repository;
+
     public function __construct(
         Installer $installer,
         DependentExtensionFinder $finder,
+        ExtensionRepository $repository,
         ExtensionConfig $config
     ) {
         $this->installer = $installer;
         $this->finder = $finder;
         $this->config = $config;
+        $this->repository = $repository;
     }
 
     public function findDependentExtensions(array $extensionNames): array
@@ -52,9 +61,17 @@ class RemoverService
         $this->installer->installForceUpdate();
     }
 
-    public function removeExtension($extension)
+    public function removeExtension(string $extensionName): void
     {
-        $this->config->unrequire($extension);
+        $extension = $this->repository->find($extensionName);
+
+        if ($extension->isPrimary()) {
+            throw new RuntimeException(
+                'Extension is a primary extension and cannot be removed'
+            );
+        }
+
+        $this->config->unrequire($extensionName);
         $this->config->commit();
     }
 }
