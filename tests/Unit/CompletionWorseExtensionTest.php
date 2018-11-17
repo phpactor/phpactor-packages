@@ -5,7 +5,7 @@ namespace Phpactor\Extension\CompletionWorse\Tests\Unit;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Container\PhpactorContainer;
-use Phpactor\Exension\Logger\LoggingExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\CompletionWorse\CompletionWorseExtension;
 use Phpactor\Extension\Completion\CompletionExtension;
