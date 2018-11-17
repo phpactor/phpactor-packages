@@ -7,7 +7,7 @@ use Phpactor\ClassFileConverter\Domain\ClassName;
 use Phpactor\ClassFileConverter\Domain\ClassToFileFileToClass;
 use Phpactor\Container\Container;
 use Phpactor\Container\PhpactorContainer;
-use Phpactor\Exension\Logger\LoggingExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
