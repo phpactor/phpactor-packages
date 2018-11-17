@@ -3,6 +3,7 @@
 namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
+use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
@@ -36,7 +37,9 @@ class RemoverService
 
     public function findDependentExtensions(array $extensionNames): array
     {
-        return $this->finder->findDependentExtensions($extensionNames);
+        return array_map(function (Extension $extension) {
+            return $extension->name();
+        }, $this->finder->findDependentExtensions($extensionNames));
     }
 
     public function install()

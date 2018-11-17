@@ -3,6 +3,7 @@
 namespace Phpactor\Extension\ExtensionManager\Model;
 
 use Composer\Package\CompletePackageInterface;
+use Composer\Package\Link;
 
 class Extension
 {
@@ -36,7 +37,10 @@ class Extension
 
     public static function fromPackage(CompletePackageInterface $package)
     {
-        return new self($package->getName(), $package->getFullPrettyVersion(), $package->getDescription(), $package->getRequires());
+        $dependencies = array_map(function (Link $link) {
+            return $link->getTarget();
+        }, $package->getRequires());
+        return new self($package->getName(), $package->getFullPrettyVersion(), $package->getDescription(), $dependencies);
     }
 
     public function name(): string

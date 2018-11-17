@@ -37,6 +37,10 @@ class RemoveCommand extends Command
             new SymfonyStyle($input, $output)
         );
 
+        if (null === $extensionNames) {
+            return 0;
+        }
+
         $this->removeExtensions($extensionNames, $output);
         $this->remover->installForceUpdate();
     }
@@ -49,14 +53,13 @@ class RemoveCommand extends Command
         }
     }
 
-
     private function resolveExtensionNamesToRemove(InputInterface $input, SymfonyStyle $style): ?array
     {
         $extensionNames = (array) $input->getArgument(self::ARG_EXTENSION_NAME);
         $dependents = $this->remover->findDependentExtensions($extensionNames);
         
         if ($dependents) {
-            $style->text(sprintf('Package(s) "<info>%s</>" depends on the following packages:', implode('</>", "<info>', $extensionNames)));
+            $style->text(sprintf('Package(s) "<info>%s</>" is dependency of the following packages:', implode('</>", "<info>', $extensionNames)));
             $style->listing($dependents);
 
             if ($input->isInteractive()) {
