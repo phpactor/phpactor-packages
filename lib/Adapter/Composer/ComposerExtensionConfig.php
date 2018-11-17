@@ -27,7 +27,19 @@ class ComposerExtensionConfig implements ExtensionConfig
      */
     private $repositories;
 
+    /**
+     * @var string
+     */
+    private $rootPackageName;
+
+    /**
+     * @var string
+     */
+    private $vendorDir;
+
     public function __construct(
+        string $rootPackageName,
+        string $vendorDir,
         string $path,
         string $minimumStability = null,
         array $repositories = []
@@ -36,6 +48,8 @@ class ComposerExtensionConfig implements ExtensionConfig
         $this->path = $path;
         $this->minimumStability = $minimumStability;
         $this->repositories = $repositories;
+        $this->rootPackageName = $rootPackageName;
+        $this->vendorDir = $vendorDir;
         $this->config = $this->read();
     }
 
@@ -75,8 +89,15 @@ class ComposerExtensionConfig implements ExtensionConfig
         return $config;
     }
 
-    private function configure($config)
+    private function configure(array $config): array
     {
+        if (!isset($config['config'])) {
+            $config['config'] = [];
+        }
+
+        $config['config']['name'] = $this->rootPackageName;
+        $config['config']['vendor-dir'] = $this->vendorDir;
+
         if ($this->minimumStability) {
             $config['minimum-stability'] = $this->minimumStability;
         }
@@ -110,10 +131,7 @@ class ComposerExtensionConfig implements ExtensionConfig
     private function readFile()
     {
         if (!file_exists($this->path)) {
-            throw new RuntimeException(sprintf(
-                'Extension config "%s" does not exist',
-                $this->path
-            ));
+            return '{}';
         }
         
         $contents = (string) file_get_contents($this->path);

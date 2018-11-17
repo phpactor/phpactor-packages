@@ -60,7 +60,7 @@ class ExtensionManagerExtension implements Extension
 
         $resolver->setDefaults([
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
-            self::PARAM_MINIMUM_STABILITY => false,
+            self::PARAM_MINIMUM_STABILITY => null,
             self::PARAM_REPOSITORIES => [],
         ]);
     }
@@ -190,6 +190,8 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.adapter.composer.extension_config', function (Container $container) {
             return new ComposerExtensionConfig(
+                $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
+                $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
                 $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->getParameter(self::PARAM_MINIMUM_STABILITY),
                 $container->getParameter(self::PARAM_REPOSITORIES)
@@ -261,21 +263,10 @@ class ExtensionManagerExtension implements Extension
     {
         $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
         
-        if (file_exists($path)) {
-            return;
-        }
-
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
 
-
-        file_put_contents($path, json_encode([
-            'config' => [
-                'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
-                'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
-            ]
-        ], JSON_PRETTY_PRINT));
         /** @var ExtensionConfig $config */
         $config = $container->get('extension_manager.adapter.composer.extension_config');
         $config->commit();
