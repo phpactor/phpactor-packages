@@ -40,7 +40,12 @@ class Extension
         $dependencies = array_map(function (Link $link) {
             return $link->getTarget();
         }, $package->getRequires());
-        return new self($package->getName(), $package->getFullPrettyVersion(), $package->getDescription(), $dependencies);
+        return new self(
+            $package->getName(),
+            $package->getFullPrettyVersion(),
+            $package->getDescription() ?: '',
+            $dependencies
+        );
     }
 
     public function name(): string

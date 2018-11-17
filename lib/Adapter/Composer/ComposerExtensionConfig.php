@@ -22,10 +22,20 @@ class ComposerExtensionConfig implements ExtensionConfig
      */
     private $minimumStability;
 
-    public function __construct(string $path, string $minimumStability = null)
+    /**
+     * @var array
+     */
+    private $repositories;
+
+    public function __construct(
+        string $path,
+        string $minimumStability = null,
+        array $repositories = []
+    )
     {
         $this->path = $path;
         $this->minimumStability = $minimumStability;
+        $this->repositories = $repositories;
         $this->config = $this->read();
     }
 
@@ -69,6 +79,16 @@ class ComposerExtensionConfig implements ExtensionConfig
     {
         if ($this->minimumStability) {
             $config['minimum-stability'] = $this->minimumStability;
+        }
+
+        if ($this->repositories) {
+            if (!isset($config['repositories'])) {
+                $config['repositories'] = [];
+            }
+
+            foreach ($this->repositories as $repository) {
+                $config['repositories'][] = $repository;
+            }
         }
 
         return $config;

@@ -16,9 +16,43 @@ class ComposerExtensionRepositoryTest extends IntegrationTestCase
     {
         parent::setUp();
 
+        $this->loadProject('Extension', <<<'EOT'
+// File: composer.json
+{
+    "name": "test/extension",
+    "type": "phpactor-extension",
+    "extra": {
+        "phpactor.extension_class": "Foo"
+    },
+    "require": {
+        "test/library": "*"
+    }
+}
+EOT
+        );
+        $this->loadProject('Library', <<<'EOT'
+// File: composer.json
+{
+    "name": "test/library"
+}
+EOT
+        );
+
         /** @var InstallerService $installer */
-        $installer = $this->container()->get('extension_manager.service.installer');
-        $installer->addExtension('phpactor/console-extension');
+        $installer = $this->container([
+            'extension_manager.minimum_stability' => 'dev',
+            'extension_manager.repositories' => [
+                [
+                    'type' => 'path',
+                    'url' => $this->workspace->path('Extension'),
+                ],
+                [
+                    'type' => 'path',
+                    'url' => $this->workspace->path('Library'),
+                ]
+            ]
+        ])->get('extension_manager.service.installer');
+        $installer->addExtension('test/extension');
         $installer->install();
     }
 
@@ -40,7 +74,7 @@ class ComposerExtensionRepositoryTest extends IntegrationTestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('it is a "library"');
-        $this->createRepository()->find('symfony/console');
+        $this->createRepository()->find('test/library');
     }
 
     private function createRepository(): ComposerExtensionRepository

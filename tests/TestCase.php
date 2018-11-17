@@ -22,4 +22,17 @@ class TestCase extends PHPUnitTestCase
     {
 //        $this->workspace->reset();
     }
+
+    public function loadProject(string $name, string $manifest)
+    {
+        $projectWorkspace = Workspace::create($this->workspace->path($name));
+        $projectWorkspace->reset();
+        $projectWorkspace->loadManifest($manifest);
+        $dir = getcwd();
+        chdir($projectWorkspace->path('/'));
+        exec('git init');
+        exec('git add -A');
+        exec('git commit -m "first"');
+        chdir($dir);
+    }
 }

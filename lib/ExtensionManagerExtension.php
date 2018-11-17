@@ -26,6 +26,7 @@ use Phpactor\Extension\ExtensionManager\Command\ListCommand;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
 use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
@@ -45,7 +46,8 @@ class ExtensionManagerExtension implements Extension
     const PARAM_ROOT_PACKAGE_NAME = 'extension_manager.root_package_name';
     const PARAM_EXTENSION_CONFIG_FILE = 'extension_manager.config_path';
     const PARAM_VENDOR_DIR = 'extension_manager.vendor_dir';
-    const PARAM_ALLOW_DEV = 'extension_manager.allow_dev';
+    const PARAM_MINIMUM_STABILITY = 'extension_manager.minimum_stability';
+    const PARAM_REPOSITORIES = 'extension_manager.repositories';
 
     public function configure(Resolver $resolver): void
     {
@@ -58,7 +60,8 @@ class ExtensionManagerExtension implements Extension
 
         $resolver->setDefaults([
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
-            self::PARAM_ALLOW_DEV => false,
+            self::PARAM_MINIMUM_STABILITY => false,
+            self::PARAM_REPOSITORIES => [],
         ]);
     }
 
@@ -187,7 +190,9 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.adapter.composer.extension_config', function (Container $container) {
             return new ComposerExtensionConfig(
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
+                $container->getParameter(self::PARAM_MINIMUM_STABILITY),
+                $container->getParameter(self::PARAM_REPOSITORIES)
             );
         });
         $container->register('extension_manager.adapter.composer.version_finder', function (Container $container) {
@@ -264,11 +269,15 @@ class ExtensionManagerExtension implements Extension
             mkdir(dirname($path), 0777, true);
         }
 
+
         file_put_contents($path, json_encode([
             'config' => [
                 'name' => $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
                 'vendor-dir' => $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
             ]
         ], JSON_PRETTY_PRINT));
+        /** @var ExtensionConfig $config */
+        $config = $container->get('extension_manager.adapter.composer.extension_config');
+        $config->commit();
     }
 }
