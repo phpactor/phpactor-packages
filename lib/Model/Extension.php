@@ -38,8 +38,7 @@ class Extension
         string $description,
         array $dependencies = [],
         bool $isPrimary = false
-    )
-    {
+    ) {
         $this->name = $name;
         $this->version = $version;
         $this->description = $description;

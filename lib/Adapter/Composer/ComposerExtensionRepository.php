@@ -69,12 +69,7 @@ class ComposerExtensionRepository implements ExtensionRepository
             ));
         }
 
-        return Extension::fromPackage($package);
-    }
-
-    public function has(string $extension): bool
-    {
-        return null !== $this->findPackage($extension);
+        return Extension::fromPackage($package, $this->belongsToPrimaryRepository($package));
     }
 
     /**
@@ -98,7 +93,6 @@ class ComposerExtensionRepository implements ExtensionRepository
 
     private function findPackage(string $extension): ?PackageInterface
     {
-        $package = $this->repository->findPackage($extension, '*');
-        return $package;
+        return $this->repository->findPackage($extension, '*');
     }
 }
