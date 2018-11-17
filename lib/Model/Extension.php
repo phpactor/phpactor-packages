@@ -21,11 +21,17 @@ class Extension
      */
     private $description;
 
-    public function __construct(string $name, string $version, string $description)
+    /**
+     * @var array
+     */
+    private $dependencies;
+
+    public function __construct(string $name, string $version, string $description, array $dependencies)
     {
         $this->name = $name;
         $this->version = $version;
         $this->description = $description;
+        $this->dependencies = $dependencies;
     }
 
     public static function fromPackage(CompletePackageInterface $package)
@@ -46,5 +52,10 @@ class Extension
     public function description(): string
     {
         return $this->description;
+    }
+
+    public function dependencies(): array
+    {
+        return $this->dependencies;
     }
 }

@@ -15,7 +15,7 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerDepdendentPackageFinder;
+use Phpactor\Extension\ExtensionManager\Model\DepdendentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerRemoveExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
@@ -196,7 +196,7 @@ class ExtensionManagerExtension implements Extension
             return new LazyComposerInstaller($container);
         });
         $container->register('extension_manager.model.dependency_finder', function (Container $container) {
-            return new ComposerDepdendentPackageFinder($container->get('extension_manager.repository.combined'));
+            return new DepdendentExtensionFinder($container->get('extension_manager.repository.combined'));
         });
         $container->register('extension_manager.model.remove_extension', function (Container $container) {
             return new ComposerRemoveExtension(

@@ -36,25 +36,26 @@ class InstallCommandTest extends TestCase
 
     public function testItInstallsASingleExtension()
     {
+        $this->installer->addExtension('foobar')->willReturn('foo-version')->shouldBeCalled();
+        $this->installer->installForceUpdate()->shouldBeCalled();
+
         $this->tester->execute([
             'extension' => [ 'foobar' ]
         ]);
 
-        $this->installer->addExtension('foobar')->shouldHaveBeenCalled();
-        $this->installer->installForceUpdate()->shouldHaveBeenCalled();
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }
 
     public function testItInstallsManyExtensions()
     {
+        $this->installer->addExtension('foobar')->willReturn('foo-version')->shouldBeCalled();
+        $this->installer->addExtension('barfoo')->willReturn('foo-version')->shouldBeCalled();
+        $this->installer->installForceUpdate()->shouldBeCalled();
+
         $this->tester->execute([
             'extension' => [ 'foobar', 'barfoo' ]
         ]);
-
-        $this->installer->addExtension('foobar')->shouldHaveBeenCalled();
-        $this->installer->addExtension('barfoo')->shouldHaveBeenCalled();
-        $this->installer->installForceUpdate()->shouldHaveBeenCalled();
 
         $this->assertEquals(0, $this->tester->getStatusCode());
     }
