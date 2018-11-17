@@ -2,9 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Tests\Integration\Adapter\Composer;
 
-use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionRepository;
-use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Tests\Integration\IntegrationTestCase;
@@ -18,7 +15,9 @@ class ComposerExtensionRepositoryTest extends IntegrationTestCase
     {
         parent::setUp();
 
-        $this->loadProject('Extension', <<<'EOT'
+        $this->loadProject(
+            'Extension',
+            <<<'EOT'
 // File: composer.json
 {
     "name": "test/extension",
@@ -32,7 +31,9 @@ class ComposerExtensionRepositoryTest extends IntegrationTestCase
 }
 EOT
         );
-        $this->loadProject('Library', <<<'EOT'
+        $this->loadProject(
+            'Library',
+            <<<'EOT'
 // File: composer.json
 {
     "name": "test/library"

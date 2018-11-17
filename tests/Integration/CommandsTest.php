@@ -2,10 +2,7 @@
 
 namespace Phpactor\Extension\ExtensionManager\Tests\Integration;
 
-use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
-use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
-use Phpactor\Extension\ExtensionManager\Tests\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -80,7 +77,9 @@ class CommandsTest extends IntegrationTestCase
 
     private function setupEnvironment()
     {
-        $this->loadProject('Extension', <<<'EOT'
+        $this->loadProject(
+            'Extension',
+            <<<'EOT'
 // File: composer.json
 {
     "name": "test/extension",

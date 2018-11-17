@@ -43,8 +43,7 @@ class ComposerExtensionConfig implements ExtensionConfig
         string $vendorDir,
         string $minimumStability = null,
         array $repositories = []
-    )
-    {
+    ) {
         $this->path = $path;
         $this->minimumStability = $minimumStability;
         $this->repositories = $repositories;
