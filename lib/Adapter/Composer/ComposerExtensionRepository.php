@@ -19,9 +19,15 @@ class ComposerExtensionRepository implements ExtensionRepository
      */
     private $repository;
 
-    public function __construct(RepositoryInterface $repository)
+    /**
+     * @var RepositoryInterface
+     */
+    private $primaryRepository;
+
+    public function __construct(RepositoryInterface $repository, RepositoryInterface $primaryRepository)
     {
         $this->repository = $repository;
+        $this->primaryRepository = $primaryRepository;
     }
 
     /**
@@ -30,13 +36,16 @@ class ComposerExtensionRepository implements ExtensionRepository
     public function extensions(): array
     {
         return array_map(function (CompletePackageInterface $package) {
-            return Extension::fromPackage($package);
+            return Extension::fromPackage(
+                $package,
+                $this->belongsToPrimaryRepository($package)
+            );
         }, self::filter($this->repository->getPackages()));
     }
 
     public function find(string $extension): Extension
     {
-        $package = $this->repository->findPackage($extension, '*');
+        $package = $this->findPackage($extension);
 
         if (!$package) {
             throw new RuntimeException(sprintf(
@@ -63,6 +72,11 @@ class ComposerExtensionRepository implements ExtensionRepository
         return Extension::fromPackage($package);
     }
 
+    public function has(string $extension): bool
+    {
+        return null !== $this->findPackage($extension);
+    }
+
     /**
      * @param PackageInterface[] $packages
      * @return CompletePackageInterface[]
@@ -75,5 +89,16 @@ class ComposerExtensionRepository implements ExtensionRepository
                 !$package instanceof AliasPackage &&
                 $package instanceof CompletePackageInterface;
         });
+    }
+
+    private function belongsToPrimaryRepository(CompletePackageInterface $package): bool
+    {
+        return null !== $this->primaryRepository->findPackage($package->getName(), '*');
+    }
+
+    private function findPackage(string $extension): ?PackageInterface
+    {
+        $package = $this->repository->findPackage($extension, '*');
+        return $package;
     }
 }

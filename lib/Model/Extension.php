@@ -27,15 +27,27 @@ class Extension
      */
     private $dependencies;
 
-    public function __construct(string $name, string $version, string $description, array $dependencies = [])
+    /**
+     * @var bool
+     */
+    private $isPrimary;
+
+    public function __construct(
+        string $name,
+        string $version,
+        string $description,
+        array $dependencies = [],
+        bool $isPrimary = false
+    )
     {
         $this->name = $name;
         $this->version = $version;
         $this->description = $description;
         $this->dependencies = $dependencies;
+        $this->isPrimary = $isPrimary;
     }
 
-    public static function fromPackage(CompletePackageInterface $package)
+    public static function fromPackage(CompletePackageInterface $package, bool $isPrimary = false)
     {
         $dependencies = array_map(function (Link $link) {
             return $link->getTarget();
@@ -44,7 +56,8 @@ class Extension
             $package->getName(),
             $package->getFullPrettyVersion(),
             $package->getDescription() ?: '',
-            $dependencies
+            $dependencies,
+            $isPrimary
         );
     }
 
@@ -66,5 +79,10 @@ class Extension
     public function dependencies(): array
     {
         return $this->dependencies;
+    }
+
+    public function isPrimary(): bool
+    {
+        return $this->isPrimary;
     }
 }

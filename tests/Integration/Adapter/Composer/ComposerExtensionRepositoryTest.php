@@ -68,6 +68,12 @@ EOT
         $this->assertContainsOnlyInstancesOf(Extension::class, $extensions);
     }
 
+    public function testHasPackage()
+    {
+        $this->assertTrue($this->repository->has('test/extension'));
+        $this->assertFalse($this->repository->has('test/foobar'));
+    }
+
     public function testThrowsExceptionWhenTryingToGetNonExistingRepository()
     {
         $this->expectException(RuntimeException::class);

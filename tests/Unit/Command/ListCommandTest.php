@@ -34,7 +34,7 @@ class ListCommandTest extends TestCase
         ]);
 
         $this->tester->execute([]);
-        $this->assertEquals(<<<'EOT'
+        $this->assertContains(<<<'EOT'
 +------+---------+-------------+
 | Name | Version | Description |
 +------+---------+-------------+

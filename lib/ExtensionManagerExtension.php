@@ -118,7 +118,7 @@ class ExtensionManagerExtension implements Extension
                 $container->get('extension_manager.io'),
                 $container->get('extension_manager.composer_for_installer')
             );
-            $installer->setAdditionalInstalledRepository($container->get('extension_manager.repository.local'));
+            $installer->setAdditionalInstalledRepository($container->get('extension_manager.repository.primary'));
 
             return $installer;
         });
@@ -147,13 +147,13 @@ class ExtensionManagerExtension implements Extension
             return new ConsoleOutput();
         });
 
-        $container->register('extension_manager.repository.local', function (Container $container) {
+        $container->register('extension_manager.repository.primary', function (Container $container) {
             return new InstalledFilesystemRepository(new JsonFile($this->repositoryFile($container)));
         });
 
         $container->register('extension_manager.repository.combined', function (Container $container) {
             return new CompositeRepository([
-                $container->get('extension_manager.repository.local'),
+                $container->get('extension_manager.repository.primary'),
                 new InstalledFilesystemRepository(new JsonFile($this->extensionRepositoryFile($container)))
             ]);
         });
@@ -216,7 +216,10 @@ class ExtensionManagerExtension implements Extension
             return new DependentExtensionFinder($container->get('extension_manager.model.extension_repository'));
         });
         $container->register('extension_manager.model.extension_repository', function (Container $container) {
-            return new ComposerExtensionRepository($container->get('extension_manager.repository.combined'));
+            return new ComposerExtensionRepository(
+                $container->get('extension_manager.repository.combined'),
+                $container->get('extension_manager.repository.primary')
+            );
         });
     }
 
@@ -240,6 +243,7 @@ class ExtensionManagerExtension implements Extension
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.adapter.composer.extension_config'),
+                $container->get('extension_manager.model.extension_repository'),
                 $container->get('extension_manager.adapter.composer.version_finder')
             );
         });

@@ -2,6 +2,7 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
+use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -34,13 +35,27 @@ class ListCommand extends Command
             'Version',
             'Description',
         ]);
+
         foreach ($this->lister->list() as $extension) {
             $table->addRow([
-                $extension->name(),
+                $this->formatName($extension),
                 $extension->version(),
                 $extension->description()
             ]);
         }
         $table->render();
+
+        $output->writeln('(*) fixed packages');
+    }
+
+    private function formatName(Extension $extension)
+    {
+        $name = $extension->name();
+
+        if ($extension->isPrimary()) {
+            return $name . '<comment>*</>';
+        }
+
+        return $name;
     }
 }
