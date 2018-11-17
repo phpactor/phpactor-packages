@@ -20,6 +20,7 @@ class IntegrationTestCase extends TestCase
             ExtensionManagerExtension::PARAM_EXTENSION_VENDOR_DIR => $this->workspace->path('vendordor-ext'),
             ExtensionManagerExtension::PARAM_EXTENSION_CONFIG_FILE => $this->workspace->path('extension.json'),
             ExtensionManagerExtension::PARAM_INSTALLED_EXTENSIONS_FILE => $this->workspace->path('installer.php'),
+            ExtensionManagerExtension::PARAM_QUIET => true,
         ], $params));
     }
 }

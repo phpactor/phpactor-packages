@@ -5,9 +5,6 @@ namespace Phpactor\Extension\ExtensionManager\Tests;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 use Phpactor\TestUtils\Workspace;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class TestCase extends PHPUnitTestCase
 {
     /**

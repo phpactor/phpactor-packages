@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager;
 use Composer\Composer;
 use Composer\DependencyResolver\Pool;
 use Composer\Factory;
+use Composer\IO\BufferIO;
 use Composer\IO\ConsoleIO;
 use Composer\Installer;
 use Composer\Json\JsonFile;
@@ -47,6 +48,7 @@ class ExtensionManagerExtension implements Extension
     const PARAM_VENDOR_DIR = 'extension_manager.vendor_dir';
     const PARAM_MINIMUM_STABILITY = 'extension_manager.minimum_stability';
     const PARAM_REPOSITORIES = 'extension_manager.repositories';
+    const PARAM_QUIET = 'extension_manager.quiet';
 
     public function configure(Resolver $resolver): void
     {
@@ -61,6 +63,7 @@ class ExtensionManagerExtension implements Extension
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
             self::PARAM_MINIMUM_STABILITY => null,
             self::PARAM_REPOSITORIES => [],
+            self::PARAM_QUIET => false,
         ]);
     }
 
@@ -124,6 +127,11 @@ class ExtensionManagerExtension implements Extension
             $helperSet  = new HelperSet([
                 'question' => new QuestionHelper(),
             ]);
+
+            if ($container->getParameter(self::PARAM_QUIET)) {
+                return new BufferIO();
+            }
+
             return new ConsoleIO(
                 $container->get('extension_manager.console.input'),
                 $container->get('extension_manager.console.output'),
