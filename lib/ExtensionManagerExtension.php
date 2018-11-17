@@ -45,6 +45,7 @@ class ExtensionManagerExtension implements Extension
     const PARAM_ROOT_PACKAGE_NAME = 'extension_manager.root_package_name';
     const PARAM_EXTENSION_CONFIG_FILE = 'extension_manager.config_path';
     const PARAM_VENDOR_DIR = 'extension_manager.vendor_dir';
+    const PARAM_ALLOW_DEV = 'extension_manager.allow_dev';
 
     public function configure(Resolver $resolver): void
     {
@@ -57,6 +58,7 @@ class ExtensionManagerExtension implements Extension
 
         $resolver->setDefaults([
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
+            self::PARAM_ALLOW_DEV => false,
         ]);
     }
 

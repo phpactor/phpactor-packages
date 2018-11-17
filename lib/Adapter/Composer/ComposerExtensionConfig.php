@@ -17,9 +17,15 @@ class ComposerExtensionConfig implements ExtensionConfig
      */
     private $config;
 
-    public function __construct(string $path)
+    /**
+     * @var string|null
+     */
+    private $minimumStability;
+
+    public function __construct(string $path, string $minimumStability = null)
     {
         $this->path = $path;
+        $this->minimumStability = $minimumStability;
         $this->config = $this->read();
     }
 
@@ -52,23 +58,45 @@ class ComposerExtensionConfig implements ExtensionConfig
 
     private function read(): array
     {
-        if (!file_exists($this->path)) {
-            throw new RuntimeException(sprintf(
-                'Extension config "%s" does not exist',
-                $this->path
-            ));
+        $config = $this->readFile();
+        $config = $this->decodeJson($config);
+        $config = $this->configure($config);
+
+        return $config;
+    }
+
+    private function configure($config)
+    {
+        if ($this->minimumStability) {
+            $config['minimum-stability'] = $this->minimumStability;
         }
 
-        $contents = (string) file_get_contents($this->path);
-        $config = json_decode($contents, true);
+        return $config;
+    }
 
+    private function decodeJson($contents)
+    {
+        $config = json_decode($contents, true);
+        
         if (null === $config) {
             throw new RuntimeException(sprintf(
                 'Invalid JSON file "%s"',
                 $this->path
             ));
         }
-
         return $config;
+    }
+
+    private function readFile()
+    {
+        if (!file_exists($this->path)) {
+            throw new RuntimeException(sprintf(
+                'Extension config "%s" does not exist',
+                $this->path
+            ));
+        }
+        
+        $contents = (string) file_get_contents($this->path);
+        return $contents;
     }
 }

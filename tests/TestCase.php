@@ -20,6 +20,6 @@ class TestCase extends PHPUnitTestCase
 
     public function tearDown()
     {
-        $this->workspace->reset();
+//        $this->workspace->reset();
     }
 }
