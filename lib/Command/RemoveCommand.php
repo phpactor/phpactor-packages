@@ -2,7 +2,9 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
+use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
+use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,9 +60,22 @@ class RemoveCommand extends Command
         $extensionNames = (array) $input->getArgument(self::ARG_EXTENSION_NAME);
         $dependents = $this->remover->findDependentExtensions($extensionNames);
         
-        if ($dependents) {
-            $style->text(sprintf('Package(s) "<info>%s</>" are dependencies of the following packages:', implode('</>", "<info>', $extensionNames)));
-            $style->listing($dependents);
+        if ($dependents->count()) {
+            $primaryDependents = $dependents->primaries();
+
+            if ($primaryDependents->count()) {
+                throw new RuntimeException(sprintf(
+                    'Package(s) "%s" depend on "%s" and are primary extension(s) - they cannot be removed',
+                    implode('", "', $primaryDependents->names()), implode('", "', $extensionNames)
+                ));
+            }
+
+            $style->text(sprintf(
+                'Package(s) "<info>%s</>" are dependencies of the following packages:',
+                implode('</>", "<info>', $extensionNames)
+            ));
+
+            $style->listing($dependents->names());
 
             if ($input->isInteractive()) {
                 $response = $style->confirm('Remove all of the above packages?', false);
@@ -71,6 +86,6 @@ class RemoveCommand extends Command
             }
         }
         
-        return array_merge($extensionNames, $dependents);
+        return array_merge($extensionNames, $dependents->names());
     }
 }

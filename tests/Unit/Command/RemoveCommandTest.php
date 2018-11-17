@@ -4,7 +4,10 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Command;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
+use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
+use RuntimeException;
 use Symfony\Component\Console\Tester\CommandTester;
 
 class RemoveCommandTest extends TestCase
@@ -28,7 +31,7 @@ class RemoveCommandTest extends TestCase
 
     public function testRemovesAnExtension()
     {
-        $this->remover->findDependentExtensions(['foo'])->willReturn([]);
+        $this->remover->findDependentExtensions(['foo'])->willReturn(new Extensions([]));
         $this->remover->removeExtension('foo')->shouldBeCalled();
         $this->remover->installForceUpdate()->shouldBeCalled();
 
@@ -42,10 +45,10 @@ class RemoveCommandTest extends TestCase
 
     public function testRemovesAnExtensionAndDependentExtensions()
     {
-        $this->remover->findDependentExtensions(['foo'])->willReturn([
-            'bar',
-            'baz'
-        ]);
+        $this->remover->findDependentExtensions(['foo'])->willReturn(new Extensions([
+            new Extension('bar', 'foo', 'desc'),
+            new Extension('baz', 'foo', 'desc'),
+        ]));
 
         $this->remover->removeExtension('foo')->shouldBeCalled();
         $this->remover->removeExtension('bar')->shouldBeCalled();
@@ -60,5 +63,21 @@ class RemoveCommandTest extends TestCase
         ]);
 
         $this->assertEquals(0, $this->tester->getStatusCode());
+    }
+
+    public function testFailsIfAnyOfTheDependentPackagesArePrimary()
+    {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('primary exten');
+        $this->remover->findDependentExtensions(['foo'])->willReturn(new Extensions([
+            new Extension('bar', 'foo', 'desc'),
+            new Extension('baz', 'foo', 'desc', [], true),
+        ]));
+
+        $this->tester->execute([
+            'extension' => ['foo'],
+        ], [
+            'interactive' => false,
+        ]);
     }
 }

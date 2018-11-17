@@ -75,8 +75,9 @@ class DepdendentExtensionFinderTest extends TestCase
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
         $this->assertCount(2, $dependants);
-        $this->assertEquals('zed', $dependants['zed']->name());
-        $this->assertEquals('zog', $dependants['zog']->name());
+        $dependants = iterator_to_array($dependants);
+        $this->assertEquals('zed', $dependants[0]->name());
+        $this->assertEquals('zog', $dependants[1]->name());
     }
 
     public function testReturnsDependenciesOfTheDependency()

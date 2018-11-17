@@ -11,10 +11,7 @@ class DependentExtensionFinder
         $this->repository = $repository;
     }
 
-    /**
-     * @return Extension[]
-     */
-    public function findDependentExtensions(array $extensions): array
+    public function findDependentExtensions(array $extensions): Extensions
     {
         $resolved = [];
         foreach ($extensions as $extension) {
@@ -22,12 +19,9 @@ class DependentExtensionFinder
             $resolved = array_merge($this->findDependentPackages($extension), $resolved);
         }
 
-        return $resolved;
+        return new Extensions($resolved);
     }
 
-    /**
-     * @return Extension[]
-     */
     private function findDependentPackages(string $sourcePackage, array $dependents = []): array
     {
         foreach ($this->repository->extensions() as $extension) {

@@ -6,6 +6,7 @@ use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\RemoveExtension;
 use RuntimeException;
@@ -44,11 +45,9 @@ class RemoverService
         $this->repository = $repository;
     }
 
-    public function findDependentExtensions(array $extensionNames): array
+    public function findDependentExtensions(array $extensionNames): Extensions
     {
-        return array_map(function (Extension $extension) {
-            return $extension->name();
-        }, $this->finder->findDependentExtensions($extensionNames));
+        return $this->finder->findDependentExtensions($extensionNames);
     }
 
     public function install()
