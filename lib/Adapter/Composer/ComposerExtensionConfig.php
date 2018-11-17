@@ -38,9 +38,9 @@ class ComposerExtensionConfig implements ExtensionConfig
     private $vendorDir;
 
     public function __construct(
+        string $path,
         string $rootPackageName,
         string $vendorDir,
-        string $path,
         string $minimumStability = null,
         array $repositories = []
     )
@@ -125,6 +125,7 @@ class ComposerExtensionConfig implements ExtensionConfig
                 $this->path
             ));
         }
+
         return $config;
     }
 

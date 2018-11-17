@@ -25,29 +25,28 @@ class ComposerExtensionConfigTest extends TestCase
         parent::setUp();
         $this->path = $this->workspace->path(self::EXAMPLE_PATH);
         file_put_contents($this->path, '{}');
-        $this->config = new ComposerExtensionConfig($this->path);
-    }
-
-    public function testThrowsExceptionifConfigFileDoesNotExist()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('does not exist');
-        new ComposerExtensionConfig(__DIR__ . '/no');
+        $this->config = new ComposerExtensionConfig(
+            $this->path,
+            'my-package',
+            dirname($this->path) .  '/vendorext'
+        );
     }
 
     public function testThrowsExceptionWithInvalidJson()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Invalid JSON');
+
         file_put_contents($this->path, 'asd');
-        new ComposerExtensionConfig($this->path);
+
+        new ComposerExtensionConfig($this->path, 'one', 'two');
     }
 
     public function testRequires()
     {
         $this->config->require('foo', 'bar');
         $this->config->commit();
-        $this->assertEquals([
+        $this->assertArraySubset([
             'require' => [
                 'foo' => 'bar'
             ]
@@ -62,8 +61,7 @@ class ComposerExtensionConfigTest extends TestCase
         $this->config->unrequire('foo');
         $this->config->commit();
 
-        $this->assertEquals([
-        ], $this->render());
+        $this->assertArrayNotHasKey('require', $this->render());
     }
 
     private function render(): array

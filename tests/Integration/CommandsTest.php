@@ -12,6 +12,18 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class CommandsTest extends IntegrationTestCase
 {
+    /**
+     * @var Container
+     */
+    private $container;
+    private $finder;
+
+    public function setUp()
+    {
+        parent::setUp();
+        $this->setupEnvironment();
+    }
+
     public function testInstall()
     {
         [$exit, $out] = $this->runCommand([
@@ -23,14 +35,8 @@ class CommandsTest extends IntegrationTestCase
     public function testRemove()
     {
         [$exit, $out] = $this->runCommand([
-            'command' => 'extension:install',
-            'extension' =>  'phpactor/logging-extension'
-        ]);
-        $this->assertEquals(0, $exit);
-
-        [$exit, $out] = $this->runCommand([
             'command' => 'extension:remove',
-            'extension' =>  [ 'phpactor/logging-extension' ],
+            'extension' =>  [ 'test/extension' ],
         ]);
         $this->assertEquals(0, $exit);
     }
@@ -39,7 +45,7 @@ class CommandsTest extends IntegrationTestCase
     {
         [$exit, $out] = $this->runCommand([
             'command' => 'extension:install',
-            'extension' =>  'phpactor/logging-extension'
+            'extension' =>  'test/extension'
         ]);
         $this->assertEquals(0, $exit);
 
@@ -47,7 +53,7 @@ class CommandsTest extends IntegrationTestCase
             'command' => 'extension:list',
         ]);
 
-        $this->assertContains('logging-extension', $out);
+        $this->assertContains('test/extension', $out);
         $this->assertEquals(0, $exit);
     }
 
@@ -61,23 +67,43 @@ class CommandsTest extends IntegrationTestCase
 
     private function runCommand(array $params): array
     {
-        $container = PhpactorContainer::fromExtensions([
-            ExtensionManagerExtension::class,
-            ConsoleExtension::class,
-        ], [
-            ExtensionManagerExtension::PARAM_VENDOR_DIR => $this->workspace->path('vendordor'),
-            ExtensionManagerExtension::PARAM_EXTENSION_VENDOR_DIR => $this->workspace->path('vendordor-ext'),
-            ExtensionManagerExtension::PARAM_EXTENSION_CONFIG_FILE => $this->workspace->path('extension.json'),
-            ExtensionManagerExtension::PARAM_INSTALLED_EXTENSIONS_FILE => $this->workspace->path('installer.php'),
-        ]);
         $application = new Application();
         $application->setAutoExit(false);
         $application->setCommandLoader(
-            $container->get(ConsoleExtension::SERVICE_COMMAND_LOADER)
+            $this->container->get(ConsoleExtension::SERVICE_COMMAND_LOADER)
         );
         $output = new BufferedOutput();
         $exit = $application->run(new ArrayInput($params), $output);
 
         return [$exit, $output->fetch()];
+    }
+
+    private function setupEnvironment()
+    {
+        $this->loadProject('Extension', <<<'EOT'
+// File: composer.json
+{
+    "name": "test/extension",
+    "type": "phpactor-extension",
+    "extra": {
+        "phpactor.extension_class": "Foo"
+    }
+}
+EOT
+        );
+
+        $this->container = $this->container([
+            'extension_manager.minimum_stability' => 'dev',
+            'extension_manager.repositories' => [
+                [
+                    'type' => 'path',
+                    'url' => $this->workspace->path('Extension'),
+                ]
+            ]
+        ]);
+        $installer = $this->container->get('extension_manager.service.installer');
+        $installer->addExtension('test/extension');
+        $installer->install();
+        $this->finder = $this->container->get('extension_manager.adapter.composer.version_finder');
     }
 }

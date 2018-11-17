@@ -163,7 +163,7 @@ class ExtensionManagerExtension implements Extension
             return $pool;
         });
 
-        $container->register('extension_manager.version_selector', function (Container $container) {
+        $container->register('extension_manager.composer.version_selector', function (Container $container) {
             return new VersionSelector($container->get('extension_manager.repository.pool'));
         });
     }
@@ -190,16 +190,16 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.adapter.composer.extension_config', function (Container $container) {
             return new ComposerExtensionConfig(
+                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
                 $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->getParameter(self::PARAM_MINIMUM_STABILITY),
                 $container->getParameter(self::PARAM_REPOSITORIES)
             );
         });
         $container->register('extension_manager.adapter.composer.version_finder', function (Container $container) {
             return new ComposerVersionFinder(
-                $container->get('extension_manager.version_selector')
+                $container->get('extension_manager.composer.version_selector')
             );
         });
         $container->register('extension_manager.model.installer', function (Container $container) {

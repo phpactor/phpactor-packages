@@ -12,6 +12,8 @@ use RuntimeException;
 
 class ComposerExtensionRepositoryTest extends IntegrationTestCase
 {
+    private $repository;
+
     public function setUp()
     {
         parent::setUp();
@@ -39,7 +41,7 @@ EOT
         );
 
         /** @var InstallerService $installer */
-        $installer = $this->container([
+        $container = $this->container([
             'extension_manager.minimum_stability' => 'dev',
             'extension_manager.repositories' => [
                 [
@@ -51,14 +53,16 @@ EOT
                     'url' => $this->workspace->path('Library'),
                 ]
             ]
-        ])->get('extension_manager.service.installer');
+        ]);
+        $installer= $container->get('extension_manager.service.installer');
+        $this->repository = $container->get('extension_manager.model.extension_repository');
         $installer->addExtension('test/extension');
         $installer->install();
     }
 
     public function testReturnsAllInstalledExtensions()
     {
-        $extensions = $this->createRepository()->extensions();
+        $extensions = $this->repository->extensions();
         $this->assertGreaterThan(0, count($extensions));
         $this->assertContainsOnlyInstancesOf(Extension::class, $extensions);
     }
@@ -67,18 +71,13 @@ EOT
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not find');
-        $this->createRepository()->find('not-existing-yeah');
+        $this->repository->find('not-existing-yeah');
     }
 
     public function testThrowsExceptionIfPackageIsNotAnExtension()
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('it is a "library"');
-        $this->createRepository()->find('test/library');
-    }
-
-    private function createRepository(): ComposerExtensionRepository
-    {
-        return $this->container()->get('extension_manager.model.extension_repository');
+        $this->repository->find('test/library');
     }
 }
