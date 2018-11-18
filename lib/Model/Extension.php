@@ -28,25 +28,25 @@ class Extension
     private $dependencies;
 
     /**
-     * @var bool
+     * @var int
      */
-    private $isPrimary;
+    private $state;
 
     public function __construct(
         string $name,
         string $version,
         string $description,
         array $dependencies = [],
-        bool $isPrimary = false
+        int $state = ExtensionState::STATE_NOT_INSTALLED
     ) {
         $this->name = $name;
         $this->version = $version;
         $this->description = $description;
         $this->dependencies = $dependencies;
-        $this->isPrimary = $isPrimary;
+        $this->state = $state;
     }
 
-    public static function fromPackage(CompletePackageInterface $package, bool $isPrimary = false)
+    public static function fromPackage(CompletePackageInterface $package, int $state = ExtensionState::STATE_NOT_INSTALLED)
     {
         $dependencies = array_map(function (Link $link) {
             return $link->getTarget();
@@ -56,7 +56,7 @@ class Extension
             $package->getFullPrettyVersion(),
             $package->getDescription() ?: '',
             $dependencies,
-            $isPrimary
+            $state
         );
     }
 
@@ -80,8 +80,8 @@ class Extension
         return $this->dependencies;
     }
 
-    public function isPrimary(): bool
+    public function state(): ExtensionState
     {
-        return $this->isPrimary;
+        return new ExtensionState($this->state);
     }
 }

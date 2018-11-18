@@ -9,4 +9,6 @@ interface ExtensionRepository
     public function find(string $extension): Extension;
 
     public function has(string $extension): bool;
+
+    public function extensions(): Extensions;
 }

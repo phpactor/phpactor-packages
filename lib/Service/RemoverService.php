@@ -63,7 +63,7 @@ class RemoverService
     {
         $extension = $this->repository->find($extensionName);
 
-        if ($extension->isPrimary()) {
+        if ($extension->state()->isPrimary()) {
             throw new RuntimeException(
                 'Extension is a primary extension and cannot be removed'
             );

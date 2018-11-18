@@ -8,6 +8,7 @@ use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use RuntimeException;
 
@@ -25,10 +26,19 @@ class ComposerExtensionRepository implements ExtensionRepository
      */
     private $primaryRepository;
 
-    public function __construct(RepositoryInterface $repository, RepositoryInterface $primaryRepository)
-    {
+    /**
+     * @var RepositoryInterface
+     */
+    private $packagistRepository;
+
+    public function __construct(
+        RepositoryInterface $repository,
+        RepositoryInterface $primaryRepository,
+        RepositoryInterface $packagistRepository
+    ) {
         $this->repository = $repository;
         $this->primaryRepository = $primaryRepository;
+        $this->packagistRepository = $packagistRepository;
     }
 
     /**
@@ -39,9 +49,29 @@ class ComposerExtensionRepository implements ExtensionRepository
         return new Extensions(array_map(function (CompletePackageInterface $package) {
             return Extension::fromPackage(
                 $package,
-                $this->belongsToPrimaryRepository($package)
+                $this->extensionState($package)
             );
         }, self::filter($this->repository->getPackages())));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function extensions(): Extensions
+    {
+        $packages = $this->packagistRepository->search('', 0, 'phpactor-extension');
+
+        $allExtensions = new Extensions(array_map(function (array $packageInfo) {
+            $package = $this->packagistRepository->findPackage($packageInfo['name'], '*');
+
+            return Extension::fromPackage(
+                $package,
+                $this->extensionState($package),
+                $this->has($package->getName())
+            );
+        }, $packages));
+
+        return $this->installedExtensions()->merge($allExtensions);
     }
 
     public function find(string $extension): Extension
@@ -70,7 +100,7 @@ class ComposerExtensionRepository implements ExtensionRepository
             ));
         }
 
-        return Extension::fromPackage($package, $this->belongsToPrimaryRepository($package));
+        return Extension::fromPackage($package, $this->extensionState($package));
     }
 
     public function has(string $extension): bool
@@ -100,5 +130,18 @@ class ComposerExtensionRepository implements ExtensionRepository
     private function findPackage(string $extension): ?PackageInterface
     {
         return $this->repository->findPackage($extension, '*');
+    }
+
+    private function extensionState(PackageInterface $package)
+    {
+        if ($this->belongsToPrimaryRepository($package)) {
+            return ExtensionState::STATE_PRIMARY;
+        }
+
+        if ($this->has($package->getName())) {
+            return ExtensionState::STATE_SECONDARY;
+        }
+
+        return ExtensionState::STATE_NOT_INSTALLED;
     }
 }

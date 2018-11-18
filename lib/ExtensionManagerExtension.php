@@ -10,6 +10,8 @@ use Composer\IO\ConsoleIO;
 use Composer\Installer;
 use Composer\Json\JsonFile;
 use Composer\Package\Version\VersionSelector;
+use Composer\Repository\ArrayRepository;
+use Composer\Repository\ComposerRepository;
 use Composer\Repository\CompositeRepository;
 use Composer\Repository\InstalledFilesystemRepository;
 use Phpactor\Container\Container;
@@ -170,6 +172,18 @@ class ExtensionManagerExtension implements Extension
             return $pool;
         });
 
+        $container->register('extension_manager.repository.packagist', function (Container $container) {
+            $repositoryManager = $container->get('extension_manager.composer')->getRepositoryManager();
+
+            foreach ($repositoryManager->getRepositories() as $repository) {
+                if ($repository instanceof ComposerRepository) {
+                    return $repository;
+                }
+            }
+
+            return new ArrayRepository();
+        });
+
         $container->register('extension_manager.composer.version_selector', function (Container $container) {
             return new VersionSelector($container->get('extension_manager.repository.pool'));
         });
@@ -218,7 +232,8 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.model.extension_repository', function (Container $container) {
             return new ComposerExtensionRepository(
                 $container->get('extension_manager.repository.combined'),
-                $container->get('extension_manager.repository.primary')
+                $container->get('extension_manager.repository.primary'),
+                $container->get('extension_manager.repository.packagist')
             );
         });
     }

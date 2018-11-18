@@ -2,11 +2,12 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
-use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ListCommand extends Command
@@ -25,37 +26,39 @@ class ListCommand extends Command
     protected function configure()
     {
         $this->setDescription('List extensions');
+        $this->addOption('installed', null, InputOption::VALUE_NONE, 'Only show installed packages');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
         $table->setHeaders([
+            '',
             'Name',
             'Version',
             'Description',
         ]);
 
-        foreach ($this->lister->list() as $extension) {
+        foreach ($this->lister->list($input->getOption('installed'))->sorted() as $extension) {
             $table->addRow([
-                $this->formatName($extension),
+                $this->formatState($extension->state()),
+                $extension->name(),
                 $extension->version(),
                 $extension->description()
             ]);
         }
         $table->render();
-
-        $output->writeln('(*) fixed packages');
+        $output->writeln('<comment>✔: installed, ✔*: fixed (primary) installed package</>');
     }
 
-    private function formatName(Extension $extension)
+    private function formatState(ExtensionState $state): string
     {
-        $name = $extension->name();
-
-        if ($extension->isPrimary()) {
-            return $name . '<comment>*</>';
+        if ($state->isPrimary()) {
+            return '✔*';
         }
-
-        return $name;
+        if ($state->isSecondary()) {
+            return '✔';
+        }
+        return '';
     }
 }

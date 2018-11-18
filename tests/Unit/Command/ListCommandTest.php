@@ -27,23 +27,30 @@ class ListCommandTest extends TestCase
         $this->tester = new CommandTester(new ListCommand($this->lister->reveal()));
     }
 
-    public function testListsInstalledExtensions()
+    public function testListsAllExtensions()
     {
-        $this->lister->list()->willReturn(new Extensions([
+        $this->lister->list(false)->willReturn(new Extensions([
             new Extension('one', 'dev-xxx', 'One'),
             new Extension('two', 'dev-yyy', 'Two'),
         ]));
 
         $this->tester->execute([]);
         $this->assertContains(<<<'EOT'
-+------+---------+-------------+
-| Name | Version | Description |
-+------+---------+-------------+
-| one  | dev-xxx | One         |
-| two  | dev-yyy | Two         |
-+------+---------+-------------+
-
+one  | dev-xxx | One 
 EOT
         , $this->tester->getDisplay());
+    }
+
+    public function testListsInstalledExtensions()
+    {
+        $this->lister->list(true)->willReturn(new Extensions([
+            new Extension('one', 'dev-xxx', 'One'),
+            new Extension('two', 'dev-yyy', 'Two'),
+        ]));
+
+        $this->tester->execute([
+            '--installed' => true,
+        ]);
+        $this->assertEquals(0, $this->tester->getStatusCode());
     }
 }

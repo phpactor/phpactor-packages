@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Command;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Command\RemoveCommand;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use RuntimeException;
@@ -71,7 +72,7 @@ class RemoveCommandTest extends TestCase
         $this->expectExceptionMessage('primary exten');
         $this->remover->findDependentExtensions(['foo'])->willReturn(new Extensions([
             new Extension('bar', 'foo', 'desc'),
-            new Extension('baz', 'foo', 'desc', [], true),
+            new Extension('baz', 'foo', 'desc', [], ExtensionState::STATE_PRIMARY),
         ]));
 
         $this->tester->execute([

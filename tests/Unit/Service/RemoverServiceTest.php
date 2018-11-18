@@ -6,6 +6,7 @@ use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\Extension\ExtensionManager\Tests\TestCase;
@@ -58,7 +59,7 @@ class RemoverServiceTest extends TestCase
     public function testRemoveExtension()
     {
         $this->repository->find('foobar')->willReturn($this->extension1->reveal());
-        $this->extension1->isPrimary()->willReturn(false);
+        $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_SECONDARY));
 
         $this->config->unrequire('foobar')->shouldBeCalled();
         $this->config->commit()->shouldBeCalled();
@@ -71,7 +72,7 @@ class RemoverServiceTest extends TestCase
         $this->expectExceptionMessage('is a primary');
 
         $this->repository->find('foobar')->willReturn($this->extension1->reveal());
-        $this->extension1->isPrimary()->willReturn(true);
+        $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_PRIMARY));
 
         $this->service->removeExtension('foobar');
     }

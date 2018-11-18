@@ -22,6 +22,15 @@ class Extensions implements IteratorAggregate, Countable
         return new Extensions(array_merge($this->extensions, $extensions->extensions));
     }
 
+    public function sorted(): Extensions
+    {
+        $extensions = $this->extensions;
+        usort($extensions, function (Extension $one, Extension $two) {
+            return $one->name() <=> $two->name();
+        });
+        return new Extensions($extensions);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -32,7 +41,7 @@ class Extensions implements IteratorAggregate, Countable
 
     private function add(Extension $extension)
     {
-        $this->extensions[] = $extension;
+        $this->extensions[$extension->name()] = $extension;
     }
 
     /**
@@ -53,7 +62,7 @@ class Extensions implements IteratorAggregate, Countable
     public function primaries(): Extensions
     {
         return new Extensions(array_filter($this->extensions, function (Extension $extension) {
-            return $extension->isPrimary();
+            return $extension->state()->isPrimary();
         }));
     }
 }
