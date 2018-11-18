@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\Completion;
 
 use Phpactor\Completion\Core\Formatter\ObjectFormatter;
-use Phpactor\Completion\Core\ChainCompletor;
 use Phpactor\Completion\Core\TypedCompletor;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Container\Extension;
@@ -37,7 +36,7 @@ class CompletionExtension implements Extension
     private function registerCompletion(ContainerBuilder $container)
     {
         $container->register(self::SERVICE_REGISTRY, function (Container $container) {
-
+            $completors = [];
             foreach ($container->getServiceIdsForTag(self::TAG_COMPLETOR) as $serviceId => $attrs) {
                 $completors[] = new TypedCompletor($container->get($serviceId), $attrs[self::KEY_COMPLETOR_TYPES] ?? ['php']);
             }
