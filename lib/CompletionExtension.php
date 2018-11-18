@@ -4,6 +4,8 @@ namespace Phpactor\Extension\Completion;
 
 use Phpactor\Completion\Core\Formatter\ObjectFormatter;
 use Phpactor\Completion\Core\ChainCompletor;
+use Phpactor\Completion\Core\TypedCompletor;
+use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Container\Extension;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\MapResolver\Resolver;
@@ -11,11 +13,11 @@ use Phpactor\Container\Container;
 
 class CompletionExtension implements Extension
 {
-    const TAG_COMPLETOR = 'completion.completor';
-    const TAG_FORMATTER = 'completion.formatter';
-
-    const SERVICE_COMPLETOR = 'completion.completor';
-    const SERVICE_FORMATTER = 'completion.formatter';
+    public const TAG_COMPLETOR = 'completion.completor';
+    public const TAG_FORMATTER = 'completion.formatter';
+    public const SERVICE_FORMATTER = 'completion.formatter';
+    public const SERVICE_REGISTRY = 'completion.registry';
+    public const KEY_COMPLETOR_TYPES = 'types';
 
     /**
      * {@inheritDoc}
@@ -34,12 +36,13 @@ class CompletionExtension implements Extension
 
     private function registerCompletion(ContainerBuilder $container)
     {
-        $container->register(self::SERVICE_COMPLETOR, function (Container $container) {
-            $completors = [];
-            foreach (array_keys($container->getServiceIdsForTag(self::TAG_COMPLETOR)) as $serviceId) {
-                $completors[] = $container->get($serviceId);
+        $container->register(self::SERVICE_REGISTRY, function (Container $container) {
+
+            foreach ($container->getServiceIdsForTag(self::TAG_COMPLETOR) as $serviceId => $attrs) {
+                $completors[] = new TypedCompletor($container->get($serviceId), $attrs[self::KEY_COMPLETOR_TYPES] ?? ['php']);
             }
-            return new ChainCompletor($completors);
+
+            return new TypedCompletorRegistry($completors);
         });
 
         $container->register(self::SERVICE_FORMATTER, function (Container $container) {

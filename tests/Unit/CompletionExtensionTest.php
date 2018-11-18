@@ -47,7 +47,7 @@ class CompletionExtensionTest extends TestCase
             })();
         });
 
-        $completor = $this->createContainer()->get(CompletionExtension::SERVICE_COMPLETOR);
+        $completor = $this->createContainer()->get(CompletionExtension::SERVICE_REGISTRY)->completorForType('php');
         $results = iterator_to_array($completor->complete(self::EXAMPLE_SOURCE, self::EXAMPLE_OFFSET));
 
         $this->assertEquals(self::EXAMPLE_SUGGESTION, $results[0]->name());
