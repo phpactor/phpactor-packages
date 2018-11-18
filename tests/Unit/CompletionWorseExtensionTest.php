@@ -27,6 +27,8 @@ class CompletionWorseExtensionTest extends TestCase
             WorseReflectionExtension::class,
             CompletionWorseExtension::class,
             SourceCodeFilesystemExtension::class
+        ], [
+            FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
         ]);
 
         $completor = $container->get(CompletionExtension::SERVICE_COMPLETOR);
