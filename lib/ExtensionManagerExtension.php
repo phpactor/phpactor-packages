@@ -103,6 +103,7 @@ class ExtensionManagerExtension implements Extension
     private function registerComposer(ContainerBuilder $container)
     {
         $container->register('extension_manager.composer', function (Container $container) {
+            $this->initializeComposer($container);
             return $this->createComposer($container);
         });
 
@@ -115,7 +116,6 @@ class ExtensionManagerExtension implements Extension
         });
         
         $container->register('extension_manager.installer', function (Container $container) {
-            $composer = $container->get('extension_manager.composer');
             $installer = Installer::create(
                 $container->get('extension_manager.io'),
                 $container->get('extension_manager.composer_for_installer')
@@ -254,7 +254,6 @@ class ExtensionManagerExtension implements Extension
     private function registerService(ContainerBuilder $container)
     {
         $container->register('extension_manager.service.installer', function (Container $container) {
-            $this->initialize($container);
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.adapter.composer.extension_config'),
@@ -270,7 +269,6 @@ class ExtensionManagerExtension implements Extension
         });
 
         $container->register('extension_manager.service.remover', function (Container $container) {
-            $this->initialize($container);
             return new RemoverService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.model.dependency_finder'),
@@ -280,7 +278,7 @@ class ExtensionManagerExtension implements Extension
         });
     }
 
-    private function initialize(Container $container): void
+    private function initializeComposer(Container $container): void
     {
         $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
         
