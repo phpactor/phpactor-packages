@@ -4,8 +4,10 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\VersionFinder;
+use RuntimeException;
 
 class InstallerService
 {
@@ -24,14 +26,21 @@ class InstallerService
      */
     private $finder;
 
+    /**
+     * @var ExtensionRepository
+     */
+    private $extensionRepository;
+
     public function __construct(
         Installer $installer,
         ExtensionConfig $config,
-        VersionFinder $finder
+        VersionFinder $finder,
+        ExtensionRepository $extensionRepository
     ) {
         $this->installer = $installer;
         $this->config = $config;
         $this->finder = $finder;
+        $this->extensionRepository = $extensionRepository;
     }
 
     public function addExtension($extension): string

@@ -24,7 +24,7 @@ class DependentExtensionFinder
 
     private function findDependentPackages(string $sourcePackage, array $dependents = []): array
     {
-        foreach ($this->repository->extensions() as $extension) {
+        foreach ($this->repository->installedExtensions() as $extension) {
             if (isset($dependents[$extension->name()])) {
                 continue;
             }

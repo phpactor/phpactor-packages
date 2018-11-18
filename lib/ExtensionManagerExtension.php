@@ -243,7 +243,8 @@ class ExtensionManagerExtension implements Extension
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.adapter.composer.extension_config'),
-                $container->get('extension_manager.adapter.composer.version_finder')
+                $container->get('extension_manager.adapter.composer.version_finder'),
+                $container->get('extension_manager.model.extension_repository')
             );
         });
 

@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Command;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Command\ListCommand;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -28,10 +29,10 @@ class ListCommandTest extends TestCase
 
     public function testListsInstalledExtensions()
     {
-        $this->lister->list()->willReturn([
+        $this->lister->list()->willReturn(new Extensions([
             new Extension('one', 'dev-xxx', 'One'),
             new Extension('two', 'dev-yyy', 'Two'),
-        ]);
+        ]));
 
         $this->tester->execute([]);
         $this->assertContains(<<<'EOT'

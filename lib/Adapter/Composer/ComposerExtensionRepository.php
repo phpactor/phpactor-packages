@@ -8,6 +8,7 @@ use Composer\Package\PackageInterface;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use RuntimeException;
 
 class ComposerExtensionRepository implements ExtensionRepository
@@ -33,14 +34,14 @@ class ComposerExtensionRepository implements ExtensionRepository
     /**
      * {@inheritDoc}
      */
-    public function extensions(): array
+    public function installedExtensions(): Extensions
     {
-        return array_map(function (CompletePackageInterface $package) {
+        return new Extensions(array_map(function (CompletePackageInterface $package) {
             return Extension::fromPackage(
                 $package,
                 $this->belongsToPrimaryRepository($package)
             );
-        }, self::filter($this->repository->getPackages()));
+        }, self::filter($this->repository->getPackages())));
     }
 
     public function find(string $extension): Extension
@@ -70,6 +71,11 @@ class ComposerExtensionRepository implements ExtensionRepository
         }
 
         return Extension::fromPackage($package, $this->belongsToPrimaryRepository($package));
+    }
+
+    public function has(string $extension): bool
+    {
+        return null !== $this->findPackage($extension, '*');
     }
 
     /**

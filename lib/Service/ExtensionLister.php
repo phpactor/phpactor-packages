@@ -4,6 +4,7 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 
 class ExtensionLister
 {
@@ -17,11 +18,8 @@ class ExtensionLister
         $this->repository = $repository;
     }
 
-    /**
-     * @return Extension[]
-     */
-    public function list(): array
+    public function list(): Extensions
     {
-        return $this->repository->extensions();
+        return $this->repository->installedExtensions();
     }
 }

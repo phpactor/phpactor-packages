@@ -63,9 +63,15 @@ EOT
 
     public function testReturnsAllInstalledExtensions()
     {
-        $extensions = $this->repository->extensions();
+        $extensions = $this->repository->installedExtensions();
         $this->assertCount(1, $extensions);
         $this->assertContainsOnlyInstancesOf(Extension::class, $extensions);
+    }
+
+    public function testHasPackage()
+    {
+        $this->assertTrue($this->repository->has('test/extension'));
+        $this->assertFalse($this->repository->has('test/foobar'));
     }
 
     public function testThrowsExceptionWhenTryingToGetNonExistingRepository()

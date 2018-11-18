@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 
 class DepdendentExtensionFinderTest extends TestCase
 {
@@ -39,7 +40,7 @@ class DepdendentExtensionFinderTest extends TestCase
         $this->repository->find(self::EXAMPLE_PACKAGE)->willReturn(
             $this->extension->reveal()
         );
-        $this->repository->extensions()->willReturn([]);
+        $this->repository->installedExtensions()->willReturn(new Extensions([]));
 
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
@@ -51,10 +52,10 @@ class DepdendentExtensionFinderTest extends TestCase
         $this->repository->find(self::EXAMPLE_PACKAGE)->willReturn(
             $this->extension->reveal()
         );
-        $this->repository->extensions()->willReturn([
+        $this->repository->installedExtensions()->willReturn(new Extensions([
             $this->createExtension('foo', [ 'bar', 'foo' ]),
             $this->createExtension('zed', [ 'bar', 'foo' ]),
-        ]);
+        ]));
 
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
@@ -66,11 +67,11 @@ class DepdendentExtensionFinderTest extends TestCase
         $this->repository->find(self::EXAMPLE_PACKAGE)->willReturn(
             $this->extension->reveal()
         );
-        $this->repository->extensions()->willReturn([
+        $this->repository->installedExtensions()->willReturn(new Extensions([
             $this->createExtension('foo', [ 'bar', 'foo' ]),
             $this->createExtension('zed', [ 'bar', self::EXAMPLE_PACKAGE ]),
             $this->createExtension('zog', [ self::EXAMPLE_PACKAGE, 'foo' ]),
-        ]);
+        ]));
 
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
@@ -85,11 +86,11 @@ class DepdendentExtensionFinderTest extends TestCase
         $this->repository->find(self::EXAMPLE_PACKAGE)->willReturn(
             $this->extension->reveal()
         );
-        $this->repository->extensions()->willReturn([
+        $this->repository->installedExtensions()->willReturn(new Extensions([
             $this->createExtension('foo', [ 'bar', 'foo' ]),
             $this->createExtension('zed', [ 'bar', self::EXAMPLE_PACKAGE ]),
             $this->createExtension('zog', [ 'zed' ]),
-        ]);
+        ]));
 
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
@@ -101,10 +102,10 @@ class DepdendentExtensionFinderTest extends TestCase
         $this->repository->find(self::EXAMPLE_PACKAGE)->willReturn(
             $this->extension->reveal()
         );
-        $this->repository->extensions()->willReturn([
+        $this->repository->installedExtensions()->willReturn(new Extensions([
             $this->createExtension('foo', [ 'bar', self::EXAMPLE_PACKAGE ]),
             $this->createExtension('bar', [ 'foo' ]),
-        ]);
+        ]));
 
         $dependants = $this->finder->findDependentExtensions([ self::EXAMPLE_PACKAGE ]);
 
