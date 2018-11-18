@@ -31,6 +31,8 @@ class ListCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $onlyInstalled = $input->getOption('installed');
+        assert(is_bool($onlyInstalled));
         $table = new Table($output);
         $table->setHeaders([
             '',
@@ -39,7 +41,7 @@ class ListCommand extends Command
             'Description',
         ]);
 
-        foreach ($this->lister->list($input->getOption('installed'))->sorted() as $extension) {
+        foreach ($this->lister->list($onlyInstalled)->sorted() as $extension) {
             $table->addRow([
                 $this->formatState($extension->state()),
                 $extension->name(),

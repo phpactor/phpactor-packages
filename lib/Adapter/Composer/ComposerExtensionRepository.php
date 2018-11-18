@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 use Composer\Package\AliasPackage;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\PackageInterface;
+use Composer\Repository\ComposerRepository;
 use Composer\Repository\RepositoryInterface;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
@@ -27,14 +28,14 @@ class ComposerExtensionRepository implements ExtensionRepository
     private $primaryRepository;
 
     /**
-     * @var RepositoryInterface
+     * @var ComposerRepository
      */
     private $packagistRepository;
 
     public function __construct(
         RepositoryInterface $repository,
         RepositoryInterface $primaryRepository,
-        RepositoryInterface $packagistRepository
+        ComposerRepository $packagistRepository
     ) {
         $this->repository = $repository;
         $this->primaryRepository = $primaryRepository;
@@ -66,8 +67,7 @@ class ComposerExtensionRepository implements ExtensionRepository
 
             return Extension::fromPackage(
                 $package,
-                $this->extensionState($package),
-                $this->has($package->getName())
+                $this->extensionState($package)
             );
         }, $packages));
 
@@ -105,7 +105,7 @@ class ComposerExtensionRepository implements ExtensionRepository
 
     public function has(string $extension): bool
     {
-        return null !== $this->findPackage($extension, '*');
+        return null !== $this->findPackage($extension);
     }
 
     /**
@@ -122,7 +122,7 @@ class ComposerExtensionRepository implements ExtensionRepository
         });
     }
 
-    private function belongsToPrimaryRepository(CompletePackageInterface $package): bool
+    private function belongsToPrimaryRepository(PackageInterface $package): bool
     {
         return null !== $this->primaryRepository->findPackage($package->getName(), '*');
     }
