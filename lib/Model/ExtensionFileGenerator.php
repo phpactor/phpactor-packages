@@ -37,7 +37,7 @@ class ExtensionFileGenerator
 
         foreach ($packages as $package) {
             $className = $this->classNameForPackage($package);
-            $code[] = sprintf('  %s::class,', $this->classNameForPackage($package));
+            $code[] = sprintf('  \\%s::class,', $this->classNameForPackage($package));
         }
 
         $code[] = '];';
