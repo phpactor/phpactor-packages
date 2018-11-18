@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\CompletionRpc\CompletionRpcExtension;
-use Phpactor\Extension\CompletionRpc\Handler\CompleteHandler;
 use Phpactor\Extension\Completion\CompletionExtension;
 use Phpactor\Extension\Rpc\Request;
 use Phpactor\Extension\Rpc\RequestHandler;

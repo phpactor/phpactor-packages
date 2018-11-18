@@ -2,8 +2,8 @@
 
 namespace Phpactor\Extension\CompletionRpc\Handler;
 
-use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
+use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Response\ReturnResponse;
@@ -13,15 +13,16 @@ class CompleteHandler implements Handler
     const NAME = 'complete';
     const PARAM_SOURCE = 'source';
     const PARAM_OFFSET = 'offset';
+    const PARAM_TYPE = 'type';
 
     /**
-     * @var Completor
+     * @var TypedCompletorRegistry
      */
-    private $completor;
+    private $registry;
 
-    public function __construct(Completor $compoletor)
+    public function __construct(TypedCompletorRegistry $registry)
     {
-        $this->completor = $compoletor;
+        $this->registry = $registry;
     }
 
     public function name(): string
@@ -35,11 +36,19 @@ class CompleteHandler implements Handler
             self::PARAM_SOURCE,
             self::PARAM_OFFSET,
         ]);
+
+        $resolver->setDefaults([
+            self::PARAM_TYPE => 'php'
+        ]);
     }
 
     public function handle(array $arguments)
     {
-        $suggestions = $this->completor->complete($arguments[self::PARAM_SOURCE], $arguments[self::PARAM_OFFSET]);
+        $suggestions = $this->registry->completorForType($arguments['type'])->complete(
+            $arguments[self::PARAM_SOURCE],
+            $arguments[self::PARAM_OFFSET]
+        );
+
         $suggestions = array_map(function (Suggestion $suggestion) {
             return $suggestion->toArray();
         }, iterator_to_array($suggestions));
