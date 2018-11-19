@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Adapter\Composer;
 
 use Composer\Package\CompletePackage;
-use Composer\Package\Package;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\Exception\InvalidExtensionPackage;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;

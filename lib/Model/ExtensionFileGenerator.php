@@ -2,10 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Model;
 
-use Composer\EventDispatcher\ScriptExecutionException;
-use Composer\Package\PackageInterface;
-use Phpactor\Extension\ExtensionManager\Util\PackageFilter;
-
 class ExtensionFileGenerator
 {
     const EXTENSION_CLASS_PROPERTY = 'phpactor.extension_class';

@@ -2,9 +2,6 @@
 
 namespace Phpactor\Extension\ExtensionManager\Model;
 
-use Composer\Package\CompletePackageInterface;
-use Composer\Package\Link;
-
 class Extension
 {
     /**

@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Tests\Integration\Model;
 
 use Composer\Package\CompletePackageInterface;
-use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;

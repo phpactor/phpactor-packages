@@ -12,7 +12,6 @@ use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use RuntimeException;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
 
 class ComposerExtensionRepository implements ExtensionRepository
 {
