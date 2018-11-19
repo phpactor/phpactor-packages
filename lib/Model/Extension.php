@@ -32,9 +32,15 @@ class Extension
      */
     private $state;
 
+    /**
+     * @var string
+     */
+    private $className;
+
     public function __construct(
         string $name,
         string $version,
+        string $className,
         string $description,
         array $dependencies = [],
         int $state = ExtensionState::STATE_NOT_INSTALLED
@@ -44,20 +50,7 @@ class Extension
         $this->description = $description;
         $this->dependencies = $dependencies;
         $this->state = $state;
-    }
-
-    public static function fromPackage(CompletePackageInterface $package, int $state = ExtensionState::STATE_NOT_INSTALLED)
-    {
-        $dependencies = array_map(function (Link $link) {
-            return $link->getTarget();
-        }, $package->getRequires());
-        return new self(
-            $package->getName(),
-            $package->getFullPrettyVersion(),
-            $package->getDescription() ?: '',
-            $dependencies,
-            $state
-        );
+        $this->className = $className;
     }
 
     public function name(): string
@@ -83,5 +76,10 @@ class Extension
     public function state(): ExtensionState
     {
         return new ExtensionState($this->state);
+    }
+
+    public function className(): string
+    {
+        return $this->className;
     }
 }

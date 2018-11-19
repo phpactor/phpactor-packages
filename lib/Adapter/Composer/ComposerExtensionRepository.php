@@ -12,11 +12,10 @@ use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use RuntimeException;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
 
 class ComposerExtensionRepository implements ExtensionRepository
 {
-    private const TYPE = 'phpactor-extension';
-
     /**
      * @var RepositoryInterface
      */
@@ -32,14 +31,21 @@ class ComposerExtensionRepository implements ExtensionRepository
      */
     private $packagistRepository;
 
+    /**
+     * @var PackageExtensionFactory
+     */
+    private $extensionFactory;
+
     public function __construct(
         RepositoryInterface $repository,
         RepositoryInterface $primaryRepository,
-        ComposerRepository $packagistRepository
+        ComposerRepository $packagistRepository,
+        PackageExtensionFactory $extensionFactory
     ) {
         $this->repository = $repository;
         $this->primaryRepository = $primaryRepository;
         $this->packagistRepository = $packagistRepository;
+        $this->extensionFactory = $extensionFactory;
     }
 
     /**
@@ -48,7 +54,7 @@ class ComposerExtensionRepository implements ExtensionRepository
     public function installedExtensions(): Extensions
     {
         return new Extensions(array_map(function (CompletePackageInterface $package) {
-            return Extension::fromPackage(
+            return $this->extensionFactory->fromPackage(
                 $package,
                 $this->extensionState($package)
             );
@@ -65,7 +71,7 @@ class ComposerExtensionRepository implements ExtensionRepository
         $allExtensions = new Extensions(array_map(function (array $packageInfo) {
             $package = $this->packagistRepository->findPackage($packageInfo['name'], '*');
 
-            return Extension::fromPackage(
+            return $this->extensionFactory->fromPackage(
                 $package,
                 $this->extensionState($package)
             );
@@ -85,14 +91,6 @@ class ComposerExtensionRepository implements ExtensionRepository
             ));
         }
 
-        if ($package->getType() !== self::TYPE) {
-            throw new RuntimeException(sprintf(
-                'Package is not a "%s" type, it is a "%s"',
-                self::TYPE,
-                $package->getType()
-            ));
-        }
-
         if (!$package instanceof CompletePackageInterface) {
             throw new RuntimeException(sprintf(
                 'Package must be a complete package, got "%s"',
@@ -100,7 +98,7 @@ class ComposerExtensionRepository implements ExtensionRepository
             ));
         }
 
-        return Extension::fromPackage($package, $this->extensionState($package));
+        return $this->extensionFactory->fromPackage($package, $this->extensionState($package));
     }
 
     public function has(string $extension): bool

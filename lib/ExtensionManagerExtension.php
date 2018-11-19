@@ -19,6 +19,7 @@ use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionRepository;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
@@ -226,6 +227,9 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.model.installer', function (Container $container) {
             return new LazyComposerInstaller($container);
         });
+        $container->register('extension_manager.model.package_extension_factory', function (Container $container) {
+            return new PackageExtensionFactory();
+        });
         $container->register('extension_manager.model.dependency_finder', function (Container $container) {
             return new DependentExtensionFinder($container->get('extension_manager.model.extension_repository'));
         });
@@ -233,7 +237,8 @@ class ExtensionManagerExtension implements Extension
             return new ComposerExtensionRepository(
                 $container->get('extension_manager.repository.combined'),
                 $container->get('extension_manager.repository.primary'),
-                $container->get('extension_manager.repository.packagist')
+                $container->get('extension_manager.repository.packagist'),
+                $container->get('extension_manager.model.package_extension_factory')
             );
         });
     }

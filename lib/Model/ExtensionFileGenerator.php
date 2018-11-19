@@ -21,12 +21,10 @@ class ExtensionFileGenerator
     }
 
     /**
-     * @param PackageInterface[] $packages
+     * @param Extensions<Extension> $extensions
      */
-    public function writeExtensionList(iterable $packages)
+    public function writeExtensionList(Extensions $extensions)
     {
-        $packages = PackageFilter::filter($packages);
-
         $code = [
             '<?php',
             '// ' . date('c'),
@@ -35,9 +33,8 @@ class ExtensionFileGenerator
             'return ['
         ];
 
-        foreach ($packages as $package) {
-            $className = $this->classNameForPackage($package);
-            $code[] = sprintf('  \\%s::class,', $this->classNameForPackage($package));
+        foreach ($extensions as $extension) {
+            $code[] = sprintf('  "\\%s"', $extension->className());
         }
 
         $code[] = '];';
@@ -47,20 +44,5 @@ class ExtensionFileGenerator
         }
 
         file_put_contents($this->extensionListFile, implode(PHP_EOL, $code));
-    }
-
-    private function classNameForPackage(PackageInterface $package)
-    {
-        $extra = $package->getExtra();
-
-        if (!isset($extra[self::EXTENSION_CLASS_PROPERTY])) {
-            throw new ScriptExecutionException(sprintf(
-                'Phpactor Package "%s" has no "%s" in the extra section. This parameter must define the extensions class',
-                $package->getName(),
-                self::EXTENSION_CLASS_PROPERTY
-            ));
-        }
-
-        return $extra[self::EXTENSION_CLASS_PROPERTY];
     }
 }
