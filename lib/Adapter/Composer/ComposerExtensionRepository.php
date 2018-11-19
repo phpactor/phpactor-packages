@@ -114,7 +114,7 @@ class ComposerExtensionRepository implements ExtensionRepository
     {
         return array_filter($packages, function (PackageInterface $package) {
             return
-                $package->getType() === self::TYPE &&
+                $package->getType() === PackageExtensionFactory::PACKAGE_TYPE &&
                 !$package instanceof AliasPackage &&
                 $package instanceof CompletePackageInterface;
         });

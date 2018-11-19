@@ -5,6 +5,7 @@ namespace Phpactor\Extension\ExtensionManager\EventSubscriber;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 
 class PostInstallSubscriber implements EventSubscriberInterface
@@ -14,9 +15,15 @@ class PostInstallSubscriber implements EventSubscriberInterface
      */
     private $extensionWriter;
 
-    public function __construct(ExtensionFileGenerator $extensionWriter)
+    /**
+     * @var PackageExtensionFactory
+     */
+    private $factory;
+
+    public function __construct(ExtensionFileGenerator $extensionWriter, PackageExtensionFactory $factory)
     {
         $this->extensionWriter = $extensionWriter;
+        $this->factory = $factory;
     }
 
     /**
@@ -33,6 +40,9 @@ class PostInstallSubscriber implements EventSubscriberInterface
     public function handlePostPackageInstall(Event $event)
     {
         $repository = $event->getComposer()->getRepositoryManager()->getLocalRepository();
-        $this->extensionWriter->writeExtensionList($repository->getPackages());
+
+        $this->extensionWriter->writeExtensionList(
+            $this->factory->fromPackages($repository->getPackages())
+        );
     }
 }

@@ -30,8 +30,8 @@ class ListCommandTest extends TestCase
     public function testListsAllExtensions()
     {
         $this->lister->list(false)->willReturn(new Extensions([
-            new Extension('one', 'dev-xxx', 'One'),
-            new Extension('two', 'dev-yyy', 'Two'),
+            new Extension('one', 'dev-xxx', 'class', 'One'),
+            new Extension('two', 'dev-yyy', 'class', 'Two'),
         ]));
 
         $this->tester->execute([]);
@@ -44,8 +44,8 @@ EOT
     public function testListsInstalledExtensions()
     {
         $this->lister->list(true)->willReturn(new Extensions([
-            new Extension('one', 'dev-xxx', 'One'),
-            new Extension('two', 'dev-yyy', 'Two'),
+            new Extension('one', 'dev-xxx', 'class', 'One'),
+            new Extension('two', 'dev-yyy', 'class', 'Two')
         ]));
 
         $this->tester->execute([

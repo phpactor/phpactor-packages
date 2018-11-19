@@ -251,7 +251,8 @@ class ExtensionManagerExtension implements Extension
         );
         
         $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
-            new ExtensionFileGenerator($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE))
+            new ExtensionFileGenerator($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE)),
+            $container->get('extension_manager.model.package_extension_factory')
         ));
         return $composer;
     }

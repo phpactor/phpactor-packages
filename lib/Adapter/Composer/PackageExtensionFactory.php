@@ -4,9 +4,11 @@ namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Link;
+use Composer\Package\PackageInterface;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\Exception\InvalidExtensionPackage;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
+use Phpactor\Extension\ExtensionManager\Model\Extensions;
 
 class PackageExtensionFactory
 {
@@ -26,6 +28,16 @@ class PackageExtensionFactory
             $this->extractDependencies($package),
             $state
         );
+    }
+
+    public function fromPackages(array $packages): Extensions
+    {
+        return new Extensions(array_filter(array_map(function (PackageInterface $package) {
+            try {
+                return $this->fromPackage($package);
+            } catch (InvalidExtensionPackage $exception) {
+            }
+        }, $packages)));
     }
 
     private function extractDependencies(CompletePackageInterface $package): array
@@ -64,5 +76,4 @@ class PackageExtensionFactory
             self::EXTRA_EXTENSION_CLASS
         ));
     }
-
 }
