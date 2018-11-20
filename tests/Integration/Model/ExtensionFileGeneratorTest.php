@@ -11,7 +11,8 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class ExtensionFileGeneratorTest extends IntegrationTestCase
 {
-    const EXAMPLE_CLASS_NAME = 'Foo\\Bar';
+    const EXAMPLE_CLASS_NAME_1 = 'Foo\\Bar';
+    const EXAMPLE_CLASS_NAME_2 = 'Foo\\Baz';
 
     /**
      * @var ObjectProphecy
@@ -31,7 +32,12 @@ class ExtensionFileGeneratorTest extends IntegrationTestCase
     /**
      * @var ObjectProphecy
      */
-    private $extension;
+    private $extension1;
+
+    /**
+     * @var ObjectProphecy
+     */
+    private $extension2;
 
     public function setUp()
     {
@@ -41,20 +47,25 @@ class ExtensionFileGeneratorTest extends IntegrationTestCase
         $this->path = $this->workspace->path('extensions.php');
         $this->generator = new ExtensionFileGenerator($this->path);
 
-        $this->extension = $this->prophesize(Extension::class);
-        $this->extension->name()->willReturn('test_extension');
+        $this->extension1 = $this->prophesize(Extension::class);
+        $this->extension1->name()->willReturn('test_extension_1');
+        $this->extension2 = $this->prophesize(Extension::class);
+        $this->extension2->name()->willReturn('test_extension_2');
     }
 
     public function testGenerate()
     {
-        $this->extension->className()->willReturn(self::EXAMPLE_CLASS_NAME);
+        $this->extension1->className()->willReturn(self::EXAMPLE_CLASS_NAME_1);
+        $this->extension2->className()->willReturn(self::EXAMPLE_CLASS_NAME_2);
         $this->generator->writeExtensionList(new Extensions([
-            $this->extension->reveal()
+            $this->extension1->reveal(),
+            $this->extension2->reveal(),
         ]));
 
         $extensions = require($this->path);
         $this->assertEquals([
-            '\\' . self::EXAMPLE_CLASS_NAME
+            '\\' . self::EXAMPLE_CLASS_NAME_1,
+            '\\' . self::EXAMPLE_CLASS_NAME_2,
         ], $extensions);
     }
 
