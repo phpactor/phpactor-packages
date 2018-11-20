@@ -109,7 +109,7 @@ class ComposerExtensionRepository implements ExtensionRepository
      * @param PackageInterface[] $packages
      * @return CompletePackageInterface[]
      */
-    private static function filter(array $packages): array
+    public static function filter(array $packages): array
     {
         return array_filter($packages, function (PackageInterface $package) {
             return

@@ -4,7 +4,6 @@ namespace Phpactor\Extension\ExtensionManager\Adapter\Composer;
 
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Link;
-use Composer\Package\PackageInterface;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\Exception\InvalidExtensionPackage;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
@@ -15,8 +14,10 @@ class PackageExtensionFactory
     const PACKAGE_TYPE = 'phpactor-extension';
     const EXTRA_EXTENSION_CLASS = 'phpactor.extension_class';
 
-    public function fromPackage(CompletePackageInterface $package, int $state = ExtensionState::STATE_NOT_INSTALLED): Extension
-    {
+    public function fromPackage(
+        CompletePackageInterface $package,
+        int $state = ExtensionState::STATE_NOT_INSTALLED
+    ): Extension {
         $this->assertPackageType($package);
         $this->assertHasExtensionClass($package);
 
@@ -32,12 +33,9 @@ class PackageExtensionFactory
 
     public function fromPackages(array $packages): Extensions
     {
-        return new Extensions(array_filter(array_map(function (PackageInterface $package) {
-            try {
-                return $this->fromPackage($package);
-            } catch (InvalidExtensionPackage $exception) {
-            }
-        }, $packages)));
+        return new Extensions(array_map(function (CompletePackageInterface $package) {
+            return $this->fromPackage($package);
+        }, ComposerExtensionRepository::filter($packages)));
     }
 
     private function extractDependencies(CompletePackageInterface $package): array

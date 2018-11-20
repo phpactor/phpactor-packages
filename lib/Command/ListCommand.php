@@ -50,7 +50,7 @@ class ListCommand extends Command
             ]);
         }
         $table->render();
-        $output->writeln('<comment>✔: installed, ✔*: fixed (primary) installed package</>');
+        $output->writeln('<comment>✔: installed, ✔*: fixed (primary) installed extension</>');
     }
 
     private function formatState(ExtensionState $state): string

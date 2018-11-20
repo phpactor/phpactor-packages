@@ -80,11 +80,4 @@ EOT
         $this->expectExceptionMessage('Could not find');
         $this->repository->find('not-existing-yeah');
     }
-
-    public function testThrowsExceptionIfPackageIsNotAnExtension()
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('it is a "library"');
-        $this->repository->find('test/library');
-    }
 }
