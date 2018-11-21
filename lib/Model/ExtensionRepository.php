@@ -10,5 +10,8 @@ interface ExtensionRepository
 
     public function has(string $extension): bool;
 
+    /**
+     * @return Extensions<Extension>
+     */
     public function extensions(): Extensions;
 }

@@ -31,9 +31,11 @@ use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
+use Phpactor\Extension\ExtensionManager\Rpc\ExtensionListHandler;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
+use Phpactor\Extension\Rpc\RpcExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -76,6 +78,7 @@ class ExtensionManagerExtension implements Extension
         $this->registerComposer($container);
         $this->registerModel($container);
         $this->registerService($container);
+        $this->registerRpc($container);
     }
 
     private function registerCommands(ContainerBuilder $container)
@@ -299,5 +302,12 @@ class ExtensionManagerExtension implements Extension
         // unconditionally write the configuration file (updates any
         // configuration parameters which may have been set).
         $config->commit();
+    }
+
+    private function registerRpc(ContainerBuilder $container)
+    {
+        $container->register('extension_manager.rpc.handler.list', function (Container $container) {
+            return new ExtensionListHandler($container->get('extension_manager.model.extension_repository'));
+        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
     }
 }
