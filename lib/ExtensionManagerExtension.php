@@ -288,12 +288,16 @@ class ExtensionManagerExtension implements Extension
     {
         $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
         
+        // create the directory if it doesn't already exist
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
 
         /** @var ExtensionConfig $config */
         $config = $container->get('extension_manager.adapter.composer.extension_config');
+
+        // unconditionally write the configuration file (updates any
+        // configuration parameters which may have been set).
         $config->commit();
     }
 }
