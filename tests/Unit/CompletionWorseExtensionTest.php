@@ -31,7 +31,7 @@ class CompletionWorseExtensionTest extends TestCase
             FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__,
         ]);
 
-        $completor = $container->get(CompletionExtension::SERVICE_COMPLETOR);
+        $completor = $container->get(CompletionExtension::SERVICE_REGISTRY)->completorForType('php');
         $this->assertInstanceOf(Completor::class, $completor);
         assert($completor instanceof Completor);
         $completor->complete('<?php array', 10);
