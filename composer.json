@@ -30,6 +30,9 @@
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Extension\\ComposerAutoloader\\ComposerAutoloaderExtension"
+        "phpactor.extension_class": "Phpactor\\Extension\\ComposerAutoloader\\ComposerAutoloaderExtension",
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
     }
 }
