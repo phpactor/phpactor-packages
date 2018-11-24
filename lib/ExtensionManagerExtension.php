@@ -67,8 +67,8 @@ class ExtensionManagerExtension implements Extension
         $resolver->setDefaults([
             self::PARAM_EXTENSION_VENDOR_DIR => '%application_root%/extensions',
             self::PARAM_VENDOR_DIR => '%application_root%/vendor',
-            self::PARAM_EXTENSION_CONFIG_FILE => '%config%/extensions.json',
-            self::PARAM_INSTALLED_EXTENSIONS_FILE => '%cache%/extensions.php',
+            self::PARAM_EXTENSION_CONFIG_FILE => '%application_root%/extensions.json',
+            self::PARAM_INSTALLED_EXTENSIONS_FILE => '%application_root%/extensions/extensions.php',
 
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
             self::PARAM_MINIMUM_STABILITY => null,
