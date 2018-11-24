@@ -11,8 +11,8 @@
         }
     ],
     "require": {
-        "phpactor/completion-extension": "dev-master",
-        "phpactor/rpc-extension": "dev-master",
+        "phpactor/completion-extension": "~0.1",
+        "phpactor/rpc-extension": "~0.1",
         "phpactor/test-utils": "^1.0"
     },
     "require-dev": {
