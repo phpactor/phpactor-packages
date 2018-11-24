@@ -43,7 +43,6 @@ class RemoveCommand extends Command
         }
 
         $this->removeExtensions($extensionNames, $output);
-        $this->remover->installForceUpdate();
     }
 
     private function removeExtensions(array $extensions, OutputInterface $output)

@@ -34,7 +34,6 @@ class RemoveCommandTest extends TestCase
     {
         $this->remover->findDependentExtensions(['foo'])->willReturn(new Extensions([]));
         $this->remover->removeExtension('foo')->shouldBeCalled();
-        $this->remover->installForceUpdate()->shouldBeCalled();
 
 
         $this->tester->execute([
@@ -54,8 +53,6 @@ class RemoveCommandTest extends TestCase
         $this->remover->removeExtension('foo')->shouldBeCalled();
         $this->remover->removeExtension('bar')->shouldBeCalled();
         $this->remover->removeExtension('baz')->shouldBeCalled();
-        $this->remover->installForceUpdate()->shouldBeCalled();
-
 
         $this->tester->execute([
             'extension' => ['foo'],
