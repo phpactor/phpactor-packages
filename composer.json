@@ -11,9 +11,9 @@
         }
     ],
     "require": {
-        "phpactor/completion-extension": "dev-master",
-        "phpactor/worse-reflection-extension": "dev-master",
-        "phpactor/source-code-filesystem-extension": "dev-master"
+        "phpactor/completion-extension": "~0.1",
+        "phpactor/worse-reflection-extension": "~0.1",
+        "phpactor/source-code-filesystem-extension": "~0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.4",
@@ -31,6 +31,9 @@
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Extension\\CompletionWorse\\CompletionWorseExtension"
+        "phpactor.extension_class": "Phpactor\\Extension\\CompletionWorse\\CompletionWorseExtension",
+        "branch-alias": {
+            "dev-master": "0.x-dev"
+        }
     }
 }
