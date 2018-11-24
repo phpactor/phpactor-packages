@@ -71,6 +71,7 @@ class RemoverServiceTest extends TestCase
         $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_SECONDARY));
 
         $this->config->unrequire('foobar')->shouldBeCalled();
+        $this->config->write()->shouldBeCalled();
         $this->installer->installForceUpdate()->shouldBeCalled();
 
         $this->service->removeExtension('foobar');
@@ -82,6 +83,7 @@ class RemoverServiceTest extends TestCase
         $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_SECONDARY));
 
         $this->config->unrequire('foobar')->shouldBeCalled();
+        $this->config->write()->shouldBeCalled();
         $this->installer->installForceUpdate()->willThrow(new Exception('foo'));
         $this->config->revert()->shouldBeCalled();
 

@@ -37,6 +37,7 @@ use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\Extension\Rpc\RpcExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -64,6 +65,11 @@ class ExtensionManagerExtension implements Extension
         ]);
 
         $resolver->setDefaults([
+            self::PARAM_EXTENSION_VENDOR_DIR => '%application_root%/extensions',
+            self::PARAM_VENDOR_DIR => '%application_root%/vendor',
+            self::PARAM_EXTENSION_CONFIG_FILE => '%config%/extensions.json',
+            self::PARAM_INSTALLED_EXTENSIONS_FILE => '%cache%/extensions.php',
+
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
             self::PARAM_MINIMUM_STABILITY => null,
             self::PARAM_REPOSITORIES => [],
@@ -187,7 +193,7 @@ class ExtensionManagerExtension implements Extension
     private function repositoryFile(Container $container)
     {
         return Path::join([
-            $container->getParameter(self::PARAM_VENDOR_DIR),
+            $this->resolvePath($container, self::PARAM_VENDOR_DIR),
             'composer',
             'installed.json'
         ]);
@@ -196,7 +202,7 @@ class ExtensionManagerExtension implements Extension
     private function extensionRepositoryFile(Container $container)
     {
         return Path::join([
-            $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
+            $this->resolvePath($container, self::PARAM_EXTENSION_VENDOR_DIR),
             'composer',
             'installed.json'
         ]);
@@ -206,9 +212,9 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.adapter.extension_config_loader', function (Container $container) {
             return new ComposerExtensionConfigLoader(
-                $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
+                $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
-                $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
+                $this->resolvePath($container, self::PARAM_EXTENSION_VENDOR_DIR),
                 $container->getParameter(self::PARAM_MINIMUM_STABILITY),
                 $container->getParameter(self::PARAM_REPOSITORIES)
             );
@@ -241,11 +247,13 @@ class ExtensionManagerExtension implements Extension
     {
         $composer = Factory::create(
             $container->get('extension_manager.io'),
-            $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE)
+            $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_FILE)
         );
         
         $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
-            new ExtensionFileGenerator($container->getParameter(self::PARAM_INSTALLED_EXTENSIONS_FILE)),
+            new ExtensionFileGenerator(
+                $this->resolvePath($container, self::PARAM_INSTALLED_EXTENSIONS_FILE)
+            ),
             $container->get('extension_manager.model.package_extension_factory')
         ));
         return $composer;
@@ -285,7 +293,7 @@ class ExtensionManagerExtension implements Extension
 
     private function initializeComposer(Container $container): void
     {
-        $path = $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE);
+        $path = $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_FILE);
         
         // create the directory if it doesn't already exist
         if (!file_exists(dirname($path))) {
@@ -305,5 +313,10 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.rpc.handler.list', function (Container $container) {
             return new ExtensionListHandler($container->get('extension_manager.model.extension_repository'));
         }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+    }
+
+    private function resolvePath(Container $container, string $path)
+    {
+        return $container->get(FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER)->resolve($container->getParameter($path));
     }
 }

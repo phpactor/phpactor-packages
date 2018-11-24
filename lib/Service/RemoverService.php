@@ -64,6 +64,7 @@ class RemoverService
         }
 
         $config->unrequire($extensionName);
+        $config->write();
 
         try {
             $this->installer->installForceUpdate();

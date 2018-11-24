@@ -11,6 +11,7 @@ use Phpactor\Extension\Rpc\Request;
 use Phpactor\Extension\Rpc\RequestHandler;
 use Phpactor\Extension\Rpc\Response\EchoResponse;
 use Phpactor\Extension\Rpc\RpcExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\TestUtils\Workspace;
 
 class ExtensionManagerExtensionTest extends TestCase
@@ -42,6 +43,7 @@ class ExtensionManagerExtensionTest extends TestCase
             ConsoleExtension::class,
             RpcExtension::class,
             LoggingExtension::class,
+            FilePathResolverExtension::class
         ], [
             ExtensionManagerExtension::PARAM_EXTENSION_CONFIG_FILE => $this->workspace->path('extensions.json'),
             ExtensionManagerExtension::PARAM_VENDOR_DIR => __DIR__ . '/../../vendor',
