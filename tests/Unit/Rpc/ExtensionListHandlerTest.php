@@ -24,9 +24,9 @@ class ExtensionListHandlerTest extends TestCase
         $response = $tester->handle('extension_list', []);
 
         $this->assertEquals(<<<'EOT'
-[✔*] one                            One (dev-xxx)
-[✔ ] two                            Two (dev-yyy)
-[  ] three                          Two (dev-yyy)
+[✔] one                            One (dev-xxx)
+[✔] two                            Two (dev-yyy)
+[ ] three                          Two
 EOT
         , $response->message());
     }

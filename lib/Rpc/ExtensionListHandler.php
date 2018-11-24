@@ -34,11 +34,11 @@ class ExtensionListHandler implements Handler
         $output = [];
         foreach ($this->repository->extensions() as $extension) {
             $output[] = sprintf(
-                "[%s] %-30s %s (%s)",
+                "[%s] %-30s %s%s",
                 $this->formatState($extension->state()),
                 $extension->name(),
                 $extension->description(),
-                $extension->version()
+                $extension->state()->isInstalled() ? sprintf(' (%s)', $extension->version()) : ''
             );
         }
 
@@ -47,14 +47,9 @@ class ExtensionListHandler implements Handler
 
     private function formatState(ExtensionState $extensionState)
     {
-        if ($extensionState->isPrimary()) {
-            return '✔*';
+        if ($extensionState->isInstalled()) {
+            return '✔';
         }
-
-        if ($extensionState->isSecondary()) {
-            return '✔ ';
-        }
-
-        return '  ';
+        return ' ';
     }
 }
