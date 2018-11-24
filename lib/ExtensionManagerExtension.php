@@ -23,7 +23,6 @@ use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionReposi
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
 use Phpactor\Extension\ExtensionManager\Adapter\Console\SymfonyProgressLogger;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
-use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\LazyComposerInstaller;
 use Phpactor\Extension\ExtensionManager\Command\InstallCommand;
@@ -41,8 +40,6 @@ use Phpactor\Extension\Rpc\RpcExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Webmozart\PathUtil\Path;
 
 class ExtensionManagerExtension implements Extension

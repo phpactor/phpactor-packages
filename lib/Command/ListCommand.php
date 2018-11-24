@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Command;
 
 use Phpactor\Extension\ExtensionManager\Model\Extension;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;

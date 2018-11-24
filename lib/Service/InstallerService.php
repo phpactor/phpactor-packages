@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\ExtensionManager\Service;
 
 use Exception;
-use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\Exception\CouldNotInstallExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfigLoader;

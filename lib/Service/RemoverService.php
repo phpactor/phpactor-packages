@@ -5,7 +5,6 @@ namespace Phpactor\Extension\ExtensionManager\Service;
 use Exception;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Exception\CouldNotInstallExtension;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfigLoader;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;

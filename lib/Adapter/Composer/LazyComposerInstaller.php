@@ -46,7 +46,8 @@ class LazyComposerInstaller implements Installer
         }
 
         throw new CouldNotInstallExtension(sprintf(
-            'Composer exited with "%s"', $status
+            'Composer exited with "%s"',
+            $status
         ));
     }
 }
