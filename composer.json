@@ -11,7 +11,7 @@
     ],
     "require": {
         "phpactor/class-to-file": "dev-master",
-        "phpactor/composer-autoloader-extension": "dev-master",
+        "phpactor/composer-autoloader-extension": "~0.1",
         "phpactor/container": "^1.0"
     },
     "require-dev": {
