@@ -39,6 +39,7 @@ $container = PhpactorContainer::fromExtensions(array_merge($extensions, [
     ExtensionManagerExtension::PARAM_VENDOR_DIR => __DIR__ . '/../vendor',
     ExtensionManagerExtension::PARAM_EXTENSION_VENDOR_DIR => $extensionsVendorDir,
     ExtensionManagerExtension::PARAM_INSTALLED_EXTENSIONS_FILE => __DIR__ . '/../vendor-extension/installed.cache.php',
+    ExtensionManagerExtension::PARAM_MINIMUM_STABILITY=> 'dev',
 ]);
 
 $application = new Application();

@@ -18,6 +18,11 @@ class ExtensionState
         $this->state = $state;
     }
 
+    public function isInstalled(): bool
+    {
+        return $this->state !== self::STATE_NOT_INSTALLED;
+    }
+
     public function isPrimary()
     {
         return (bool) ($this->state & self::STATE_PRIMARY);

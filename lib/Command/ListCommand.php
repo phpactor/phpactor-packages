@@ -2,6 +2,7 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
+use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Symfony\Component\Console\Command\Command;
@@ -35,7 +36,6 @@ class ListCommand extends Command
         assert(is_bool($onlyInstalled));
         $table = new Table($output);
         $table->setHeaders([
-            '',
             'Name',
             'Version',
             'Description',
@@ -43,24 +43,27 @@ class ListCommand extends Command
 
         foreach ($this->lister->list($onlyInstalled)->sorted() as $extension) {
             $table->addRow([
-                $this->formatState($extension->state()),
                 $extension->name(),
-                $extension->version(),
+                $this->formatVersion($extension),
                 $extension->description()
             ]);
         }
         $table->render();
-        $output->writeln('<comment>✔: installed, ✔*: fixed (primary) installed extension</>');
+        $output->writeln('<comment>* core extension</>');
     }
 
-    private function formatState(ExtensionState $state): string
+    private function formatVersion(Extension $extension): string
     {
-        if ($state->isPrimary()) {
-            return '✔*';
+        if (!$extension->state()->isInstalled()) {
+            return '';
         }
-        if ($state->isSecondary()) {
-            return '✔';
+
+        $version = $extension->version();
+
+        if ($extension->state()->isSecondary()) {
+            return $version;
         }
-        return '';
+
+        return sprintf('<options=bold>%s*</>', $version);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Phpactor\Extension\ExtensionManager\Command;
 
+use Phpactor\Extension\ExtensionManager\Model\Exception\CouldNotInstallExtension;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,18 +31,16 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (count((array) $input->getArgument('extension'))) {
-            $this->installer->requireExtensions((array) $input->getArgument('extension'));
+            try {
+                $this->installer->requireExtensions((array) $input->getArgument('extension'));
+            } catch (CouldNotInstallExtension $couldNotInstall) {
+                $output->writeln('<error>Could not install</>');
+                return 1;
+            }
+
             return 0;
         }
 
         $this->installer->install();
-    }
-
-    private function requireExtensions(InputInterface $input, OutputInterface $output)
-    {
-        foreach ((array) $input->getArgument('extension') as $extension) {
-            $version = $this->installer->addExtension($extension);
-            $output->writeln(sprintf('Using version <info>%s</> of %s', $version, $extension));
-        }
     }
 }
