@@ -29,9 +29,9 @@ class InstallerService
     private $extensionRepository;
 
     /**
-     * @var ExtensionConfigFactory
+     * @var ExtensionConfigLoader
      */
-    private $configFactory;
+    private $configLoader;
 
     /**
      * @var ProgressLogger
@@ -40,7 +40,7 @@ class InstallerService
 
     public function __construct(
         Installer $installer,
-        ExtensionConfigLoader $configFactory,
+        ExtensionConfigLoader $configLoader,
         VersionFinder $finder,
         ExtensionRepository $extensionRepository,
         ProgressLogger $progress
@@ -48,13 +48,13 @@ class InstallerService
         $this->installer = $installer;
         $this->finder = $finder;
         $this->extensionRepository = $extensionRepository;
-        $this->configFactory = $configFactory;
+        $this->configLoader = $configLoader;
         $this->progress = $progress;
     }
 
     public function requireExtensions(array $extensions): void
     {
-        $config = $this->configFactory->load();
+        $config = $this->configLoader->load();
 
         foreach ($extensions as $extension) {
             $version = $this->finder->findBestVersion($extension);

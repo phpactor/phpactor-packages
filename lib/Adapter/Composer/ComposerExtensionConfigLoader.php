@@ -23,7 +23,7 @@ class ComposerExtensionConfigLoader implements ExtensionConfigLoader
     private $vendorDir;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $minimumStability;
 

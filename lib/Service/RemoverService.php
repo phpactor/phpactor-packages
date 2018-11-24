@@ -69,7 +69,7 @@ class RemoverService
             $this->installer->installForceUpdate();
         } catch (Exception $exception) {
             $config->revert();
-            throw new CouldNotInstallExtension($couldNotInstall->getMessage(), null, $exception);
+            throw new CouldNotInstallExtension($exception->getMessage());
         }
     }
 }
