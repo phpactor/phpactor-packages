@@ -35,10 +35,7 @@ class ListCommandTest extends TestCase
         ]));
 
         $this->tester->execute([]);
-        $this->assertContains(<<<'EOT'
-one  | dev-xxx | One 
-EOT
-        , $this->tester->getDisplay());
+        $this->assertEquals(0, $this->tester->getStatusCode());
     }
 
     public function testListsInstalledExtensions()
