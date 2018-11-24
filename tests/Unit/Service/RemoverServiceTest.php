@@ -2,9 +2,11 @@
 
 namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Service;
 
+use Exception;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Model\Extension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionConfigLoader;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
@@ -39,9 +41,15 @@ class RemoverServiceTest extends TestCase
      */
     private $extension1;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $configLoader;
+
     public function setUp()
     {
         $this->installer = $this->prophesize(Installer::class);
+        $this->configLoader = $this->prophesize(ExtensionConfigLoader::class);
         $this->config = $this->prophesize(ExtensionConfig::class);
         $this->finder = $this->prophesize(DependentExtensionFinder::class);
         $this->repository = $this->prophesize(ExtensionRepository::class);
@@ -50,9 +58,10 @@ class RemoverServiceTest extends TestCase
             $this->installer->reveal(),
             $this->finder->reveal(),
             $this->repository->reveal(),
-            $this->config->reveal()
+            $this->configLoader->reveal()
         );
 
+        $this->configLoader->load()->willReturn($this->config->reveal());
         $this->extension1 = $this->prophesize(Extension::class);
     }
 
@@ -62,8 +71,24 @@ class RemoverServiceTest extends TestCase
         $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_SECONDARY));
 
         $this->config->unrequire('foobar')->shouldBeCalled();
-        $this->config->commit()->shouldBeCalled();
+        $this->installer->installForceUpdate()->shouldBeCalled();
+
         $this->service->removeExtension('foobar');
+    }
+
+    public function testRevertsConfigOnError()
+    {
+        $this->repository->find('foobar')->willReturn($this->extension1->reveal());
+        $this->extension1->state()->willReturn(new ExtensionState(ExtensionState::STATE_SECONDARY));
+
+        $this->config->unrequire('foobar')->shouldBeCalled();
+        $this->installer->installForceUpdate()->willThrow(new Exception('foo'));
+        $this->config->revert()->shouldBeCalled();
+
+        try {
+            $this->service->removeExtension('foobar');
+        } catch (Exception $e) {
+        }
     }
 
     public function testThrowsExceptionIfExtensionIsPrimary()

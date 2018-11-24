@@ -2,8 +2,11 @@
 
 namespace Phpactor\Extension\ExtensionManager\Service;
 
+use Exception;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
+use Phpactor\Extension\ExtensionManager\Model\Exception\CouldNotInstallExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionConfigLoader;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
@@ -23,25 +26,25 @@ class RemoverService
     private $finder;
 
     /**
-     * @var ExtensionConfig
-     */
-    private $config;
-
-    /**
      * @var ExtensionRepository
      */
     private $repository;
+
+    /**
+     * @var ExtensionConfigLoader
+     */
+    private $configLoader;
 
     public function __construct(
         Installer $installer,
         DependentExtensionFinder $finder,
         ExtensionRepository $repository,
-        ExtensionConfig $config
+        ExtensionConfigLoader $configLoader
     ) {
         $this->installer = $installer;
         $this->finder = $finder;
-        $this->config = $config;
         $this->repository = $repository;
+        $this->configLoader = $configLoader;
     }
 
     public function findDependentExtensions(array $extensionNames): Extensions
@@ -49,18 +52,10 @@ class RemoverService
         return $this->finder->findDependentExtensions($extensionNames);
     }
 
-    public function install()
-    {
-        $this->installer->install();
-    }
-
-    public function installForceUpdate()
-    {
-        $this->installer->installForceUpdate();
-    }
-
     public function removeExtension(string $extensionName): void
     {
+        $config = $this->configLoader->load();
+
         $extension = $this->repository->find($extensionName);
 
         if ($extension->state()->isPrimary()) {
@@ -69,7 +64,13 @@ class RemoverService
             );
         }
 
-        $this->config->unrequire($extensionName);
-        $this->config->revert();
+        $config->unrequire($extensionName);
+
+        try {
+            $this->installer->installForceUpdate();
+        } catch (Exception $exception) {
+            $config->revert();
+            throw new CouldNotInstallExtension($couldNotInstall->getMessage(), null, $exception);
+        }
     }
 }

@@ -93,6 +93,9 @@ class InstallerServiceTest extends TestCase
         $this->installer->install()->willThrow(new CouldNotInstallExtension('foo'));
         $this->config->revert()->shouldBeCalled();
 
-        $this->service->requireExtensions(['foobar']);
+        try {
+            $this->service->requireExtensions(['foobar']);
+        } catch (CouldNotInstallExtension $e) {
+        }
     }
 }
