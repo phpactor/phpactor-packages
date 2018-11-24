@@ -68,7 +68,9 @@ class ComposerExtensionRepository implements ExtensionRepository
         $packages = $this->packagistRepository->search('', 0, 'phpactor-extension');
 
         $allExtensions = new Extensions(array_map(function (array $packageInfo) {
-            $package = $this->packagistRepository->findPackage($packageInfo['name'], '*');
+            if (!$package = $this->repository->findPackage($packageInfo['name'], '*')) {
+                $package = $this->packagistRepository->findPackage($packageInfo['name'], '*');
+            }
 
             return $this->extensionFactory->fromPackage(
                 $package,
