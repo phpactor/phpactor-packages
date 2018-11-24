@@ -68,8 +68,13 @@ class InstallerService
         return $version;
     }
 
-    public function install(ExtensionConfig $config): void
+    public function install(ExtensionConfig $config = null): void
     {
+        if (!$config) {
+            $this->installer->install();
+            return;
+        }
+
         try {
             $this->installer->install();
         } catch (Exception $couldNotInstall) {

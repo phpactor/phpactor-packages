@@ -36,7 +36,7 @@ class InstallCommandTest extends TestCase
 
     public function testItInstallsASingleExtension()
     {
-        $this->installer->addExtension('foobar')->willReturn('foo-version')->shouldBeCalled();
+        $this->installer->requireExtensions(['foobar'])->shouldBeCalled();
         $this->installer->installForceUpdate()->shouldBeCalled();
 
         $this->tester->execute([
@@ -49,8 +49,7 @@ class InstallCommandTest extends TestCase
 
     public function testItInstallsManyExtensions()
     {
-        $this->installer->addExtension('foobar')->willReturn('foo-version')->shouldBeCalled();
-        $this->installer->addExtension('barfoo')->willReturn('foo-version')->shouldBeCalled();
+        $this->installer->requireExtensions(['foobar', 'barfoo'])->shouldBeCalled();
         $this->installer->installForceUpdate()->shouldBeCalled();
 
         $this->tester->execute([
