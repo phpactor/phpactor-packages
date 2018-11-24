@@ -31,7 +31,6 @@ class InstallCommand extends Command
     {
         if (count((array) $input->getArgument('extension'))) {
             $this->installer->requireExtensions((array) $input->getArgument('extension'));
-            $this->installer->installForceUpdate();
             return 0;
         }
 

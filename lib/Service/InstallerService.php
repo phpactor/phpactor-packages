@@ -53,7 +53,7 @@ class InstallerService
         $this->progress = $progress;
     }
 
-    public function requireExtensions(array $extensions): string
+    public function requireExtensions(array $extensions): void
     {
         $config = $this->configFactory->load();
 
@@ -65,8 +65,6 @@ class InstallerService
 
         $config->write();
         $this->installForceUpdate($config);
-
-        return $version;
     }
 
     public function install(): void
@@ -74,17 +72,19 @@ class InstallerService
         $this->installer->install();
     }
 
-    public function installForceUpdate(ExtensionConfig $config = null)
+    public function installForceUpdate(ExtensionConfig $config = null): void
     {
         if (!$config) {
             $this->installer->installForceUpdate();
+            return;
         }
 
         try {
             $this->installer->installForceUpdate();
         } catch (Exception $couldNotInstall) {
             $config->revert();
-            throw new CouldNotInstallExtension($couldNotInstall->getMessage(), null, $couldNotInstall);
+            $this->progress->log('Rolling back configuration');
+            throw new CouldNotInstallExtension($couldNotInstall->getMessage());
         }
     }
 }

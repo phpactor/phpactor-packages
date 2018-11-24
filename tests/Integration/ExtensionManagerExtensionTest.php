@@ -4,6 +4,7 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\PhpactorContainer;
+use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\Rpc\Request;
@@ -38,6 +39,7 @@ class ExtensionManagerExtensionTest extends TestCase
     {
         return PhpactorContainer::fromExtensions([
             ExtensionManagerExtension::class,
+            ConsoleExtension::class,
             RpcExtension::class,
             LoggingExtension::class,
         ], [

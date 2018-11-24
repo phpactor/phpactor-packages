@@ -141,18 +141,10 @@ class ExtensionManagerExtension implements Extension
             }
 
             return new ConsoleIO(
-                $container->get('extension_manager.console.input'),
-                $container->get('extension_manager.console.output'),
+                $container->get(ConsoleExtension::SERVICE_INPUT),
+                $container->get(ConsoleExtension::SERVICE_OUTPUT),
                 $helperSet
             );
-        });
-
-        $container->register('extension_manager.console.input', function () {
-            return new ArgvInput();
-        });
-
-        $container->register('extension_manager.console.output', function () {
-            return new ConsoleOutput();
         });
 
         $container->register('extension_manager.repository.primary', function (Container $container) {
