@@ -45,7 +45,7 @@ class ComposerExtensionConfigTest extends TestCase
     public function testRequires()
     {
         $this->config->require('foo', 'bar');
-        $this->config->commit();
+        $this->config->revert();
         $this->assertArraySubset([
             'require' => [
                 'foo' => 'bar'
@@ -56,10 +56,10 @@ class ComposerExtensionConfigTest extends TestCase
     public function testUnrequireRemovesRequireElementCompletely()
     {
         $this->config->require('foo', 'bar');
-        $this->config->commit();
+        $this->config->revert();
 
         $this->config->unrequire('foo');
-        $this->config->commit();
+        $this->config->revert();
 
         $this->assertArrayNotHasKey('require', $this->render());
     }

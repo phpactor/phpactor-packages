@@ -29,14 +29,12 @@ class InstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->requireExtensions($input, $output);
-
         if (count((array) $input->getArgument('extension'))) {
             $this->installer->installForceUpdate();
             return 0;
         }
 
-        $this->installer->install();
+        $this->installer->requireExtensions((array) $input->getArgument('extension'));
     }
 
     private function requireExtensions(InputInterface $input, OutputInterface $output)

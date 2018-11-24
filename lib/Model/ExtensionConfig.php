@@ -8,5 +8,5 @@ interface ExtensionConfig
 
     public function unrequire(string $extension): void;
 
-    public function commit(): void;
+    public function revert(): void;
 }

@@ -2,8 +2,10 @@
 
 namespace Phpactor\Extension\ExtensionManager\Service;
 
+use Exception;
 use Phpactor\Extension\ExtensionManager\Model\AddExtension;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
+use Phpactor\Extension\ExtensionManager\Model\ExtensionConfigLoader;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Model\VersionFinder;
@@ -14,10 +16,6 @@ class InstallerService
      * @var Installer
      */
     private $installer;
-
-    /**
-     * @var ExtensionConfig
-     */
     private $config;
 
     /**
@@ -30,34 +28,55 @@ class InstallerService
      */
     private $extensionRepository;
 
+    /**
+     * @var ExtensionConfigFactory
+     */
+    private $configFactory;
+
+    /**
+     * @var ProgressLogger
+     */
+    private $progress;
+
     public function __construct(
         Installer $installer,
-        ExtensionConfig $config,
+        ExtensionConfigLoader $configFactory,
         VersionFinder $finder,
-        ExtensionRepository $extensionRepository
+        ExtensionRepository $extensionRepository,
+        ProgressLogger $progress
     ) {
         $this->installer = $installer;
-        $this->config = $config;
         $this->finder = $finder;
         $this->extensionRepository = $extensionRepository;
+        $this->configFactory = $configFactory;
+        $this->progress = $progress;
     }
 
-    public function addExtension($extension): string
+    public function requireExtensions(array $extensions): string
     {
-        $version = $this->finder->findBestVersion($extension);
+        $config = $this->configFactory->load();
 
-        $this->config->require($extension, $version);
-        $this->config->commit();
+        foreach ($extensions as $extension) {
+            $version = $this->finder->findBestVersion($extension);
+            $this->progress->log(sprintf('Using version "%s"', $version));
+            $config->require($extension, $version);
+        }
+
+        $this->install($config);
 
         return $version;
     }
 
-    public function install(): void
+    public function install(ExtensionConfig $config): void
     {
-        $this->installer->install();
+        try {
+            $this->installer->install();
+        } catch (Exception $couldNotInstall) {
+            $config->revert();
+        }
     }
 
-    public function installForceUpdate(): void
+    public function installForceUpdate()
     {
         $this->installer->installForceUpdate();
     }

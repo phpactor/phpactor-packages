@@ -74,7 +74,7 @@ class ComposerExtensionConfig implements ExtensionConfig
         }
     }
 
-    public function commit(): void
+    public function revert(): void
     {
         file_put_contents($this->path, json_encode($this->config, JSON_PRETTY_PRINT));
     }

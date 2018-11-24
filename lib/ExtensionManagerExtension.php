@@ -301,7 +301,7 @@ class ExtensionManagerExtension implements Extension
 
         // unconditionally write the configuration file (updates any
         // configuration parameters which may have been set).
-        $config->commit();
+        $config->revert();
     }
 
     private function registerRpc(ContainerBuilder $container)

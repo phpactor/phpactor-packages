@@ -70,6 +70,6 @@ class RemoverService
         }
 
         $this->config->unrequire($extensionName);
-        $this->config->commit();
+        $this->config->revert();
     }
 }
