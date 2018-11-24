@@ -80,7 +80,8 @@ class InstallerServiceTest extends TestCase
     {
         $this->finder->findBestVersion('foobar')->willReturn('dev-foo');
         $this->config->require('foobar', 'dev-foo')->shouldBeCalled();
-        $this->installer->install()->shouldBeCalled();
+        $this->config->write()->shouldBeCalled();
+        $this->installer->installForceUpdate()->shouldBeCalled();
         $this->progress->log('Using version "dev-foo"')->shouldBeCalled();
 
         $this->service->requireExtensions(['foobar']);
@@ -90,7 +91,8 @@ class InstallerServiceTest extends TestCase
     {
         $this->finder->findBestVersion('foobar')->willReturn('dev-foo');
         $this->config->require('foobar', 'dev-foo')->shouldBeCalled();
-        $this->installer->install()->willThrow(new CouldNotInstallExtension('foo'));
+        $this->config->write()->shouldBeCalled();
+        $this->installer->installForceUpdate()->willThrow(new CouldNotInstallExtension('foo'));
         $this->config->revert()->shouldBeCalled();
 
         try {

@@ -63,28 +63,28 @@ class InstallerService
             $config->require($extension, $version);
         }
 
-        $this->install($config);
+        $config->write();
+        $this->installForceUpdate($config);
 
         return $version;
     }
 
-    public function install(ExtensionConfig $config = null): void
+    public function install(): void
+    {
+        $this->installer->install();
+    }
+
+    public function installForceUpdate(ExtensionConfig $config = null)
     {
         if (!$config) {
-            $this->installer->install();
-            return;
+            $this->installer->installForceUpdate();
         }
 
         try {
-            $this->installer->install();
+            $this->installer->installForceUpdate();
         } catch (Exception $couldNotInstall) {
             $config->revert();
             throw new CouldNotInstallExtension($couldNotInstall->getMessage(), null, $couldNotInstall);
         }
-    }
-
-    public function installForceUpdate()
-    {
-        $this->installer->installForceUpdate();
     }
 }

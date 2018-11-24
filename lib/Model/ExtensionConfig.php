@@ -9,4 +9,6 @@ interface ExtensionConfig
     public function unrequire(string $extension): void;
 
     public function revert(): void;
+
+    public function write(): void;
 }

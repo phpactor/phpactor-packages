@@ -61,8 +61,7 @@ EOT
             ]
         ]);
         $installer = $container->get('extension_manager.service.installer');
-        $installer->addExtension('test/extension');
-        $installer->install();
+        $installer->requireExtensions(['test/extension']);
         $this->finder = $container->get('extension_manager.adapter.composer.version_finder');
     }
 }

@@ -37,6 +37,11 @@ class ComposerExtensionConfig implements ExtensionConfig
      */
     private $vendorDir;
 
+    /**
+     * @var string
+     */
+    private $originalContents;
+
     public function __construct(
         string $path,
         string $rootPackageName,
@@ -49,6 +54,7 @@ class ComposerExtensionConfig implements ExtensionConfig
         $this->repositories = $repositories;
         $this->rootPackageName = $rootPackageName;
         $this->vendorDir = $vendorDir;
+        $this->originalContents = '{}';
         $this->config = $this->read();
     }
 
@@ -75,6 +81,11 @@ class ComposerExtensionConfig implements ExtensionConfig
     }
 
     public function revert(): void
+    {
+        file_put_contents($this->path, $this->originalContents);
+    }
+
+    public function write(): void
     {
         file_put_contents($this->path, json_encode($this->config, JSON_PRETTY_PRINT));
     }
@@ -128,13 +139,15 @@ class ComposerExtensionConfig implements ExtensionConfig
         return $config;
     }
 
-    private function readFile()
+    private function readFile(): string
     {
         if (!file_exists($this->path)) {
             return '{}';
         }
         
         $contents = (string) file_get_contents($this->path);
+        $this->originalContents = $contents;
+
         return $contents;
     }
 }

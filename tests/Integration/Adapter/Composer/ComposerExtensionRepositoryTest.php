@@ -57,8 +57,7 @@ EOT
         ]);
         $installer= $container->get('extension_manager.service.installer');
         $this->repository = $container->get('extension_manager.model.extension_repository');
-        $installer->addExtension('test/extension');
-        $installer->install();
+        $installer->requireExtensions(['test/extension']);
     }
 
     public function testReturnsAllInstalledExtensions()

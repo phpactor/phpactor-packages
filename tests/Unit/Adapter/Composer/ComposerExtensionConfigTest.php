@@ -45,12 +45,21 @@ class ComposerExtensionConfigTest extends TestCase
     public function testRequires()
     {
         $this->config->require('foo', 'bar');
-        $this->config->revert();
+        $this->config->write();
         $this->assertArraySubset([
             'require' => [
                 'foo' => 'bar'
             ]
         ], $this->render());
+    }
+
+    public function testRevertsToOriginalConfig()
+    {
+        $this->config->require('foo', 'bar');
+        $this->config->write();
+        $this->config->revert();
+
+        $this->assertArraySubset([], $this->render());
     }
 
     public function testUnrequireRemovesRequireElementCompletely()

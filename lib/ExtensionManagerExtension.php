@@ -18,8 +18,10 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Console\ConsoleExtension;
+use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfigLoader;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\PackageExtensionFactory;
+use Phpactor\Extension\ExtensionManager\Adapter\Console\SymfonyProgressLogger;
 use Phpactor\Extension\ExtensionManager\Model\DependentExtensionFinder;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Adapter\Composer\ComposerVersionFinder;
@@ -213,8 +215,8 @@ class ExtensionManagerExtension implements Extension
 
     private function registerModel(ContainerBuilder $container)
     {
-        $container->register('extension_manager.adapter.composer.extension_config', function (Container $container) {
-            return new ComposerExtensionConfig(
+        $container->register('extension_manager.adapter.extension_config_loader', function (Container $container) {
+            return new ComposerExtensionConfigLoader(
                 $container->getParameter(self::PARAM_EXTENSION_CONFIG_FILE),
                 $container->getParameter(self::PARAM_ROOT_PACKAGE_NAME),
                 $container->getParameter(self::PARAM_EXTENSION_VENDOR_DIR),
@@ -262,12 +264,17 @@ class ExtensionManagerExtension implements Extension
 
     private function registerService(ContainerBuilder $container)
     {
+        $container->register('extension_manager.service.progress', function (Container $container) {
+            return new SymfonyProgressLogger($container->get(ConsoleExtension::SERVICE_OUTPUT));
+        });
+
         $container->register('extension_manager.service.installer', function (Container $container) {
             return new InstallerService(
                 $container->get('extension_manager.model.installer'),
-                $container->get('extension_manager.adapter.composer.extension_config'),
+                $container->get('extension_manager.adapter.extension_config_loader'),
                 $container->get('extension_manager.adapter.composer.version_finder'),
-                $container->get('extension_manager.model.extension_repository')
+                $container->get('extension_manager.model.extension_repository'),
+                $container->get('extension_manager.service.progress')
             );
         });
 
@@ -282,7 +289,7 @@ class ExtensionManagerExtension implements Extension
                 $container->get('extension_manager.model.installer'),
                 $container->get('extension_manager.model.dependency_finder'),
                 $container->get('extension_manager.model.extension_repository'),
-                $container->get('extension_manager.adapter.composer.extension_config')
+                $container->get('extension_manager.adapter.extension_config_loader')
             );
         });
     }
@@ -297,11 +304,11 @@ class ExtensionManagerExtension implements Extension
         }
 
         /** @var ExtensionConfig $config */
-        $config = $container->get('extension_manager.adapter.composer.extension_config');
+        $config = $container->get('extension_manager.adapter.extension_config_loader')->load();
 
         // unconditionally write the configuration file (updates any
         // configuration parameters which may have been set).
-        $config->revert();
+        $config->write();
     }
 
     private function registerRpc(ContainerBuilder $container)
