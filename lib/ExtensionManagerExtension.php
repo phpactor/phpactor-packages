@@ -71,7 +71,7 @@ class ExtensionManagerExtension implements Extension
             self::PARAM_INSTALLED_EXTENSIONS_FILE => '%application_root%/extensions/extensions.php',
 
             self::PARAM_ROOT_PACKAGE_NAME => 'phpactor-extensions',
-            self::PARAM_MINIMUM_STABILITY => null,
+            self::PARAM_MINIMUM_STABILITY => 'stable',
             self::PARAM_REPOSITORIES => [],
             self::PARAM_QUIET => false,
         ]);
@@ -221,7 +221,8 @@ class ExtensionManagerExtension implements Extension
         });
         $container->register('extension_manager.adapter.composer.version_finder', function (Container $container) {
             return new ComposerVersionFinder(
-                $container->get('extension_manager.composer.version_selector')
+                $container->get('extension_manager.composer.version_selector'),
+                $container->getParameter(self::PARAM_MINIMUM_STABILITY)
             );
         });
         $container->register('extension_manager.model.installer', function (Container $container) {

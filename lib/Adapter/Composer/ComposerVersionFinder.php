@@ -13,14 +13,21 @@ class ComposerVersionFinder implements VersionFinder
      */
     private $selector;
 
-    public function __construct(VersionSelector $selector)
+    /**
+     * @var string
+     */
+    private $minimumStability;
+
+
+    public function __construct(VersionSelector $selector, string $minimumStability)
     {
         $this->selector = $selector;
+        $this->minimumStability = $minimumStability;
     }
 
     public function findBestVersion(string $extensionName): string
     {
-        $package = $this->selector->findBestCandidate($extensionName);
+        $package = $this->selector->findBestCandidate($extensionName, null, null, $this->minimumStability);
 
         if (is_bool($package)) {
             throw new RuntimeException(sprintf(
@@ -29,6 +36,8 @@ class ComposerVersionFinder implements VersionFinder
             ));
         }
 
-        return $package->getPrettyVersion();
+        $requireVersion = $this->selector->findRecommendedRequireVersion($package);
+
+        return $requireVersion;
     }
 }

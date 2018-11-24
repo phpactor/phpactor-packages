@@ -13,7 +13,7 @@
 
     "require": {
         "phpactor/container": "^1.0",
-        "phpactor/console-extension": "dev-master",
+        "phpactor/console-extension": "~0.1",
         "composer/composer": "^1.7",
         "webmozart/path-util": "^2.3",
         "phpactor/file-path-resolver-extension": "~0.1"
@@ -23,7 +23,7 @@
         "phpunit/phpunit": "^7.4",
         "friendsofphp/php-cs-fixer": "^2.13",
         "phpactor/test-utils": "^1.0",
-        "phpactor/rpc-extension": "^1.0@dev"
+        "phpactor/rpc-extension": "~0.1"
     },
     "autoload": {
         "psr-4": {
