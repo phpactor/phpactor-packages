@@ -62,6 +62,33 @@ class ComposerExtensionConfigTest extends TestCase
         $this->assertArraySubset([], $this->render());
     }
 
+    public function testAddsRepositories()
+    {
+        $repository = [
+            'type' => 'hello',
+            'url' => 'foo/bar'
+        ];
+
+        file_put_contents($this->path, json_encode([
+            'repositories' => [ $repository ],
+        ]));
+
+        $this->config = new ComposerExtensionConfig(
+            $this->path,
+            'my-package',
+            dirname($this->path) .  '/vendorext',
+            'dev',
+            [
+                $repository,
+            ]
+        );
+        $this->config->write();
+
+        $this->assertEquals([
+            $repository
+        ], $this->render()['repositories']);
+    }
+
     public function testUnrequireRemovesRequireElementCompletely()
     {
         $this->config->require('foo', 'bar');

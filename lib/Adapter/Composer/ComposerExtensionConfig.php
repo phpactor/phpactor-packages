@@ -117,9 +117,7 @@ class ComposerExtensionConfig implements ExtensionConfig
                 $config['repositories'] = [];
             }
 
-            foreach ($this->repositories as $repository) {
-                $config['repositories'][] = $repository;
-            }
+            $config['repositories'] = $this->repositories;
         }
 
         return $config;
