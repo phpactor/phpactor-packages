@@ -4,7 +4,7 @@ namespace Phpactor\Extension\ExtensionManager\Rpc;
 
 use Exception;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
-use Phpactor\Extension\ExtensionManager\Service\InstallerService;
+use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Handler\AbstractHandler;
 use Phpactor\Extension\Rpc\Request;
@@ -15,23 +15,23 @@ use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
 use Phpactor\Extension\Rpc\Response\Input\TextInput;
 use Phpactor\MapResolver\Resolver;
 
-class ExtensionInstallHandler extends AbstractHandler implements Handler
+class ExtensionRemoveHandler extends AbstractHandler implements Handler
 {
     const PARAM_EXTENSION_NAME = 'extension_name';
 
     /**
-     * @var InstallerService
+     * @var RemoverService
      */
-    private $installer;
+    private $remover;
 
-    public function __construct(InstallerService $installer)
+    public function __construct(RemoverService $remover)
     {
-        $this->installer = $installer;
+        $this->remover = $remover;
     }
 
     public function name(): string
     {
-        return 'extension_install';
+        return 'extension_remove';
     }
 
     public function configure(Resolver $resolver)
@@ -52,11 +52,11 @@ class ExtensionInstallHandler extends AbstractHandler implements Handler
         }
 
         try {
-            $this->installer->requireExtensions([ $arguments[self::PARAM_EXTENSION_NAME] ]);
+            $this->remover->removeExtension($arguments[self::PARAM_EXTENSION_NAME]);
         } catch (Exception $e) {
             return CollectionResponse::fromActions([
                 ErrorResponse::fromMessageAndDetails(
-                    'Failed to install extension, try running `phpactor extension:install` from the command line',
+                    'Failed to remove extension, try running `phpactor extension:remove` from the command line',
                     $e->getMessage()
                 ),
                 InputCallbackResponse::fromCallbackAndInputs(
@@ -71,7 +71,7 @@ class ExtensionInstallHandler extends AbstractHandler implements Handler
             ]);
         };
 
-        return EchoResponse::fromMessage(sprintf('Extension "%s" installed', $arguments[self::PARAM_EXTENSION_NAME]));
+        return EchoResponse::fromMessage(sprintf('Extension "%s" removed', $arguments[self::PARAM_EXTENSION_NAME]));
     }
 
     private function formatState(ExtensionState $extensionState)

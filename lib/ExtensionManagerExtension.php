@@ -34,6 +34,7 @@ use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionInstallHandler;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionListHandler;
+use Phpactor\Extension\ExtensionManager\Rpc\ExtensionRemoveHandler;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
@@ -321,6 +322,10 @@ class ExtensionManagerExtension implements Extension
 
         $container->register('extension_manager.rpc.handler.install', function (Container $container) {
             return new ExtensionInstallHandler($container->get('extension_manager.service.installer'));
+        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+
+        $container->register('extension_manager.rpc.handler.remove', function (Container $container) {
+            return new ExtensionRemoveHandler($container->get('extension_manager.service.remover'));
         }, [ RpcExtension::TAG_RPC_HANDLER => []]);
     }
 
