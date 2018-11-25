@@ -4,9 +4,7 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Rpc;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\ExtensionManager\Rpc\ExtensionInstallHandler;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionRemoveHandler;
-use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\Extension\Rpc\Response\CollectionResponse;
 use Phpactor\Extension\Rpc\Response\EchoResponse;
@@ -62,4 +60,3 @@ class ExtensionRemoveHandlerTest extends TestCase
         return $tester;
     }
 }
-
