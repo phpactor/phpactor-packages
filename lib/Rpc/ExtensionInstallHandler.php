@@ -3,9 +3,7 @@
 namespace Phpactor\Extension\ExtensionManager\Rpc;
 
 use Exception;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
-use Phpactor\Extension\ExtensionManager\Model\Installer;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Handler\AbstractHandler;

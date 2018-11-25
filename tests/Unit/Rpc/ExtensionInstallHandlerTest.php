@@ -4,12 +4,7 @@ namespace Phpactor\Extension\ExtensionManager\Tests\Unit\Rpc;
 
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\ExtensionManager\Model\Extension;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionRepository;
-use Phpactor\Extension\ExtensionManager\Model\ExtensionState;
-use Phpactor\Extension\ExtensionManager\Model\Extensions;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionInstallHandler;
-use Phpactor\Extension\ExtensionManager\Rpc\ExtensionListHandler;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\Rpc\Response\CollectionResponse;
 use Phpactor\Extension\Rpc\Response\EchoResponse;

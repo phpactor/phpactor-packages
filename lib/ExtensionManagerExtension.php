@@ -320,7 +320,7 @@ class ExtensionManagerExtension implements Extension
         }, [ RpcExtension::TAG_RPC_HANDLER => []]);
 
         $container->register('extension_manager.rpc.handler.install', function (Container $container) {
-            return new ExtensionInstallHandler($container->get('extension_manager.service.installer'), $container->get(ConsoleExtension::SERVICE_OUTPUT));
+            return new ExtensionInstallHandler($container->get('extension_manager.service.installer'));
         }, [ RpcExtension::TAG_RPC_HANDLER => []]);
     }
 
