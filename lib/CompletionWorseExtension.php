@@ -2,6 +2,7 @@
 
 namespace Phpactor\Extension\CompletionWorse;
 
+use Phpactor\Completion\Bridge\TolerantParser\LimitingCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\SourceCodeFilesystem\ScfClassCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassAliasCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstantCompletor;
@@ -84,10 +85,10 @@ class CompletionWorseExtension implements Extension
         }, [ self::TAG_TOLERANT_COMPLETOR => []]);
 
         $container->register('completion_worse.completor.tolerant.class', function (Container $container) {
-            return new ScfClassCompletor(
+            return new LimitingCompletor(new ScfClassCompletor(
                 $container->get(SourceCodeFilesystemExtension::SERVICE_REGISTRY)->get('composer'),
                 $container->get('class_to_file.file_to_class')
-            );
+            ), $container->getParameter(self::CLASS_COMPLETOR_LIMIT));
         }, [ self::TAG_TOLERANT_COMPLETOR => []]);
 
         $container->register('completion_worse.completor.local_variable', function (Container $container) {
