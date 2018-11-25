@@ -5,6 +5,7 @@ use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
 use Phpactor\Extension\Logger\LoggingExtension;
+use Phpactor\Extension\Rpc\RpcExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Symfony\Component\Console\Application;
 
@@ -35,6 +36,8 @@ $container = PhpactorContainer::fromExtensions(array_merge($extensions, [
     ExtensionManagerExtension::class,
     ConsoleExtension::class,
     FilePathResolverExtension::class,
+    RpcExtension::class,
+    LoggingExtension::class
 ]), [
     ExtensionManagerExtension::PARAM_MINIMUM_STABILITY=> 'dev',
     FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__ . '/..',

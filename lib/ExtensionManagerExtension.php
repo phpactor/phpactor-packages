@@ -32,6 +32,7 @@ use Phpactor\Extension\ExtensionManager\Command\UpdateCommand;
 use Phpactor\Extension\ExtensionManager\EventSubscriber\PostInstallSubscriber;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionConfig;
 use Phpactor\Extension\ExtensionManager\Model\ExtensionFileGenerator;
+use Phpactor\Extension\ExtensionManager\Rpc\ExtensionInstallHandler;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionListHandler;
 use Phpactor\Extension\ExtensionManager\Service\ExtensionLister;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
@@ -41,6 +42,8 @@ use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Webmozart\PathUtil\Path;
 
 class ExtensionManagerExtension implements Extension
@@ -139,7 +142,7 @@ class ExtensionManagerExtension implements Extension
                 'question' => new QuestionHelper(),
             ]);
 
-            if ($container->getParameter(self::PARAM_QUIET)) {
+            if ($this->isRpcCommand($container) || $container->getParameter(self::PARAM_QUIET)) {
                 return new BufferIO();
             }
 
@@ -263,7 +266,8 @@ class ExtensionManagerExtension implements Extension
     private function registerService(ContainerBuilder $container)
     {
         $container->register('extension_manager.service.progress', function (Container $container) {
-            return new SymfonyProgressLogger($container->get(ConsoleExtension::SERVICE_OUTPUT));
+            $output = $this->isRpcCommand($container) ? new BufferedOutput() : $container->get(ConsoleExtension::SERVICE_OUTPUT);
+            return new SymfonyProgressLogger($output);
         });
 
         $container->register('extension_manager.service.installer', function (Container $container) {
@@ -314,10 +318,23 @@ class ExtensionManagerExtension implements Extension
         $container->register('extension_manager.rpc.handler.list', function (Container $container) {
             return new ExtensionListHandler($container->get('extension_manager.model.extension_repository'));
         }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+
+        $container->register('extension_manager.rpc.handler.install', function (Container $container) {
+            return new ExtensionInstallHandler($container->get('extension_manager.service.installer'), $container->get(ConsoleExtension::SERVICE_OUTPUT));
+        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
     }
 
     private function resolvePath(Container $container, string $path)
     {
         return $container->get(FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER)->resolve($container->getParameter($path));
+    }
+
+    private function isRpcCommand(Container $container): bool
+    {
+        /** @var InputInterface $input */
+        $input = $container->get(ConsoleExtension::SERVICE_INPUT);
+        $cmd = $input->getFirstArgument();
+
+        return $cmd === 'rpc';
     }
 }
