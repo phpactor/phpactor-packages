@@ -31,7 +31,7 @@ use Phpactor\Container\Container;
 
 class CompletionWorseExtension implements Extension
 {
-    const CLASS_COMPLETOR_LIMIT = 'completion_worse.completor.class.limit';
+    const PARAM_CLASS_COMPLETOR_LIMIT = 'completion_worse.completor.class.limit';
     const TAG_TOLERANT_COMPLETOR = 'completion_worse.tolerant_completor';
 
     /**
@@ -47,6 +47,9 @@ class CompletionWorseExtension implements Extension
      */
     public function configure(Resolver $schema)
     {
+        $schema->setDefaults([
+            self::PARAM_CLASS_COMPLETOR_LIMIT => 100,
+        ]);
     }
 
     private function registerCompletion(ContainerBuilder $container)
@@ -88,7 +91,7 @@ class CompletionWorseExtension implements Extension
             return new LimitingCompletor(new ScfClassCompletor(
                 $container->get(SourceCodeFilesystemExtension::SERVICE_REGISTRY)->get('composer'),
                 $container->get('class_to_file.file_to_class')
-            ), $container->getParameter(self::CLASS_COMPLETOR_LIMIT));
+            ), $container->getParameter(self::PARAM_CLASS_COMPLETOR_LIMIT));
         }, [ self::TAG_TOLERANT_COMPLETOR => []]);
 
         $container->register('completion_worse.completor.local_variable', function (Container $container) {
