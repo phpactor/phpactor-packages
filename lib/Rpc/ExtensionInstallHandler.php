@@ -8,7 +8,6 @@ use Phpactor\Extension\ExtensionManager\Service\InstallerService;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Handler\AbstractHandler;
 use Phpactor\Extension\Rpc\Request;
-use Phpactor\Extension\Rpc\Response\CollectionResponse;
 use Phpactor\Extension\Rpc\Response\EchoResponse;
 use Phpactor\Extension\Rpc\Response\ErrorResponse;
 use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
@@ -54,21 +53,10 @@ class ExtensionInstallHandler extends AbstractHandler implements Handler
         try {
             $this->installer->requireExtensions([ $arguments[self::PARAM_EXTENSION_NAME] ]);
         } catch (Exception $e) {
-            return CollectionResponse::fromActions([
-                ErrorResponse::fromMessageAndDetails(
-                    'Failed to install extension, try running `phpactor extension:install` from the command line',
-                    $e->getMessage()
-                ),
-                InputCallbackResponse::fromCallbackAndInputs(
-                    Request::fromNameAndParameters(
-                        $this->name(),
-                        $arguments
-                    ),
-                    [
-                        $this->createTextInput($arguments[self::PARAM_EXTENSION_NAME])
-                    ]
-                ),
-            ]);
+            return ErrorResponse::fromMessageAndDetails(
+                'Failed to install extension, try running `phpactor extension:install` from the command line',
+                $e->getMessage()
+            );
         };
 
         return EchoResponse::fromMessage(sprintf('Extension "%s" installed', $arguments[self::PARAM_EXTENSION_NAME]));

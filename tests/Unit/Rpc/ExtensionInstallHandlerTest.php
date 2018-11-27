@@ -6,8 +6,8 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\ExtensionManager\Rpc\ExtensionInstallHandler;
 use Phpactor\Extension\ExtensionManager\Service\InstallerService;
-use Phpactor\Extension\Rpc\Response\CollectionResponse;
 use Phpactor\Extension\Rpc\Response\EchoResponse;
+use Phpactor\Extension\Rpc\Response\ErrorResponse;
 use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
 use Phpactor\Extension\Rpc\Test\HandlerTester;
 
@@ -49,7 +49,7 @@ class ExtensionInstallHandlerTest extends TestCase
         $response = $tester->handle('extension_install', [
             'extension_name' => self::EXAMPLE_EXTENSION_NAME,
         ]);
-        $this->assertInstanceOf(CollectionResponse::class, $response);
+        $this->assertInstanceOf(ErrorResponse::class, $response);
     }
 
     private function createTester(): HandlerTester

@@ -8,7 +8,6 @@ use Phpactor\Extension\ExtensionManager\Service\RemoverService;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Handler\AbstractHandler;
 use Phpactor\Extension\Rpc\Request;
-use Phpactor\Extension\Rpc\Response\CollectionResponse;
 use Phpactor\Extension\Rpc\Response\EchoResponse;
 use Phpactor\Extension\Rpc\Response\ErrorResponse;
 use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
@@ -54,21 +53,10 @@ class ExtensionRemoveHandler extends AbstractHandler implements Handler
         try {
             $this->remover->removeExtension($arguments[self::PARAM_EXTENSION_NAME]);
         } catch (Exception $e) {
-            return CollectionResponse::fromActions([
-                ErrorResponse::fromMessageAndDetails(
-                    'Failed to remove extension, try running `phpactor extension:remove` from the command line',
-                    $e->getMessage()
-                ),
-                InputCallbackResponse::fromCallbackAndInputs(
-                    Request::fromNameAndParameters(
-                        $this->name(),
-                        $arguments
-                    ),
-                    [
-                        $this->createTextInput($arguments[self::PARAM_EXTENSION_NAME])
-                    ]
-                ),
-            ]);
+            return ErrorResponse::fromMessageAndDetails(
+                'Failed to remove extension, try running `phpactor extension:remove` from the command line',
+                $e->getMessage()
+            );
         };
 
         return EchoResponse::fromMessage(sprintf('Extension "%s" removed', $arguments[self::PARAM_EXTENSION_NAME]));
