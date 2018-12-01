@@ -26,6 +26,6 @@ class CompletionRpcExtension implements Extension
     {
         $container->register('completion_rpc.handler', function (Container $container) {
             return new CompleteHandler($container->get(CompletionExtension::SERVICE_REGISTRY));
-        }, [ RpcExtension::TAG_RPC_HANDLER => [] ]);
+        }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => CompleteHandler::NAME] ]);
     }
 }
