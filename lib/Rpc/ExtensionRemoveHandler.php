@@ -17,6 +17,8 @@ use Phpactor\MapResolver\Resolver;
 class ExtensionRemoveHandler extends AbstractHandler implements Handler
 {
     const PARAM_EXTENSION_NAME = 'extension_name';
+    const NAME = 'extension_remove';
+
 
     /**
      * @var RemoverService
@@ -30,7 +32,7 @@ class ExtensionRemoveHandler extends AbstractHandler implements Handler
 
     public function name(): string
     {
-        return 'extension_remove';
+        return self::NAME;
     }
 
     public function configure(Resolver $resolver)

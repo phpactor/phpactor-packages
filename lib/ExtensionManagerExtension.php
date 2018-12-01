@@ -127,7 +127,7 @@ class ExtensionManagerExtension implements Extension
             // to instantiate earlier).
             return $this->createComposer($container);
         });
-        
+
         $container->register('extension_manager.installer', function (Container $container) {
             $installer = Installer::create(
                 $container->get('extension_manager.io'),
@@ -137,7 +137,7 @@ class ExtensionManagerExtension implements Extension
 
             return $installer;
         });
-        
+
         $container->register('extension_manager.io', function (Container $container) {
             $helperSet  = new HelperSet([
                 'question' => new QuestionHelper(),
@@ -254,7 +254,7 @@ class ExtensionManagerExtension implements Extension
             $container->get('extension_manager.io'),
             $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_FILE)
         );
-        
+
         $composer->getEventDispatcher()->addSubscriber(new PostInstallSubscriber(
             new ExtensionFileGenerator(
                 $this->resolvePath($container, self::PARAM_INSTALLED_EXTENSIONS_FILE)
@@ -300,7 +300,7 @@ class ExtensionManagerExtension implements Extension
     private function initializeComposer(Container $container): void
     {
         $path = $this->resolvePath($container, self::PARAM_EXTENSION_CONFIG_FILE);
-        
+
         // create the directory if it doesn't already exist
         if (!file_exists(dirname($path))) {
             mkdir(dirname($path), 0777, true);
@@ -318,15 +318,15 @@ class ExtensionManagerExtension implements Extension
     {
         $container->register('extension_manager.rpc.handler.list', function (Container $container) {
             return new ExtensionListHandler($container->get('extension_manager.model.extension_repository'));
-        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+        }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ExtensionListHandler::NAME]]);
 
         $container->register('extension_manager.rpc.handler.install', function (Container $container) {
             return new ExtensionInstallHandler($container->get('extension_manager.service.installer'));
-        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+        }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ExtensionInstallHandler::NAME]]);
 
         $container->register('extension_manager.rpc.handler.remove', function (Container $container) {
             return new ExtensionRemoveHandler($container->get('extension_manager.service.remover'));
-        }, [ RpcExtension::TAG_RPC_HANDLER => []]);
+        }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ExtensionRemoveHandler::NAME]]);
     }
 
     private function resolvePath(Container $container, string $path)

@@ -10,6 +10,8 @@ use Phpactor\MapResolver\Resolver;
 
 class ExtensionListHandler implements Handler
 {
+    const NAME = 'extension_list';
+
     /**
      * @var ExtensionRepository
      */
@@ -22,7 +24,7 @@ class ExtensionListHandler implements Handler
 
     public function name(): string
     {
-        return 'extension_list';
+        return self::NAME;
     }
 
     public function configure(Resolver $resolver)

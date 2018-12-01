@@ -17,6 +17,8 @@ use Phpactor\MapResolver\Resolver;
 class ExtensionInstallHandler extends AbstractHandler implements Handler
 {
     const PARAM_EXTENSION_NAME = 'extension_name';
+    const NAME = 'extension_install';
+
 
     /**
      * @var InstallerService
@@ -30,7 +32,7 @@ class ExtensionInstallHandler extends AbstractHandler implements Handler
 
     public function name(): string
     {
-        return 'extension_install';
+        return self::NAME;
     }
 
     public function configure(Resolver $resolver)
