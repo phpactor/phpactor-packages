@@ -1,7 +1,7 @@
-CodeTransform
-=============
+CodeTransformExtension
+======================
 
-[![Build Status](https://travis-ci.org/phpactor/code-transform.svg?branch=master)](https://travis-ci.org/phpactor/code-transform)
+[![Build Status](https://travis-ci.org/phpactor/code-transform-extension.svg?branch=master)](https://travis-ci.org/phpactor/code-transform-extension)
 
 Base package for code transformation, class generation and inflection.
 
