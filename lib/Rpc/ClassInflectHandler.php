@@ -14,22 +14,6 @@ class ClassInflectHandler extends AbstractClassGenerateHandler
 {
     const NAME = 'class_inflect';
 
-    /**
-     * @var Generators
-     */
-    private $generators;
-
-    /**
-     * @var FileToClass
-     */
-    private $fileToClass;
-
-    public function __construct(Generators $generators, FileToClass $fileToClass)
-    {
-        $this->generators = $generators;
-        $this->fileToClass = $fileToClass;
-    }
-
     public function name(): string
     {
         return self::NAME;

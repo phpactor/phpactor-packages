@@ -17,15 +17,13 @@ use Phpactor\CodeTransform\Domain\Transformers;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
+use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\Rpc\RpcExtension;
 use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
-use Phpactor\Extension\CodeTransform\Application\ClassInflect;
-use Phpactor\Extension\CodeTransform\Application\ClassNew;
-use Phpactor\Extension\CodeTransform\Application\Transformer;
 use Phpactor\Extension\CodeTransform\Command\ClassInflectCommand;
 use Phpactor\Extension\CodeTransform\Command\ClassNewCommand;
 use Phpactor\Extension\CodeTransform\Command\ClassTransformCommand;
@@ -66,32 +64,7 @@ class CodeTransformExtension implements Extension
         $this->registerConsole($container);
         $this->registerTransformers($container);
         $this->registerGenerators($container);
-        $this->registerApplication($container);
         $this->registerRpc($container);
-    }
-
-    private function registerApplication(ContainerBuilder $container)
-    {
-        $container->register('application.transform', function (Container $container) {
-            return new Transformer(
-                $container->get('code_transform.transform')
-            );
-        });
-
-        $container->register('application.class_new', function (Container $container) {
-            return new ClassNew(
-                $container->get('application.helper.class_file_normalizer'),
-                $container->get('code_transform.new_class_generators')
-            );
-        });
-
-        $container->register('application.class_inflect', function (Container $container) {
-            return new ClassInflect(
-                $container->get('application.helper.class_file_normalizer'),
-                $container->get('code_transform.from_existing_generators'),
-                $container->get(LoggingExtension::SERVICE_LOGGER)
-            );
-        });
     }
 
     private function registerConsole(ContainerBuilder $container)
@@ -160,13 +133,15 @@ class CodeTransformExtension implements Extension
     {
         $container->register('code_transform.rpc.handler.class_inflect', function (Container $container) {
             return new ClassInflectHandler(
-                $container->get('application.class_inflect')
+                $container->get('code_transform.from_existing_generators'),
+                $container->get(ClassToFileExtension::SERVICE_CONVERTER)
             );
         }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ClassInflectHandler::NAME] ]);
 
         $container->register('code_transform.rpc.handler.class_new', function (Container $container) {
             return new ClassNewHandler(
-                $container->get('application.class_new')
+                $container->get('code_transform.from_existing_generators'),
+                $container->get(ClassToFileExtension::SERVICE_CONVERTER)
             );
         }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ClassNewHandler::NAME] ]);
 
