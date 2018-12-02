@@ -4,8 +4,6 @@ namespace Phpactor\Extension\CodeTransform\Tests\Unit\Rpc;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\ClassFileConverter\Domain\FileToClass;
-use Phpactor\CodeTransform\Domain\GenerateFromExisting;
-use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
@@ -25,7 +23,7 @@ abstract class AbstractClassGenerateHandlerTest extends TestCase
     /**
      * @var ObjectProphecy
      */
-     protected $fileToClass;
+    protected $fileToClass;
 
     public function setUp()
     {

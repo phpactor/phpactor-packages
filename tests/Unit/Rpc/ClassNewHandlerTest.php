@@ -2,24 +2,17 @@
 
 namespace Phpactor\Extension\CodeTransform\Tests\Unit\Rpc;
 
-use PHPUnit\Framework\TestCase;
 use Phpactor\ClassFileConverter\Domain\ClassName as ConvertedClassName;
 use Phpactor\ClassFileConverter\Domain\ClassNameCandidates;
 use Phpactor\ClassFileConverter\Domain\FilePath;
-use Phpactor\ClassFileConverter\Domain\FileToClass;
 use Phpactor\CodeTransform\Domain\ClassName;
-use Phpactor\CodeTransform\Domain\GenerateFromExisting;
 use Phpactor\CodeTransform\Domain\GenerateNew;
 use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\CodeTransform\Domain\SourceCode;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ClassNewHandler;
 use Phpactor\Extension\Rpc\Handler;
-use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
-use Phpactor\Extension\Rpc\Response\Input\ChoiceInput;
-use Phpactor\Extension\Rpc\Response\Input\TextInput;
 use Phpactor\Extension\Rpc\Response\ReplaceFileSourceResponse;
-use Phpactor\Extension\Rpc\Test\HandlerTester;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ClassNewHandlerTest extends AbstractClassGenerateHandlerTest
