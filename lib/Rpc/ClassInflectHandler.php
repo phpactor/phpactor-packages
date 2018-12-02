@@ -2,13 +2,8 @@
 
 namespace Phpactor\Extension\CodeTransform\Rpc;
 
-use Phpactor\ClassFileConverter\Domain\FilePath;
-use Phpactor\ClassFileConverter\Domain\FileToClass;
-use Phpactor\CodeTransform\Domain\ClassName;
 use Phpactor\CodeTransform\Domain\GenerateFromExisting;
-use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\CodeTransform\Domain\SourceCode;
-use Webmozart\Glob\Glob;
 
 class ClassInflectHandler extends AbstractClassGenerateHandler
 {

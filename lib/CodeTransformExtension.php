@@ -2,15 +2,6 @@
 
 namespace Phpactor\Extension\CodeTransform;
 
-use Phpactor\CodeBuilder\Adapter\Twig\TwigExtension;
-use Phpactor\CodeBuilder\Adapter\Twig\TwigRenderer;
-use Phpactor\CodeBuilder\Util\TextFormat;
-use Phpactor\CodeTransform\Adapter\Native\GenerateNew\ClassGenerator;
-use Phpactor\CodeTransform\Adapter\TolerantParser\ClassToFile\Transformer\ClassNameFixerTransformer;
-use Phpactor\CodeTransform\Adapter\TolerantParser\Refactor\TolerantChangeVisiblity;
-use Phpactor\CodeTransform\Adapter\TolerantParser\Refactor\TolerantExtractExpression;
-use Phpactor\CodeTransform\Adapter\TolerantParser\Refactor\TolerantImportClass;
-use Phpactor\CodeTransform\Adapter\TolerantParser\Refactor\TolerantRenameVariable;
 use Phpactor\CodeTransform\CodeTransform;
 use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\CodeTransform\Domain\Transformers;
@@ -18,28 +9,12 @@ use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
-use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\Rpc\RpcExtension;
-use Phpactor\Extension\Console\ConsoleExtension;
-use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
-use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
-use Phpactor\Extension\CodeTransform\Rpc\ChangeVisiblityHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ClassNewHandler;
-use Phpactor\Extension\CodeTransform\Rpc\ExtractConstantHandler;
-use Phpactor\Extension\CodeTransform\Rpc\ExtractExpressionHandler;
-use Phpactor\Extension\CodeTransform\Rpc\ExtractMethodHandler;
-use Phpactor\Extension\CodeTransform\Rpc\GenerateAccessorHandler;
-use Phpactor\Extension\CodeTransform\Rpc\GenerateMethodHandler;
-use Phpactor\Extension\CodeTransform\Rpc\ImportClassHandler;
-use Phpactor\Extension\CodeTransform\Rpc\OverrideMethodHandler;
-use Phpactor\Extension\CodeTransform\Rpc\RenameVariableHandler;
 use Phpactor\Extension\CodeTransform\Rpc\TransformHandler;
 use RuntimeException;
-use Twig\Environment;
-use Twig\Loader\ChainLoader;
-use Twig\Loader\FilesystemLoader;
 
 class CodeTransformExtension implements Extension
 {

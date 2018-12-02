@@ -8,7 +8,6 @@ use Phpactor\CodeTransform\Domain\SourceCode;
 use Phpactor\Extension\CodeTransform\Rpc\ChangeVisiblityHandler;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Response\UpdateFileSourceResponse;
-use Phpactor\Tests\Unit\Extension\Rpc\HandlerTestCase;
 
 class ChangeVisiblityHandlerTest extends TestCase
 {
