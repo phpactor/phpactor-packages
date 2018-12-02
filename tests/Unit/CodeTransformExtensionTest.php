@@ -3,7 +3,6 @@
 namespace Phpactor\Extension\CodeTransform\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Phpactor\ClassFileConverter\ClassToFileConverter;
 use Phpactor\CodeTransform\CodeTransform;
 use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\Container\Container;

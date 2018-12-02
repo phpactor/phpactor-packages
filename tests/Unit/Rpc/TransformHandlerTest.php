@@ -19,7 +19,6 @@ class TransformHandlerTest extends TestCase
     const EXAMPLE_NEW_PATH = '/path/to/new.php';
     const EXAMPLE_SOURCE_CODE = '<?php';
 
-
     /**
      * @var ObjectProphecy
      */
