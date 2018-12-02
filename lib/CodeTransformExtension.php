@@ -24,9 +24,6 @@ use Phpactor\Extension\Console\ConsoleExtension;
 use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\MapResolver\Resolver;
-use Phpactor\Extension\CodeTransform\Command\ClassInflectCommand;
-use Phpactor\Extension\CodeTransform\Command\ClassNewCommand;
-use Phpactor\Extension\CodeTransform\Command\ClassTransformCommand;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ChangeVisiblityHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ClassNewHandler;
@@ -61,33 +58,9 @@ class CodeTransformExtension implements Extension
 
     public function load(ContainerBuilder $container)
     {
-        $this->registerConsole($container);
         $this->registerTransformers($container);
         $this->registerGenerators($container);
         $this->registerRpc($container);
-    }
-
-    private function registerConsole(ContainerBuilder $container)
-    {
-        $container->register('command.transform', function (Container $container) {
-            return new ClassTransformCommand(
-                $container->get('application.transform')
-            );
-        }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'class:transform' ]]);
-
-        $container->register('command.class_new', function (Container $container) {
-            return new ClassNewCommand(
-                $container->get('application.class_new'),
-                $container->get('console.dumper_registry')
-            );
-        }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'class:new' ]]);
-
-        $container->register('command.class_inflect', function (Container $container) {
-            return new ClassInflectCommand(
-                $container->get('application.class_inflect'),
-                $container->get('console.dumper_registry')
-            );
-        }, [ ConsoleExtension::TAG_COMMAND => [ 'name' => 'class:inflect' ]]);
     }
 
     private function registerTransformers(ContainerBuilder $container)

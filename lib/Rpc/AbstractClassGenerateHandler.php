@@ -65,7 +65,7 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
             $this->requireInput(ChoiceInput::fromNameLabelChoicesAndDefault(
                 self::PARAM_VARIANT,
                 'Variant: ',
-                array_combine(
+                (array) array_combine(
                     $this->generators->names(),
                     $this->generators->names()
                 )
@@ -88,7 +88,7 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
         return ReplaceFileSourceResponse::fromPathAndSource($code->path(), (string) $code);
     }
 
-    private function className(string $path)
+    protected function className(string $path)
     {
         $candidates = $this->fileToClass->fileToClassCandidates(FilePath::fromString($path));
         return ClassName::fromString($candidates->best()->__toString());

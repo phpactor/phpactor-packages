@@ -17,7 +17,6 @@ class TransformHandler implements Handler
     const PARAM_PATH = 'path';
     const PARAM_SOURCE = 'source';
 
-
     /**
      * @var CodeTransform
      */
@@ -81,7 +80,7 @@ class TransformHandler implements Handler
                 ChoiceInput::fromNameLabelChoicesAndDefault(
                     self::NAME,
                     'Transform: ',
-                    array_combine($transformers, $transformers)
+                    (array) array_combine($transformers, $transformers)
                 )
             ]
         );

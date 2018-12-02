@@ -27,19 +27,10 @@ class ClassInflectHandler extends AbstractClassGenerateHandler
         $currentClass = $this->className($arguments[self::PARAM_CURRENT_PATH]);
         $targetClass = $this->className($arguments[self::PARAM_NEW_PATH]);
 
-        $sourceCodes = $inflector->generateFromExisting(
+        return $inflector->generateFromExisting(
             $currentClass,
             $targetClass
         );
-
-        if (count($sourceCodes) !== 1) {
-            throw new \RuntimeException(sprintf(
-                'Expected 1 path from class generator, got %s',
-                count($sourceCodes)
-            ));
-        }
-
-        return reset($sourceCodes);
     }
 
     public function newMessage(): string
