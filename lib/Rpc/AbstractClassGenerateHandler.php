@@ -15,10 +15,10 @@ use Phpactor\Extension\Rpc\Response\ReplaceFileSourceResponse;
 
 abstract class AbstractClassGenerateHandler extends AbstractHandler
 {
-    protected const PARAM_CURRENT_PATH = 'current_path';
-    protected const PARAM_NEW_PATH = 'new_path';
-    protected const PARAM_OVERWRITE = 'overwrite';
-    protected const PARAM_VARIANT = 'variant';
+    const PARAM_CURRENT_PATH = 'current_path';
+    const PARAM_NEW_PATH = 'new_path';
+    const PARAM_OVERWRITE = 'overwrite';
+    const PARAM_VARIANT = 'variant';
 
     /**
      * @var Generators
