@@ -13,12 +13,11 @@
 
     "require": {
         "phpactor/container": "^1.0",
-        "phpactor/code-transform": "^0.1.0@dev",
-        "phpactor/rpc-extension": "^0.1.0@dev",
-        "webmozart/glob": "^4.1",
-        "phpactor/class-to-file-extension": "^0.1.0"
+        "phpactor/code-transform": "~0.1",
+        "phpactor/class-to-file-extension": "~0.1"
     },
     "require-dev": {
+        "phpactor/rpc-extension": "^0.1.0@dev",
         "phpstan/phpstan": "^0.10.5",
         "phpunit/phpunit": "^7.4",
         "friendsofphp/php-cs-fixer": "^2.13"
