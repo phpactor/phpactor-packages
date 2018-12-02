@@ -22,12 +22,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 
 class ClassInflectHandlerTest extends AbstractClassGenerateHandlerTest
 {
-    const EXAMPLE_NEW_PATH = '/new/path.php';
-    const EXAMPLE_VARIANT = 'one';
-    const EXAMPLE_CLASS_1 = 'exampleClassName1';
-    const EXAMPLE_CLASS_2 = 'exampleClassName2';
-
-
     /**
      * @var ObjectProphecy
      */

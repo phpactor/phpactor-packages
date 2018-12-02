@@ -14,7 +14,8 @@ class ClassNewHandler extends AbstractClassGenerateHandler
         $generator = $this->generators->get($arguments[self::PARAM_VARIANT]);
         assert($generator instanceof GenerateNew);
 
-        return $generator->generateNew($arguments[self::PARAM_NEW_PATH]);
+        $className = $this->className($arguments[self::PARAM_NEW_PATH]);
+        return $generator->generateNew($className);
     }
 
     public function name(): string

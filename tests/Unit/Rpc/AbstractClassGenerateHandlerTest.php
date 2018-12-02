@@ -17,6 +17,10 @@ use Prophecy\Prophecy\ObjectProphecy;
 abstract class AbstractClassGenerateHandlerTest extends TestCase
 {
     const EXAMPLE_PATH = '/path/to.php';
+    const EXAMPLE_NEW_PATH = '/new/path.php';
+    const EXAMPLE_VARIANT = 'one';
+    const EXAMPLE_CLASS_1 = 'exampleClassName1';
+    const EXAMPLE_CLASS_2 = 'exampleClassName2';
 
     /**
      * @var ObjectProphecy
