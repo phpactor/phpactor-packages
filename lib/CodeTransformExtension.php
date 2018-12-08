@@ -99,7 +99,7 @@ class CodeTransformExtension implements Extension
 
         $container->register('code_transform.rpc.handler.class_new', function (Container $container) {
             return new ClassNewHandler(
-                $container->get(self::SERVICE_CLASS_INFLECTORS),
+                $container->get(self::SERVICE_CLASS_GENERATORS),
                 $container->get(ClassToFileExtension::SERVICE_CONVERTER)
             );
         }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => ClassNewHandler::NAME] ]);
