@@ -79,7 +79,10 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
 
         $code = $this->generate($arguments);
 
-        return ReplaceFileSourceResponse::fromPathAndSource($code->path(), (string) $code);
+        return ReplaceFileSourceResponse::fromPathAndSource(
+            $code->path() ?: $arguments[self::PARAM_NEW_PATH],
+            (string) $code
+        );
     }
 
     protected function className(string $path)
