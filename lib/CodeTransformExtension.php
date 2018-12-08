@@ -18,12 +18,12 @@ use RuntimeException;
 
 class CodeTransformExtension implements Extension
 {
-    const SERVICE_CODE_TRANSFORM = 'code_transform.transform';
-
     const TAG_FROM_EXISTING_GENERATOR = 'code_transform.from_existing_generator';
     const TAG_TRANSFORMER = 'code_transform.transformer';
     const TAG_NEW_CLASS_GENERATOR = 'code_transform.new_class_generator';
+
     const SERVICE_CLASS_GENERATORS = 'code_transform.new_class_generators';
+    const SERVICE_CODE_TRANSFORM = 'code_transform.transform';
     const SERVICE_CLASS_INFLECTORS = 'code_transform.from_existing_generators';
 
     /**
@@ -61,8 +61,17 @@ class CodeTransformExtension implements Extension
         $container->register(self::SERVICE_CLASS_GENERATORS, function (Container $container) {
             $generators = [];
             foreach ($container->getServiceIdsForTag(self::TAG_NEW_CLASS_GENERATOR) as $serviceId => $attrs) {
+                $generator = $container->get($serviceId);
+
+                // if the tagged "service" is an array, then assume it's an
+                // array of class generators and move on.
+                if (is_array($generator)) {
+                    $generators = array_merge($generators, $generator);
+                    continue;
+                }
+
                 $this->assertNameAttribute($attrs, $serviceId);
-                $generators[$attrs['name']] = $container->get($serviceId);
+                $generators[$attrs['name']] = $generator;
             }
 
             return Generators::fromArray($generators);
