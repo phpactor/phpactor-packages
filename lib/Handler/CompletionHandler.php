@@ -1,25 +1,32 @@
 <?php
 
-namespace Phpactor\Extension\WorseLanguageServer\Handler;
+namespace Phpactor\Extension\LanguageServerCompletion\Handler;
 
 use Generator;
+use LanguageServerProtocol\ClientCapabilities;
 use LanguageServerProtocol\CompletionItem;
 use LanguageServerProtocol\CompletionList;
+use LanguageServerProtocol\CompletionOptions;
 use LanguageServerProtocol\Diagnostic;
 use LanguageServerProtocol\DiagnosticSeverity;
 use LanguageServerProtocol\Position;
 use LanguageServerProtocol\Range;
+use LanguageServerProtocol\ServerCapabilities;
+use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentItem;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
+use Phpactor\Completion\Core\TypedCompletorRegistry;
+use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspCompletionType;
 use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
-use Phpactor\Extension\WorseLanguageServer\Util\PhpactorToLspCompletionType;
 use Phpactor\LanguageServer\Core\Dispatcher\Handler;
+use Phpactor\LanguageServer\Core\Event\EventSubscriber;
+use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
 use Phpactor\LanguageServer\Core\Rpc\NotificationMessage;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
 
-class CompletionHandler implements Handler
+class CompletionHandler implements Handler, EventSubscriber
 {
     /**
      * @var Completor
@@ -32,15 +39,14 @@ class CompletionHandler implements Handler
     private $sessionManager;
 
     /**
-     * @var SourceCodeReflector
+     * @var TypedCompletorRegistry
      */
-    private $reflector;
+    private $registry;
 
-    public function __construct(SessionManager $sessionManager, Completor $completor, SourceCodeReflector $reflector)
+    public function __construct(SessionManager $sessionManager, TypedCompletorRegistry $registry)
     {
-        $this->completor = $completor;
         $this->sessionManager = $sessionManager;
-        $this->reflector = $reflector;
+        $this->registry = $registry;
     }
 
     public function methods(): array
@@ -50,11 +56,20 @@ class CompletionHandler implements Handler
         ];
     }
 
+    public function events(): array
+    {
+        return [
+            LanguageServerEvents::CAPABILITIES_REGISTER => 'capabilities',
+        ];
+    }
+
     public function completion(TextDocumentItem $textDocument, Position $position): Generator
     {
         $textDocument = $this->sessionManager->current()->workspace()->get($textDocument->uri);
 
-        $suggestions = $this->completor->complete(
+        $suggestions = $this->registry->completorForType(
+            $textDocument->languageId ?: 'php'
+        )->complete(
             $textDocument->text,
             $position->toOffset($textDocument->text)
         );
@@ -72,39 +87,11 @@ class CompletionHandler implements Handler
         }
 
         yield $completionList;
-
-        $diagnostics = $this->resolveDiagnostics($textDocument, $position);
-
-        yield new NotificationMessage('textDocument/publishDiagnostics', [
-            'uri' => $textDocument->uri,
-            'diagnostics' => $diagnostics
-        ]);
     }
 
-    private function resolveDiagnostics(TextDocumentItem $textDocument, Position $position)
+    public function capabilities(ServerCapabilities $capabilities): void
     {
-        $reflectionOffset = $this->reflector->reflectOffset(
-            substr($textDocument->text, 0, $position->toOffset($textDocument->text)),
-            $position->toOffset($textDocument->text)
-        );
-        
-        $issues = $reflectionOffset->symbolContext()->issues();
-        $diagnostics = [];
-        $position = $reflectionOffset->symbolContext()->symbol()->position();
-
-        if ($issues) {
-            $diagnostics[] = new Diagnostic(
-                implode(', ', $issues),
-                new Range(
-                    OffsetHelper::offsetToPosition($textDocument->text, $position->start()),
-                    OffsetHelper::offsetToPosition($textDocument->text, $position->end())
-                ),
-                null,
-                DiagnosticSeverity::WARNING,
-                'phpactor'
-            );
-        }
-
-        return $diagnostics;
+        $capabilities->completionProvider = new CompletionOptions(false, [':', '>']);
+        $capabilities->signatureHelpProvider = new SignatureHelpOptions(['(', ',']);
     }
 }

@@ -1,6 +1,6 @@
 {
-    "name": "phpactor/worse-language-server",
-    "description": "Wose Reflection completion, definition, etc",
+    "name": "phpactor/language-server-completion-extension",
+    "description": "Phpactor Language Server Handlers",
     "license": "MIT",
     "type": "phpactor-extension",
     "minimum-stability": "dev",
@@ -14,8 +14,7 @@
     "require": {
         "phpactor/container": "^1.0",
         "phpactor/language-server-extension": "dev-amphp",
-        "phpactor/completion-worse-extension": "^0.1.0@dev",
-        "phpactor/worse-reference-finder-extension": "^0.1.0@dev"
+        "phpactor/completion-extension": "~0.1.0@dev"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.7",
@@ -24,16 +23,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Phpactor\\Extension\\WorseLanguageServer\\": "lib/"
+            "Phpactor\\Extension\\LanguageServerCompletion\\": "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Phpactor\\Extension\\WorseLanguageServer\\Tests\\": "tests/"
+            "Phpactor\\Extension\\LanguageServerCompletion\\Tests\\": "tests/"
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Extension\\WorseLanguageServer\\WorseLanguageServerExtension",
+        "phpactor.extension_class": "Phpactor\\Extension\\LanguageServerCompletion\\LanguageServerCompletionExtension",
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }

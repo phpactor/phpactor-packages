@@ -1,10 +1,10 @@
 <?php
 
-namespace Phpactor\Extension\WorseLanguageServer\Tests\Unit\Util;
+namespace Phpactor\Extension\LanguageServerCompletion\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Suggestion;
-use Phpactor\Extension\WorseLanguageServer\Util\PhpactorToLspCompletionType;
+use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspCompletionType;
 use ReflectionClass;
 
 class PhpactorToLspCompletionTypeTest extends TestCase

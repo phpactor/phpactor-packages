@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\Extension\WorseLanguageServer\Tests\Unit\Handler;
+namespace Phpactor\Extension\LanguageServerCompletion\Tests\Unit\Handler;
 
 use Generator;
 use LanguageServerProtocol\CompletionItem;
@@ -10,7 +10,9 @@ use LanguageServerProtocol\TextDocumentItem;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
-use Phpactor\Extension\WorseLanguageServer\Handler\CompletionHandler;
+use Phpactor\Completion\Core\TypedCompletor;
+use Phpactor\Completion\Core\TypedCompletorRegistry;
+use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
 use Phpactor\LanguageServer\Core\Handler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
 use Phpactor\LanguageServer\Core\Session\Manager;
@@ -96,19 +98,31 @@ class CompletionHandlerTest extends TestCase
 
     private function create(array $suggestions): HandlerTester
     {
-        return new HandlerTester(new CompletionHandler($this->manager, new class($suggestions) implements Completor {
-            private $suggestions;
-            public function __construct(array $suggestions)
-            {
-                $this->suggestions = $suggestions;
-            }
+        $completor = $this->createCompletor($suggestions);
+        $registry = new TypedCompletorRegistry([
+            new TypedCompletor($completor, [ 'php' ])
+        ]);
+        return new HandlerTester(new CompletionHandler(
+            $this->manager,
+            $registry
+        ));
+    }
 
-            public function complete(string $source, int $offset): Generator
-            {
-                foreach ($this->suggestions as $suggestion) {
-                    yield $suggestion;
-                }
-            }
-        }, $this->reflector));
+    private function createCompletor(array $suggestions)
+    {
+        return new class($suggestions) implements Completor {
+                    private $suggestions;
+                    public function __construct(array $suggestions)
+                    {
+                        $this->suggestions = $suggestions;
+                    }
+        
+                    public function complete(string $source, int $offset): Generator
+                    {
+                        foreach ($this->suggestions as $suggestion) {
+                            yield $suggestion;
+                        }
+                    }
+                };
     }
 }
