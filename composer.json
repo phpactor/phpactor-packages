@@ -12,7 +12,7 @@
     ],
     "require": {
         "phpactor/container": "^1.0",
-        "phpactor/completion": "~0.1"
+        "phpactor/completion": "~0.2"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.4",
@@ -32,7 +32,7 @@
     "extra": {
         "phpactor.extension_class": "Phpactor\\Extension\\Completion\\CompletionExtension",
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2-x-dev"
         }
     }
 }

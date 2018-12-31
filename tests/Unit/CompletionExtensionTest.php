@@ -13,6 +13,8 @@ use Phpactor\Container\Extension;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Completion\CompletionExtension;
 use Phpactor\MapResolver\Resolver;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 use Prophecy\Prophecy\ObjectProphecy;
 use stdClass;
 
@@ -41,14 +43,21 @@ class CompletionExtensionTest extends TestCase
 
     public function testCreatesChainedCompletor()
     {
-        $this->completor1->complete(self::EXAMPLE_SOURCE, self::EXAMPLE_OFFSET)->will(function () {
+        $document = TextDocumentBuilder::create(self::EXAMPLE_SOURCE)->build();
+        $this->completor1->complete(
+            $document,
+            ByteOffset::fromInt(self::EXAMPLE_OFFSET)
+        )->will(function () {
             return (function () {
                 yield Suggestion::create(self::EXAMPLE_SUGGESTION);
             })();
         });
 
         $completor = $this->createContainer()->get(CompletionExtension::SERVICE_REGISTRY)->completorForType('php');
-        $results = iterator_to_array($completor->complete(self::EXAMPLE_SOURCE, self::EXAMPLE_OFFSET));
+        $results = iterator_to_array($completor->complete(
+            $document,
+            ByteOffset::fromInt(self::EXAMPLE_OFFSET)
+        ));
 
         $this->assertEquals(self::EXAMPLE_SUGGESTION, $results[0]->name());
     }
