@@ -13,9 +13,7 @@ use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Completion\Core\TypedCompletor;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
-use Phpactor\LanguageServer\Core\Handler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
-use Phpactor\LanguageServer\Core\Session\Manager;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
@@ -111,18 +109,18 @@ class CompletionHandlerTest extends TestCase
     private function createCompletor(array $suggestions)
     {
         return new class($suggestions) implements Completor {
-                    private $suggestions;
-                    public function __construct(array $suggestions)
-                    {
-                        $this->suggestions = $suggestions;
-                    }
+            private $suggestions;
+            public function __construct(array $suggestions)
+            {
+                $this->suggestions = $suggestions;
+            }
         
-                    public function complete(string $source, int $offset): Generator
-                    {
-                        foreach ($this->suggestions as $suggestion) {
-                            yield $suggestion;
-                        }
-                    }
-                };
+            public function complete(string $source, int $offset): Generator
+            {
+                foreach ($this->suggestions as $suggestion) {
+                    yield $suggestion;
+                }
+            }
+        };
     }
 }

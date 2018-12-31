@@ -3,14 +3,10 @@
 namespace Phpactor\Extension\LanguageServerCompletion\Handler;
 
 use Generator;
-use LanguageServerProtocol\ClientCapabilities;
 use LanguageServerProtocol\CompletionItem;
 use LanguageServerProtocol\CompletionList;
 use LanguageServerProtocol\CompletionOptions;
-use LanguageServerProtocol\Diagnostic;
-use LanguageServerProtocol\DiagnosticSeverity;
 use LanguageServerProtocol\Position;
-use LanguageServerProtocol\Range;
 use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentItem;
@@ -18,13 +14,10 @@ use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspCompletionType;
-use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
 use Phpactor\LanguageServer\Core\Dispatcher\Handler;
 use Phpactor\LanguageServer\Core\Event\EventSubscriber;
 use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
-use Phpactor\LanguageServer\Core\Rpc\NotificationMessage;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
-use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
 
 class CompletionHandler implements Handler, EventSubscriber
 {

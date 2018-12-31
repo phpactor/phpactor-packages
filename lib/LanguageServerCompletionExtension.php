@@ -7,9 +7,7 @@ use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\Completion\CompletionExtension;
 use Phpactor\Extension\LanguageServer\LanguageServerExtension;
-use Phpactor\Extension\ReferenceFinder\ReferenceFinderExtension;
 use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
-use Phpactor\Extension\LanguageServerCompletion\Handler\GotoDefinitionHandler;
 use Phpactor\MapResolver\Resolver;
 
 class LanguageServerCompletionExtension implements Extension
