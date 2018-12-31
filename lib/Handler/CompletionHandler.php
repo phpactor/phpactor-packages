@@ -18,6 +18,8 @@ use Phpactor\LanguageServer\Core\Dispatcher\Handler;
 use Phpactor\LanguageServer\Core\Event\EventSubscriber;
 use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 
 class CompletionHandler implements Handler, EventSubscriber
 {
@@ -60,11 +62,12 @@ class CompletionHandler implements Handler, EventSubscriber
     {
         $textDocument = $this->sessionManager->current()->workspace()->get($textDocument->uri);
 
+        $languageId = $textDocument->languageId ?: 'php';
         $suggestions = $this->registry->completorForType(
-            $textDocument->languageId ?: 'php'
+            $languageId
         )->complete(
-            $textDocument->text,
-            $position->toOffset($textDocument->text)
+            TextDocumentBuilder::create($textDocument->text)->language($languageId)->uri($textDocument->uri)->build(),
+            ByteOffset::fromInt($position->toOffset($textDocument->text))
         );
 
         $completionList = new CompletionList();

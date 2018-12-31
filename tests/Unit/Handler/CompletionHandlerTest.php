@@ -16,6 +16,8 @@ use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Test\HandlerTester;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocument;
 use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
 use Phpactor\WorseReflection\ReflectorBuilder;
 
@@ -47,7 +49,7 @@ class CompletionHandlerTest extends TestCase
         $this->manager = new SessionManager();
         $this->manager->initialize('foo');
         $this->document = new TextDocumentItem();
-        $this->document->uri = 'test';
+        $this->document->uri = '/test';
         $this->document->text = 'hello';
         $this->position = new Position(1, 1);
 
@@ -115,7 +117,7 @@ class CompletionHandlerTest extends TestCase
                 $this->suggestions = $suggestions;
             }
         
-            public function complete(string $source, int $offset): Generator
+            public function complete(TextDocument $source, ByteOffset $offset): Generator
             {
                 foreach ($this->suggestions as $suggestion) {
                     yield $suggestion;
