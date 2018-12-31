@@ -7,6 +7,8 @@ use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\Response\ReturnResponse;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 
 class CompleteHandler implements Handler
 {
@@ -45,8 +47,10 @@ class CompleteHandler implements Handler
     public function handle(array $arguments)
     {
         $suggestions = $this->registry->completorForType($arguments['type'])->complete(
-            $arguments[self::PARAM_SOURCE],
-            $arguments[self::PARAM_OFFSET]
+            TextDocumentBuilder::create($arguments[self::PARAM_SOURCE])
+                ->language($arguments['type'])
+                ->build(),
+            ByteOffset::fromInt($arguments[self::PARAM_OFFSET])
         );
 
         $suggestions = array_map(function (Suggestion $suggestion) {

@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "phpactor/completion-extension": "~0.1",
+        "phpactor/completion-extension": "~0.2",
         "phpactor/rpc-extension": "~0.1"
     },
     "require-dev": {
@@ -33,7 +33,7 @@
     "extra": {
         "phpactor.extension_class": "Phpactor\\Extension\\CompletionRpc\\CompletionRpcExtension",
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.2.x-dev"
         }
     }
 }

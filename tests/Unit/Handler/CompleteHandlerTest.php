@@ -10,6 +10,8 @@ use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\CompletionRpc\Handler\CompleteHandler;
 use Phpactor\Extension\Rpc\Response\ReturnResponse;
 use Phpactor\Extension\Rpc\Test\HandlerTester;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class CompleteHandlerTest extends TestCase
@@ -30,11 +32,17 @@ class CompleteHandlerTest extends TestCase
     public function testHandler()
     {
         $handler = new CompleteHandler($this->registry);
-        $this->completor->complete('aaa', 1234)->will(function () {
+        $this->completor->complete(
+            TextDocumentBuilder::create('aaa')->language('php')->build(),
+            ByteOffset::fromInt(1234)
+        )->will(function () {
             yield Suggestion::create('aaa');
             yield Suggestion::create('bbb');
         });
-        $action = (new HandlerTester($handler))->handle('complete', ['source' => 'aaa', 'offset' => 1234]);
+        $action = (new HandlerTester($handler))->handle('complete', [
+            'source' => 'aaa',
+            'offset' => 1234
+        ]);
 
         $this->assertInstanceOf(ReturnResponse::class, $action);
         $this->assertArraySubset([
