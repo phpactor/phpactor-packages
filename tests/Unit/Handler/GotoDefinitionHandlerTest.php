@@ -1,14 +1,13 @@
 <?php
 
-namespace Phpactor\Extension\WorseLanguageServer\Tests\Unit\Handler;
+namespace Phpactor\Extension\LanguageServerReferenceFinder\Tests\Unit\Handler;
 
 use LanguageServerProtocol\Location;
 use LanguageServerProtocol\Position;
 use LanguageServerProtocol\TextDocumentIdentifier;
 use LanguageServerProtocol\TextDocumentItem;
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\WorseLanguageServer\Handler\GotoDefinitionHandler;
-use Phpactor\LanguageServer\Core\Dispatcher\Handler;
+use Phpactor\Extension\LanguageServerReferenceFinder\Handler\GotoDefinitionHandler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Test\HandlerTester;

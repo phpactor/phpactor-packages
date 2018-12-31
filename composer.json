@@ -1,6 +1,6 @@
 {
-    "name": "phpactor/worse-language-server",
-    "description": "Wose Reflection completion, definition, etc",
+    "name": "phpactor/language-server-reference-finder-extension",
+    "description": "Language Server support for Goto Definition etc",
     "license": "MIT",
     "type": "phpactor-extension",
     "minimum-stability": "dev",
@@ -13,9 +13,8 @@
 
     "require": {
         "phpactor/container": "^1.0",
-        "phpactor/language-server-extension": "dev-amphp",
-        "phpactor/completion-worse-extension": "^0.1.0@dev",
-        "phpactor/worse-reference-finder-extension": "^0.1.0@dev"
+        "phpactor/language-server-extension": "~0.2",
+        "phpactor/reference-finder-extension": "~0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.7",
@@ -24,16 +23,16 @@
     },
     "autoload": {
         "psr-4": {
-            "Phpactor\\Extension\\WorseLanguageServer\\": "lib/"
+            "Phpactor\\Extension\\LanguageServerReferenceFinder\\": "lib/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Phpactor\\Extension\\WorseLanguageServer\\Tests\\": "tests/"
+            "Phpactor\\Extension\\LanguageServerReferenceFinder\\Tests\\": "tests/"
         }
     },
     "extra": {
-        "phpactor.extension_class": "Phpactor\\Extension\\WorseLanguageServer\\WorseLanguageServerExtension",
+        "phpactor.extension_class": "Phpactor\\Extension\\LanguageServerReferenceFinder\\LanguageServerReferenceFinderExtension",
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }
