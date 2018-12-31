@@ -14,7 +14,7 @@
     "require": {
         "phpactor/container": "^1.0",
         "phpactor/language-server-extension": "~0.2",
-        "phpactor/completion-extension": "~0.2"
+        "phpactor/completion-extension": "~0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.7",
