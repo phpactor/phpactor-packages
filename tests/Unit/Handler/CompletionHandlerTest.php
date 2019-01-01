@@ -102,7 +102,7 @@ class CompletionHandlerTest extends TestCase
     public function testHandleSuggestionsWithRange()
     {
         $tester = $this->create([
-            Suggestion::createWithOptions('hello', [ 'range' => PhpactorRange::fromStartAndEnd(1,2)]),
+            Suggestion::createWithOptions('hello', [ 'range' => PhpactorRange::fromStartAndEnd(1, 2)]),
         ]);
         $responses = $tester->dispatch(
             'textDocument/completion',
@@ -116,7 +116,7 @@ class CompletionHandlerTest extends TestCase
         $this->assertInstanceOf(CompletionList::class, $list);
         $this->assertEquals([
             new CompletionItem('hello', null, '', null, null, null, null, new TextEdit(
-                new Range(new Position(0,1), new Position(0,2)),
+                new Range(new Position(0, 1), new Position(0, 2)),
                 'hello'
             )),
         ], $list->items);

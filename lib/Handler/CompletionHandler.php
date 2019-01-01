@@ -12,7 +12,6 @@ use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentItem;
 use LanguageServerProtocol\TextEdit;
-use Microsoft\PhpParser\LineCharacterPosition;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
@@ -102,12 +101,18 @@ class CompletionHandler implements Handler, EventSubscriber
 
     private function textEdit(Suggestion $suggestion, TextDocumentItem $textDocument): ?TextEdit
     {
-        return $suggestion->range() ? new TextEdit(
+        $range = $suggestion->range();
+
+        if (!$range) {
+            return null;
+        }
+
+        return new TextEdit(
             new Range(
-                OffsetHelper::offsetToPosition($textDocument->text, $suggestion->range()->start()->toInt()),
-                OffsetHelper::offsetToPosition($textDocument->text, $suggestion->range()->end()->toInt())
+                OffsetHelper::offsetToPosition($textDocument->text, $range->start()->toInt()),
+                OffsetHelper::offsetToPosition($textDocument->text, $range->end()->toInt())
             ),
             $suggestion->name()
-        ) : null;
+        );
     }
 }
