@@ -7,13 +7,17 @@ use LanguageServerProtocol\CompletionItem;
 use LanguageServerProtocol\CompletionList;
 use LanguageServerProtocol\CompletionOptions;
 use LanguageServerProtocol\Position;
+use LanguageServerProtocol\Range;
 use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentItem;
+use LanguageServerProtocol\TextEdit;
+use Microsoft\PhpParser\LineCharacterPosition;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspCompletionType;
+use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
 use Phpactor\LanguageServer\Core\Dispatcher\Handler;
 use Phpactor\LanguageServer\Core\Event\EventSubscriber;
 use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
@@ -78,7 +82,12 @@ class CompletionHandler implements Handler, EventSubscriber
             $completionList->items[] = new CompletionItem(
                 $suggestion->name(),
                 PhpactorToLspCompletionType::fromPhpactorType($suggestion->type()),
-                $suggestion->shortDescription()
+                $suggestion->shortDescription(),
+                null,
+                null,
+                null,
+                null,
+                $this->textEdit($suggestion, $textDocument)
             );
         }
 
@@ -89,5 +98,16 @@ class CompletionHandler implements Handler, EventSubscriber
     {
         $capabilities->completionProvider = new CompletionOptions(false, [':', '>']);
         $capabilities->signatureHelpProvider = new SignatureHelpOptions(['(', ',']);
+    }
+
+    private function textEdit(Suggestion $suggestion, TextDocumentItem $textDocument): ?TextEdit
+    {
+        return $suggestion->range() ? new TextEdit(
+            new Range(
+                OffsetHelper::offsetToPosition($textDocument->text, $suggestion->range()->start()->toInt()),
+                OffsetHelper::offsetToPosition($textDocument->text, $suggestion->range()->end()->toInt())
+            ),
+            $suggestion->name()
+        ) : null;
     }
 }
