@@ -22,7 +22,11 @@ class LanguageServerReferenceFinderExtension implements Extension
                 $container->get(LanguageServerExtension::SERVICE_SESSION_MANAGER),
                 $container->get(ReferenceFinderExtension::SERVICE_DEFINITION_LOCATOR)
             );
-        }, [ LanguageServerExtension::TAG_HANDLER => []]);
+        }, [ LanguageServerExtension::TAG_HANDLER => [
+            'metods' => [
+                'textDocument/definition'
+            ]
+        ]]);
     }
 
     /**

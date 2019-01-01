@@ -9,6 +9,7 @@ use LanguageServerProtocol\TextDocumentItem;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Extension\LanguageServerReferenceFinder\Handler\GotoDefinitionHandler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
+use Phpactor\LanguageServer\Core\Session\Session;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\ReferenceFinder\DefinitionLocation;
@@ -49,7 +50,7 @@ class GotoDefinitionHandlerTest extends TestCase
     public function setUp()
     {
         $this->manager = new SessionManager();
-        $this->manager->initialize('foo');
+        $this->manager->load(new Session('foo', 1));
         $this->locator = $this->prophesize(DefinitionLocator::class);
 
         $this->document = new TextDocumentItem();

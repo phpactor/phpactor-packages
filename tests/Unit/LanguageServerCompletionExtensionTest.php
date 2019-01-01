@@ -11,6 +11,7 @@ use Phpactor\Extension\LanguageServerReferenceFinder\LanguageServerReferenceFind
 use Phpactor\Extension\LanguageServer\LanguageServerExtension;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\ReferenceFinder\ReferenceFinderExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\LanguageServer\Core\Rpc\RequestMessage;
 use Phpactor\LanguageServer\Core\Rpc\ResponseError;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
@@ -25,6 +26,7 @@ class LanguageServerCompletionExtensionTest extends TestCase
             LanguageServerExtension::class,
             LanguageServerReferenceFinderExtension::class,
             ReferenceFinderExtension::class,
+            FilePathResolverExtension::class,
         ]);
 
         $builder = $container->get(LanguageServerExtension::SERVICE_LANGUAGE_SERVER_BUILDER);
@@ -42,8 +44,7 @@ class LanguageServerCompletionExtensionTest extends TestCase
         $responses = $dispatcher->dispatch(new RequestMessage(1, 'textDocument/didOpen', [
             'textDocument' => new TextDocumentItem(__FILE__, 'php', 1, file_get_contents(__FILE__)),
         ]));
-        $responses = iterator_to_array($responses);
-        $response = $responses[0];
+        iterator_to_array($responses);
 
         $responses = $dispatcher->dispatch(new RequestMessage(1, 'textDocument/definition', [
             'textDocument' => new TextDocumentIdentifier(__FILE__),
