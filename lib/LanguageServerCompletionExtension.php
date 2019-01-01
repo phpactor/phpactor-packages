@@ -12,6 +12,8 @@ use Phpactor\MapResolver\Resolver;
 
 class LanguageServerCompletionExtension implements Extension
 {
+    const PARAM_PROVIDE_TEXT_EDIT = 'language_server_completion.provide_text_edit';
+
     /**
      * {@inheritDoc}
      */
@@ -30,5 +32,8 @@ class LanguageServerCompletionExtension implements Extension
      */
     public function configure(Resolver $schema)
     {
+        $schema->setDefaults([
+            self::PARAM_PROVIDE_TEXT_EDIT => false,
+        ]);
     }
 }

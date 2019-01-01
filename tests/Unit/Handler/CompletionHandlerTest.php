@@ -130,7 +130,8 @@ class CompletionHandlerTest extends TestCase
         ]);
         return new HandlerTester(new CompletionHandler(
             $this->manager,
-            $registry
+            $registry,
+            true
         ));
     }
 

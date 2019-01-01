@@ -41,10 +41,20 @@ class CompletionHandler implements Handler, EventSubscriber
      */
     private $registry;
 
-    public function __construct(SessionManager $sessionManager, TypedCompletorRegistry $registry)
+    /**
+     * @var bool
+     */
+    private $provideTextEdit;
+
+    public function __construct(
+        SessionManager $sessionManager,
+        TypedCompletorRegistry $registry,
+        bool $provideTextEdit = false
+    )
     {
         $this->sessionManager = $sessionManager;
         $this->registry = $registry;
+        $this->provideTextEdit = $provideTextEdit;
     }
 
     public function methods(): array
@@ -101,6 +111,10 @@ class CompletionHandler implements Handler, EventSubscriber
 
     private function textEdit(Suggestion $suggestion, TextDocumentItem $textDocument): ?TextEdit
     {
+        if (false === $this->provideTextEdit) {
+            return null;
+        }
+
         $range = $suggestion->range();
 
         if (!$range) {
