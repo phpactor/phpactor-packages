@@ -50,8 +50,7 @@ class CompletionHandler implements Handler, EventSubscriber
         SessionManager $sessionManager,
         TypedCompletorRegistry $registry,
         bool $provideTextEdit = false
-    )
-    {
+    ) {
         $this->sessionManager = $sessionManager;
         $this->registry = $registry;
         $this->provideTextEdit = $provideTextEdit;
