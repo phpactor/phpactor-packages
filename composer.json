@@ -16,7 +16,8 @@
         "phpbench/phpbench": "^0.14.0",
         "phpstan/phpstan": "^0.10.5",
         "phpunit/phpunit": "^7.4",
-        "friendsofphp/php-cs-fixer": "^2.13"
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "psr/log": "^1.1"
     },
     "autoload": {
         "psr-4": {
