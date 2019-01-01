@@ -72,7 +72,8 @@ class CompletionHandler implements Handler, EventSubscriber
 
     public function completion(TextDocumentItem $textDocument, Position $position): Generator
     {
-        $textDocument = $this->sessionManager->current()->workspace()->get($textDocument->uri);
+        $session = $this->sessionManager->current()->workspace();
+        $textDocument = $session->get($textDocument->uri);
 
         $languageId = $textDocument->languageId ?: 'php';
         $suggestions = $this->registry->completorForType(

@@ -17,6 +17,7 @@ use Phpactor\Completion\Core\TypedCompletor;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
+use Phpactor\LanguageServer\Core\Session\Session;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\TextDocument\ByteOffset;
@@ -50,7 +51,7 @@ class CompletionHandlerTest extends TestCase
     public function setUp()
     {
         $this->manager = new SessionManager();
-        $this->manager->initialize('foo');
+        $this->manager->load(new Session('foo', 1));
         $this->document = new TextDocumentItem();
         $this->document->uri = '/test';
         $this->document->text = 'hello';

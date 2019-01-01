@@ -24,7 +24,11 @@ class LanguageServerCompletionExtension implements Extension
                 $container->get(LanguageServerExtension::SERVICE_SESSION_MANAGER),
                 $container->get(CompletionExtension::SERVICE_REGISTRY)
             );
-        }, [ LanguageServerExtension::TAG_HANDLER => []]);
+        }, [ LanguageServerExtension::TAG_HANDLER => [
+            'methods' => [
+                'textDocument/completion'
+            ]
+        ]]);
     }
 
     /**
