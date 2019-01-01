@@ -13,6 +13,8 @@ use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
 use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
 use Phpactor\Extension\WorseReflection\WorseReflectionExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 
 class CompletionWorseExtensionTest extends TestCase
 {
@@ -34,6 +36,9 @@ class CompletionWorseExtensionTest extends TestCase
         $completor = $container->get(CompletionExtension::SERVICE_REGISTRY)->completorForType('php');
         $this->assertInstanceOf(Completor::class, $completor);
         assert($completor instanceof Completor);
-        $completor->complete('<?php array', 10);
+        $completor->complete(
+            TextDocumentBuilder::create('<?php array')->build(),
+            ByteOffset::fromInt(8)
+        );
     }
 }
