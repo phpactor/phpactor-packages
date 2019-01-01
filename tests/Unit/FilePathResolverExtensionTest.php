@@ -4,6 +4,7 @@ namespace Phpactor\FilePathResolverExtension\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\PhpactorContainer;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\FilePathResolver\PathResolver;
 
@@ -33,6 +34,7 @@ class FilePathResolverExtensionTest extends TestCase
     {
         $container = PhpactorContainer::fromExtensions([
             FilePathResolverExtension::class,
+            LoggingExtension::class
         ], $config);
 
         return $container->get(FilePathResolverExtension::SERVICE_FILE_PATH_RESOLVER);

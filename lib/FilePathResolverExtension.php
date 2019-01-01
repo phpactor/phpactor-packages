@@ -5,6 +5,7 @@ namespace Phpactor\FilePathResolverExtension;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\FilePathResolver\CachingPathResolver;
 use Phpactor\FilePathResolver\Expander\ValueExpander;
 use Phpactor\FilePathResolver\Expander\Xdg\SuffixExpanderDecorator;
@@ -15,8 +16,9 @@ use Phpactor\FilePathResolver\Expanders;
 use Phpactor\FilePathResolver\Filter\CanonicalizingPathFilter;
 use Phpactor\FilePathResolver\Filter\TokenExpandingFilter;
 use Phpactor\FilePathResolver\FilteringPathResolver;
-use Phpactor\FilePathResolver\PathResolver;
+use Phpactor\FilePathResolver\LoggingPathResolver;
 use Phpactor\MapResolver\Resolver;
+use Psr\Log\LogLevel;
 
 class FilePathResolverExtension implements Extension
 {
@@ -29,6 +31,7 @@ class FilePathResolverExtension implements Extension
     const PARAM_PROJECT_ROOT = 'file_path_resolver.project_root';
     const PARAM_APP_NAME = 'file_path_resolver.app_name';
     const PARAM_ENABLE_CACHE = 'file_path_resolver.enable_cache';
+    const PARAM_ENABLE_LOGGING = 'file_path_resolver.enable_logging';
     const PARAM_APPLICATION_ROOT = 'file_path_resolver.application_root';
 
     /**
@@ -41,6 +44,7 @@ class FilePathResolverExtension implements Extension
             self::PARAM_APP_NAME => 'phpactor',
             self::PARAM_APPLICATION_ROOT => null,
             self::PARAM_ENABLE_CACHE => true,
+            self::PARAM_ENABLE_LOGGING => true,
         ]);
     }
 
@@ -67,6 +71,14 @@ class FilePathResolverExtension implements Extension
                 $resolver = new CachingPathResolver($resolver);
             }
 
+            if ($container->getParameter(self::PARAM_ENABLE_LOGGING)) {
+                $resolver = new LoggingPathResolver(
+                    $resolver,
+                    $container->get(LoggingExtension::SERVICE_LOGGER),
+                    LogLevel::DEBUG
+                );
+            }
+
             return $resolver;
         });
     }
@@ -78,7 +90,6 @@ class FilePathResolverExtension implements Extension
         }, [ self::TAG_FILTER => [] ]);
 
         $container->register('file_path_resolver.filter.token_expanding', function (Container $container) {
-
             return new TokenExpandingFilter($container->get(self::SERVICE_EXPANDERS));
         }, [ self::TAG_FILTER => [] ]);
 
