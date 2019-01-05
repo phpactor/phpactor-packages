@@ -9,11 +9,8 @@ use LanguageServerProtocol\Range;
 use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\TextDocumentIdentifier;
 use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
-use Phpactor\LanguageServer\Core\Event\EventSubscriber;
-use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
 use Phpactor\LanguageServer\Core\Handler\CanRegisterCapabilities;
 use Phpactor\LanguageServer\Core\Handler\Handler;
-use Phpactor\LanguageServer\Core\Session\SessionManager;
 use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\ReferenceFinder\DefinitionLocator;
 use Phpactor\TextDocument\ByteOffset;
@@ -65,7 +62,8 @@ class GotoDefinitionHandler implements Handler, CanRegisterCapabilities
 
         if (false === $sourceCode) {
             throw new RuntimeException(sprintf(
-                'Could not read file "%s"', $location->uri()
+                'Could not read file "%s"',
+                $location->uri()
             ));
         }
 
