@@ -17,8 +17,7 @@ use Phpactor\Completion\Core\TypedCompletor;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
-use Phpactor\LanguageServer\Core\Session\Session;
-use Phpactor\LanguageServer\Core\Session\SessionManager;
+use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocument;
@@ -27,11 +26,6 @@ use Phpactor\WorseReflection\ReflectorBuilder;
 
 class CompletionHandlerTest extends TestCase
 {
-    /**
-     * @var SessionManager
-     */
-    private $manager;
-
     /**
      * @var TextDocumentItem
      */
@@ -50,16 +44,15 @@ class CompletionHandlerTest extends TestCase
 
     public function setUp()
     {
-        $this->manager = new SessionManager();
-        $this->manager->load(new Session('foo', 1));
         $this->document = new TextDocumentItem();
         $this->document->uri = '/test';
         $this->document->text = 'hello';
         $this->position = new Position(1, 1);
 
         $this->reflector = ReflectorBuilder::create()->build();
+        $this->workspace = new Workspace();
 
-        $this->manager->current()->workspace()->open($this->document);
+        $this->workspace->open($this->document);
     }
 
     public function testHandleNoSuggestions()
@@ -130,7 +123,7 @@ class CompletionHandlerTest extends TestCase
             new TypedCompletor($completor, [ 'php' ])
         ]);
         return new HandlerTester(new CompletionHandler(
-            $this->manager,
+            $this->workspace,
             $registry,
             true
         ));

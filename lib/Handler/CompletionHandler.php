@@ -17,24 +17,18 @@ use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspCompletionType;
 use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
-use Phpactor\LanguageServer\Core\Dispatcher\Handler;
-use Phpactor\LanguageServer\Core\Event\EventSubscriber;
-use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
-use Phpactor\LanguageServer\Core\Session\SessionManager;
+use Phpactor\LanguageServer\Core\Handler\CanRegisterCapabilities;
+use Phpactor\LanguageServer\Core\Handler\Handler;
+use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocumentBuilder;
 
-class CompletionHandler implements Handler, EventSubscriber
+class CompletionHandler implements Handler, CanRegisterCapabilities
 {
     /**
      * @var Completor
      */
     private $completor;
-
-    /**
-     * @var SessionManager
-     */
-    private $sessionManager;
 
     /**
      * @var TypedCompletorRegistry
@@ -46,14 +40,19 @@ class CompletionHandler implements Handler, EventSubscriber
      */
     private $provideTextEdit;
 
+    /**
+     * @var Workspace
+     */
+    private $workspace;
+
     public function __construct(
-        SessionManager $sessionManager,
+        Workspace $workspace,
         TypedCompletorRegistry $registry,
         bool $provideTextEdit = false
     ) {
-        $this->sessionManager = $sessionManager;
         $this->registry = $registry;
         $this->provideTextEdit = $provideTextEdit;
+        $this->workspace = $workspace;
     }
 
     public function methods(): array
@@ -63,17 +62,9 @@ class CompletionHandler implements Handler, EventSubscriber
         ];
     }
 
-    public function events(): array
-    {
-        return [
-            LanguageServerEvents::CAPABILITIES_REGISTER => 'capabilities',
-        ];
-    }
-
     public function completion(TextDocumentItem $textDocument, Position $position): Generator
     {
-        $session = $this->sessionManager->current()->workspace();
-        $textDocument = $session->get($textDocument->uri);
+        $textDocument = $this->workspace->get($textDocument->uri);
 
         $languageId = $textDocument->languageId ?: 'php';
         $suggestions = $this->registry->completorForType(
@@ -103,7 +94,7 @@ class CompletionHandler implements Handler, EventSubscriber
         yield $completionList;
     }
 
-    public function capabilities(ServerCapabilities $capabilities): void
+    public function registerCapabiltiies(ServerCapabilities $capabilities)
     {
         $capabilities->completionProvider = new CompletionOptions(false, [':', '>']);
         $capabilities->signatureHelpProvider = new SignatureHelpOptions(['(', ',']);

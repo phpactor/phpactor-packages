@@ -21,10 +21,10 @@ class LanguageServerCompletionExtension implements Extension
     {
         $container->register('worse_language_server.handler.completion', function (Container $container) {
             return new CompletionHandler(
-                $container->get(LanguageServerExtension::SERVICE_SESSION_MANAGER),
+                $container->get(LanguageServerExtension::SERVICE_SESSION_WORKSPACE),
                 $container->get(CompletionExtension::SERVICE_REGISTRY)
             );
-        }, [ LanguageServerExtension::TAG_HANDLER => [
+        }, [ LanguageServerExtension::TAG_SESSION_HANDLER => [
             'methods' => [
                 'textDocument/completion'
             ]
