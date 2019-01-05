@@ -11,6 +11,7 @@ use Phpactor\Extension\LanguageServerReferenceFinder\Handler\GotoDefinitionHandl
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
 use Phpactor\LanguageServer\Core\Session\Session;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
+use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\ReferenceFinder\DefinitionLocation;
 use Phpactor\ReferenceFinder\DefinitionLocator;
@@ -22,11 +23,6 @@ class GotoDefinitionHandlerTest extends TestCase
     const EXAMPLE_URI = '/test';
     const EXAMPLE_TEXT = 'hello';
 
-
-    /**
-     * @var SessionManager
-     */
-    private $manager;
     /**
      * @var ObjectProphecy|DefinitionLocator
      */
@@ -47,16 +43,20 @@ class GotoDefinitionHandlerTest extends TestCase
      */
     private $identifier;
 
+    /**
+     * @var Workspace
+     */
+    private $workspace;
+
     public function setUp()
     {
-        $this->manager = new SessionManager();
-        $this->manager->load(new Session('foo', 1));
         $this->locator = $this->prophesize(DefinitionLocator::class);
+        $this->workspace = new Workspace();
 
         $this->document = new TextDocumentItem();
         $this->document->uri = __FILE__;
         $this->document->text = self::EXAMPLE_TEXT;
-        $this->manager->current()->workspace()->open($this->document);
+        $this->workspace->open($this->document);
         $this->identifier = new TextDocumentIdentifier(__FILE__);
         $this->position = new Position(1, 1);
     }
@@ -76,7 +76,10 @@ class GotoDefinitionHandlerTest extends TestCase
             new DefinitionLocation($document->uri(), ByteOffset::fromInt(2))
         );
 
-        $tester = new HandlerTester(new GotoDefinitionHandler($this->manager, $this->locator->reveal()));
+        $tester = new HandlerTester(new GotoDefinitionHandler(
+            $this->workspace,
+            $this->locator->reveal()
+        ));
         $responses = $tester->dispatch('textDocument/definition', [
             'textDocument' => $this->identifier,
             'position' => $this->position,

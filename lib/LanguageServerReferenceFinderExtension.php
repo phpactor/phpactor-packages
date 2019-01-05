@@ -19,14 +19,10 @@ class LanguageServerReferenceFinderExtension implements Extension
     {
         $container->register('worse_language_server.handler.goto_definition', function (Container $container) {
             return new GotoDefinitionHandler(
-                $container->get(LanguageServerExtension::SERVICE_SESSION_MANAGER),
+                $container->get(LanguageServerExtension::SERVICE_SESSION_WORKSPACE),
                 $container->get(ReferenceFinderExtension::SERVICE_DEFINITION_LOCATOR)
             );
-        }, [ LanguageServerExtension::TAG_HANDLER => [
-            'metods' => [
-                'textDocument/definition'
-            ]
-        ]]);
+        }, [ LanguageServerExtension::TAG_SESSION_HANDLER => [] ]);
     }
 
     /**

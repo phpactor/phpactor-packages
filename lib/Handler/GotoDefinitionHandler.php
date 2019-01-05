@@ -9,31 +9,33 @@ use LanguageServerProtocol\Range;
 use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\TextDocumentIdentifier;
 use Phpactor\Extension\LanguageServer\Helper\OffsetHelper;
-use Phpactor\LanguageServer\Core\Dispatcher\Handler;
 use Phpactor\LanguageServer\Core\Event\EventSubscriber;
 use Phpactor\LanguageServer\Core\Event\LanguageServerEvents;
+use Phpactor\LanguageServer\Core\Handler\CanRegisterCapabilities;
+use Phpactor\LanguageServer\Core\Handler\Handler;
 use Phpactor\LanguageServer\Core\Session\SessionManager;
+use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\ReferenceFinder\DefinitionLocator;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocumentBuilder;
 use RuntimeException;
 
-class GotoDefinitionHandler implements Handler, EventSubscriber
+class GotoDefinitionHandler implements Handler, CanRegisterCapabilities
 {
-    /**
-     * @var SessionManager
-     */
-    private $sessionManager;
-
     /**
      * @var DefinitionLocator
      */
     private $definitionLocator;
 
-    public function __construct(SessionManager $sessionManager, DefinitionLocator $definitionLocator)
+    /**
+     * @var Workspace
+     */
+    private $workspace;
+
+    public function __construct(Workspace $workspace, DefinitionLocator $definitionLocator)
     {
-        $this->sessionManager = $sessionManager;
         $this->definitionLocator = $definitionLocator;
+        $this->workspace = $workspace;
     }
 
     public function methods(): array
@@ -43,18 +45,11 @@ class GotoDefinitionHandler implements Handler, EventSubscriber
         ];
     }
 
-    public function events(): array
-    {
-        return [
-            LanguageServerEvents::CAPABILITIES_REGISTER => 'registerCapabilities',
-        ];
-    }
-
     public function definition(
         TextDocumentIdentifier $textDocument,
         Position $position
     ): Generator {
-        $textDocument = $this->sessionManager->current()->workspace()->get($textDocument->uri);
+        $textDocument = $this->workspace->get($textDocument->uri);
 
         $offset = $position->toOffset($textDocument->text);
 
@@ -79,7 +74,7 @@ class GotoDefinitionHandler implements Handler, EventSubscriber
             $location->offset()->toInt()
         );
 
-        $location = new Location('file://' . $location->uri(), new Range(
+        $location = new Location($location->uri(), new Range(
             $startPosition,
             $startPosition
         ));
@@ -87,7 +82,7 @@ class GotoDefinitionHandler implements Handler, EventSubscriber
         yield $location;
     }
 
-    public function registerCapabilities(ServerCapabilities $capabilities)
+    public function registerCapabiltiies(ServerCapabilities $capabilities)
     {
         $capabilities->definitionProvider = true;
     }

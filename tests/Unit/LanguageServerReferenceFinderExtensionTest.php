@@ -16,10 +16,27 @@ use Phpactor\LanguageServer\Core\Rpc\RequestMessage;
 use Phpactor\LanguageServer\Core\Rpc\ResponseError;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
 use Phpactor\LanguageServer\LanguageServerBuilder;
+use Phpactor\LanguageServer\Test\ServerTester;
 
-class LanguageServerCompletionExtensionTest extends TestCase
+class LanguageServerReferenceFinderExtensionTest extends TestCase
 {
     public function testComplete()
+    {
+        $tester = $this->createTester();
+        $tester->initialize();
+        $tester->openDocument(new TextDocumentItem(__FILE__, 'php', 1, file_get_contents(__FILE__)));
+
+        $responses = $tester->dispatch('textDocument/definition', [
+            'textDocument' => new TextDocumentIdentifier(__FILE__),
+            'position' => [
+            ],
+        ]);
+        $response = $responses[0];
+        $this->assertInstanceOf(ResponseError::class, $response->responseError);
+        $this->assertContains('Unable to locate definition', $response->responseError->message);
+    }
+
+    private function createTester(): ServerTester
     {
         $container = PhpactorContainer::fromExtensions([
             LoggingExtension::class,
@@ -28,32 +45,10 @@ class LanguageServerCompletionExtensionTest extends TestCase
             ReferenceFinderExtension::class,
             FilePathResolverExtension::class,
         ]);
-
+        
         $builder = $container->get(LanguageServerExtension::SERVICE_LANGUAGE_SERVER_BUILDER);
         $this->assertInstanceOf(LanguageServerBuilder::class, $builder);
-        $dispatcher = $builder->buildDispatcher();
-        $responses = $dispatcher->dispatch(new RequestMessage(1, 'initialize', [
-            'rootUri' => __DIR__
-        ]));
-        $responses = iterator_to_array($responses);
-        $response = $responses[0];
-        $this->assertInstanceOf(ResponseMessage::class, $response);
-        $this->assertNull($response->responseError);
-        $this->assertInstanceOf(InitializeResult::class, $response->result);
 
-        $responses = $dispatcher->dispatch(new RequestMessage(1, 'textDocument/didOpen', [
-            'textDocument' => new TextDocumentItem(__FILE__, 'php', 1, file_get_contents(__FILE__)),
-        ]));
-        iterator_to_array($responses);
-
-        $responses = $dispatcher->dispatch(new RequestMessage(1, 'textDocument/definition', [
-            'textDocument' => new TextDocumentIdentifier(__FILE__),
-            'position' => [
-            ],
-        ]));
-        $responses = iterator_to_array($responses);
-        $response = $responses[0];
-        $this->assertInstanceOf(ResponseError::class, $response->responseError);
-        $this->assertContains('Unable to locate definition', $response->responseError->message);
+        return $builder->buildServerTester();
     }
 }
