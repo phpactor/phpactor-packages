@@ -267,7 +267,9 @@ class ExtensionManagerExtension implements Extension
     private function registerService(ContainerBuilder $container)
     {
         $container->register('extension_manager.service.progress', function (Container $container) {
-            $output = $this->isRpcCommand($container) ? new BufferedOutput() : $container->get(ConsoleExtension::SERVICE_OUTPUT);
+            $output = $this->isRpcCommand($container) || $container->getParameter(self::PARAM_QUIET)
+                ? new BufferedOutput()
+                : $container->get(ConsoleExtension::SERVICE_OUTPUT);
             return new SymfonyProgressLogger($output);
         });
 
