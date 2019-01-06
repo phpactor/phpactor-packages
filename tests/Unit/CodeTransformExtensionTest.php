@@ -10,6 +10,7 @@ use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\CodeTransform\CodeTransformExtension;
 use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\Extension\Rpc\Handler;
 use Phpactor\Extension\Rpc\RpcExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
@@ -46,7 +47,8 @@ class CodeTransformExtensionTest extends TestCase
             CodeTransformExtension::class,
             ClassToFileExtension::class,
             ComposerAutoloaderExtension::class,
-            FilePathResolverExtension::class
+            FilePathResolverExtension::class,
+            LoggingExtension::class
         ]);
 
         return $container;
