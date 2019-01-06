@@ -3,6 +3,7 @@
     "description": "Converts classes to files and vice-versa",
     "license": "MIT",
     "type": "phpactor-extension",
+    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Daniel Leech",
@@ -10,7 +11,7 @@
         }
     ],
     "require": {
-        "phpactor/class-to-file": "dev-master",
+        "phpactor/class-to-file": "~0.1",
         "phpactor/composer-autoloader-extension": "~0.1",
         "phpactor/container": "^1.0"
     },
