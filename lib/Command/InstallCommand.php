@@ -35,6 +35,11 @@ class InstallCommand extends Command
                 $this->installer->requireExtensions((array) $input->getArgument('extension'));
             } catch (CouldNotInstallExtension $couldNotInstall) {
                 $output->writeln('<error>Could not install</>');
+
+                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    throw $couldNotInstall;
+                }
+
                 return 1;
             }
 
