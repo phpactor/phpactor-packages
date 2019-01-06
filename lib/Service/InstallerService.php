@@ -83,7 +83,7 @@ class InstallerService
         } catch (Exception $couldNotInstall) {
             $config->revert();
             $this->progress->log('Rolling back configuration');
-            throw new CouldNotInstallExtension($couldNotInstall->getMessage());
+            throw new CouldNotInstallExtension($couldNotInstall->getMessage(), $couldNotInstall);
         }
     }
 }
