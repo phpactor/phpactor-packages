@@ -6,7 +6,8 @@ use Generator;
 use LanguageServerProtocol\Position;
 use LanguageServerProtocol\SignatureHelp;
 use LanguageServerProtocol\TextDocumentIdentifier;
-use Phpactor\Extension\LanguageServerCompletion\Signature\SignatureHelpProvider;
+use Phpactor\Extension\LanguageServerCompletion\Model\Signature\CouldNotHelp;
+use Phpactor\Extension\LanguageServerCompletion\Model\Signature\SignatureHelpProvider;
 use Phpactor\LanguageServer\Core\Handler\Handler;
 use Phpactor\LanguageServer\Core\Session\Workspace;
 
@@ -40,12 +41,16 @@ class SignatureHelpHandler implements Handler
     }
 
     public function signatureHelp(
-        TextDocumentIdentifier $item,
+        TextDocumentIdentifier $textDocument,
         Position $position
     ): Generator
     {
-        $document = $this->workspace->get($item->uri);
+        $document = $this->workspace->get($textDocument->uri);
 
-        yield $this->provider->provideHelp($document, $position);
+        try {
+            yield $this->provider->provideHelp($document, $position);
+        } catch (CouldNotHelp $couldNotHelp) {
+            yield new SignatureHelp();
+        }
     }
 }

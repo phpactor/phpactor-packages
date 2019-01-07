@@ -6,9 +6,9 @@ use LanguageServerProtocol\Position;
 use LanguageServerProtocol\SignatureHelp;
 use LanguageServerProtocol\TextDocumentItem;
 use PHPUnit\Framework\TestCase;
-use Phpactor\Extension\LanguageServerCompletion\Signature\ChainSignatureHelpProvider;
-use Phpactor\Extension\LanguageServerCompletion\Signature\CouldNotHelp;
-use Phpactor\Extension\LanguageServerCompletion\Signature\SignatureHelpProvider;
+use Phpactor\Extension\LanguageServerCompletion\Model\Signature\ChainSignatureHelpProvider;
+use Phpactor\Extension\LanguageServerCompletion\Model\Signature\CouldNotHelp;
+use Phpactor\Extension\LanguageServerCompletion\Model\Signature\SignatureHelpProvider;
 use Psr\Log\LoggerInterface;
 
 class ChainSignatureHelpProviderTest extends TestCase

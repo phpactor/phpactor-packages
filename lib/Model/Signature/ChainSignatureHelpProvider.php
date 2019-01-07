@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpactor\Extension\LanguageServerCompletion\Signature;
+namespace Phpactor\Extension\LanguageServerCompletion\Model\Signature;
 
 use LanguageServerProtocol\Position;
 use LanguageServerProtocol\SignatureHelp;
