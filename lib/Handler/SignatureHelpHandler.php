@@ -8,11 +8,14 @@ use LanguageServerProtocol\ServerCapabilities;
 use LanguageServerProtocol\SignatureHelp;
 use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentIdentifier;
+use Phpactor\Completion\Core\Exception\CouldNotHelpWithSignature;
+use Phpactor\Completion\Core\SignatureHelper;
 use Phpactor\Extension\LanguageServerCompletion\Model\Signature\CouldNotHelp;
-use Phpactor\Extension\LanguageServerCompletion\Model\Signature\SignatureHelpProvider;
 use Phpactor\LanguageServer\Core\Handler\CanRegisterCapabilities;
 use Phpactor\LanguageServer\Core\Handler\Handler;
 use Phpactor\LanguageServer\Core\Session\Workspace;
+use Phpactor\TextDocument\ByteOffset;
+use Phpactor\TextDocument\TextDocumentBuilder;
 
 class SignatureHelpHandler implements Handler, CanRegisterCapabilities
 {
@@ -22,15 +25,14 @@ class SignatureHelpHandler implements Handler, CanRegisterCapabilities
     private $workspace;
 
     /**
-     * @var SignatureHelpProvider
+     * @var SignatureHelper
      */
-    private $provider;
+    private $helper;
 
-
-    public function __construct(Workspace $workspace, SignatureHelpProvider $provider)
+    public function __construct(Workspace $workspace, SignatureHelper $helper)
     {
         $this->workspace = $workspace;
-        $this->provider = $provider;
+        $this->helper = $helper;
     }
 
     /**
@@ -48,11 +50,16 @@ class SignatureHelpHandler implements Handler, CanRegisterCapabilities
         Position $position
     ): Generator
     {
-        $document = $this->workspace->get($textDocument->uri);
+        $textDocument = $this->workspace->get($textDocument->uri);
+
+        $languageId = $textDocument->languageId ?: 'php';
 
         try {
-            yield $this->provider->provideHelp($document, $position);
-        } catch (CouldNotHelp $couldNotHelp) {
+            yield $this->helper->signatureHelp(
+                TextDocumentBuilder::create($textDocument->text)->language($languageId)->uri($textDocument->uri)->build(),
+                ByteOffset::fromInt($position->toOffset($textDocument->text))
+            );
+        } catch (CouldNotHelpWithSignature $couldNotHelp) {
             yield new SignatureHelp();
         }
     }
