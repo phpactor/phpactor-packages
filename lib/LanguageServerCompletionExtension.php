@@ -22,7 +22,7 @@ class LanguageServerCompletionExtension implements Extension
      */
     public function load(ContainerBuilder $container)
     {
-        $container->register('worse_language_server.handler.completion', function (Container $container) {
+        $container->register('language_server_completion.handler.completion', function (Container $container) {
             return new CompletionHandler(
                 $container->get(LanguageServerExtension::SERVICE_SESSION_WORKSPACE),
                 $container->get(CompletionExtension::SERVICE_REGISTRY)
@@ -33,28 +33,13 @@ class LanguageServerCompletionExtension implements Extension
             ]
         ]]);
 
-        $container->register('worse_language_server.handler.signature_help', function (Container $container) {
-            $helpers = [];
-
-            $helper = null;
-            foreach (array_keys($container->getServiceIdsForTag('language_server_completion.handler.signature_help')) as $serviceId) {
-                $helpers[] = $container->get($serviceId);
-            }
-
-            $chainHelper = new ChainSignatureHelper(
-                $container->get(LoggingExtension::SERVICE_LOGGER),
-                $helpers
-            );
+        $container->register('language_server_completion.handler.signature_help', function (Container $container) {
 
             return new SignatureHelpHandler(
                 $container->get(LanguageServerExtension::SERVICE_SESSION_WORKSPACE),
-                $chainHelper
+                $container->get(CompletionExtension::SERVICE_SIGNATURE_HELPER)
             );
-        }, [ LanguageServerExtension::TAG_SESSION_HANDLER => [
-            'methods' => [
-                'textDocument/completion'
-            ]
-        ]]);
+        }, [ LanguageServerExtension::TAG_SESSION_HANDLER => [] ]);
     }
 
     /**
