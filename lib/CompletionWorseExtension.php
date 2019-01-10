@@ -7,6 +7,7 @@ use Phpactor\Completion\Bridge\TolerantParser\SourceCodeFilesystem\ScfClassCompl
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassAliasCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstantCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstructorCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseSignatureHelper;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\ClassFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\FunctionFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\MethodFormatter;
@@ -28,6 +29,8 @@ use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
 use Phpactor\Extension\WorseReflection\WorseReflectionExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Container\Container;
+use Phpactor\WorseReflection\Core\Reflection\ReflectionClassLike;
+use Phpactor\WorseReflection\Reflector;
 
 class CompletionWorseExtension implements Extension
 {
@@ -40,6 +43,7 @@ class CompletionWorseExtension implements Extension
     public function load(ContainerBuilder $container)
     {
         $this->registerCompletion($container);
+        $this->registerSignatureHelper($container);
     }
 
     /**
@@ -131,5 +135,15 @@ class CompletionWorseExtension implements Extension
                 new VariableFormatter(),
             ];
         }, [ CompletionExtension::TAG_FORMATTER => []]);
+    }
+
+    private function registerSignatureHelper(ContainerBuilder $container)
+    {
+        $container->register('completion_worse.signature_helper', function (Container $container) {
+            return new WorseSignatureHelper(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
+            );
+        }, [ CompletionExtension::SERVICE_FORMATTER => []]);
     }
 }
