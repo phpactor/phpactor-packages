@@ -12,7 +12,8 @@
     ],
     "require": {
         "phpactor/container": "^1.0",
-        "phpactor/completion": "~0.2"
+        "phpactor/completion": "~0.2",
+        "phpactor/logging-extension": "~0.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^0.10.4",

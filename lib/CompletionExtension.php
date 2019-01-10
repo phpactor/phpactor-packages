@@ -2,11 +2,13 @@
 
 namespace Phpactor\Extension\Completion;
 
+use Phpactor\Completion\Core\ChainSignatureHelper;
 use Phpactor\Completion\Core\Formatter\ObjectFormatter;
 use Phpactor\Completion\Core\TypedCompletor;
 use Phpactor\Completion\Core\TypedCompletorRegistry;
 use Phpactor\Container\Extension;
 use Phpactor\Container\ContainerBuilder;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Container\Container;
 
@@ -17,6 +19,8 @@ class CompletionExtension implements Extension
     public const SERVICE_FORMATTER = 'completion.formatter';
     public const SERVICE_REGISTRY = 'completion.registry';
     public const KEY_COMPLETOR_TYPES = 'types';
+    const SERVICE_SIGNATURE_HELPER = 'completion.handler.signature_helper';
+    const TAG_SIGNATURE_HELPER = 'language_server_completion.handler.signature_help';
 
     /**
      * {@inheritDoc}
@@ -56,6 +60,20 @@ class CompletionExtension implements Extension
             }
 
             return new ObjectFormatter($formatters);
+        });
+
+        $container->register(self::SERVICE_SIGNATURE_HELPER, function (Container $container) {
+            $helpers = [];
+
+            $helper = null;
+            foreach (array_keys($container->getServiceIdsForTag(self::TAG_SIGNATURE_HELPER)) as $serviceId) {
+                $helpers[] = $container->get($serviceId);
+            }
+
+            return new ChainSignatureHelper(
+                $container->get(LoggingExtension::SERVICE_LOGGER),
+                $helpers
+            );
         });
     }
 }
