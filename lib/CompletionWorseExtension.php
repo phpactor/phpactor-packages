@@ -144,6 +144,6 @@ class CompletionWorseExtension implements Extension
                 $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
                 $container->get(CompletionExtension::SERVICE_FORMATTER)
             );
-        }, [ CompletionExtension::SERVICE_FORMATTER => []]);
+        }, [ CompletionExtension::TAG_SIGNATURE_HELPER => []]);
     }
 }
