@@ -6,12 +6,15 @@ use Closure;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Formatter\Formatter;
+use Phpactor\Completion\Core\SignatureHelp;
+use Phpactor\Completion\Core\SignatureHelper;
 use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Completion\CompletionExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocumentBuilder;
@@ -35,9 +38,15 @@ class CompletionExtensionTest extends TestCase
      */
     private $formatter1;
 
+    /**
+     * @var ObjectProphecy
+     */
+    private $signatureHelper1;
+
     public function setUp()
     {
         $this->completor1 = $this->prophesize(Completor::class);
+        $this->signatureHelper1 = $this->prophesize(SignatureHelper::class);
         $this->formatter1 = $this->prophesize(Formatter::class);
     }
 
@@ -72,6 +81,27 @@ class CompletionExtensionTest extends TestCase
         $this->assertEquals(false, $canFormat);
     }
 
+    public function testCreatesSignatureHelper()
+    {
+        $document = TextDocumentBuilder::create(self::EXAMPLE_SOURCE)->build();
+        $this->signatureHelper1->signatureHelp(
+            $document,
+            ByteOffset::fromInt(self::EXAMPLE_OFFSET)
+        )->will(function () {
+            return (function () {
+                return new SignatureHelp([], 0);
+            })();
+        });
+
+        $signatureHelper = $this->createContainer()->get(CompletionExtension::SERVICE_SIGNATURE_HELPER);
+        $help = $signatureHelper->signatureHelp(
+            $document,
+            ByteOffset::fromInt(self::EXAMPLE_OFFSET)
+        );
+
+        $this->assertInstanceOf(SignatureHelp::class, $help);
+    }
+
     private function createContainer(): Container
     {
         $builder = new PhpactorContainer();
@@ -85,6 +115,10 @@ class CompletionExtensionTest extends TestCase
             return $this->formatter1->reveal();
         }, [ CompletionExtension::TAG_FORMATTER => []]);
 
+        $builder->register('signarure_helper', function () {
+            return $this->signatureHelper1->reveal();
+        }, [ CompletionExtension::TAG_SIGNATURE_HELPER => []]);
+
         $builder->register('formatter_array', function () {
             return [
                 $this->formatter1->reveal(),
@@ -93,6 +127,11 @@ class CompletionExtensionTest extends TestCase
         }, [ CompletionExtension::TAG_FORMATTER => []]);
         
         $extension->load($builder);
-        return $builder->build([]);
+
+        $extension = new LoggingExtension();
+        $extension->load($builder);
+        return $builder->build([
+            'logging.enabled' => false,
+        ]);
     }
 }
