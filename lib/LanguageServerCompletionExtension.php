@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\LanguageServerCompletion;
 
-use Phpactor\Completion\Core\ChainSignatureHelper;
 use Phpactor\Container\Container;
 use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
@@ -10,7 +9,6 @@ use Phpactor\Extension\Completion\CompletionExtension;
 use Phpactor\Extension\LanguageServerCompletion\Handler\SignatureHelpHandler;
 use Phpactor\Extension\LanguageServer\LanguageServerExtension;
 use Phpactor\Extension\LanguageServerCompletion\Handler\CompletionHandler;
-use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\MapResolver\Resolver;
 
 class LanguageServerCompletionExtension implements Extension
@@ -34,7 +32,6 @@ class LanguageServerCompletionExtension implements Extension
         ]]);
 
         $container->register('language_server_completion.handler.signature_help', function (Container $container) {
-
             return new SignatureHelpHandler(
                 $container->get(LanguageServerExtension::SERVICE_SESSION_WORKSPACE),
                 $container->get(CompletionExtension::SERVICE_SIGNATURE_HELPER)

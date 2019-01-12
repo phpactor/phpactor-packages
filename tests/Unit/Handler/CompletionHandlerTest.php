@@ -21,8 +21,6 @@ use Phpactor\LanguageServer\Core\Session\Workspace;
 use Phpactor\LanguageServer\Test\HandlerTester;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocument;
-use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
-use Phpactor\WorseReflection\ReflectorBuilder;
 
 class CompletionHandlerTest extends TestCase
 {
@@ -36,11 +34,6 @@ class CompletionHandlerTest extends TestCase
      */
     private $position;
 
-    /**
-     * @var SourceCodeReflector
-     */
-    private $reflector;
-
 
     public function setUp()
     {
@@ -48,8 +41,6 @@ class CompletionHandlerTest extends TestCase
         $this->document->uri = '/test';
         $this->document->text = 'hello';
         $this->position = new Position(1, 1);
-
-        $this->reflector = ReflectorBuilder::create()->build();
         $this->workspace = new Workspace();
 
         $this->workspace->open($this->document);

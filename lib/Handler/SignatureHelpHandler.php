@@ -10,7 +10,7 @@ use LanguageServerProtocol\SignatureHelpOptions;
 use LanguageServerProtocol\TextDocumentIdentifier;
 use Phpactor\Completion\Core\Exception\CouldNotHelpWithSignature;
 use Phpactor\Completion\Core\SignatureHelper;
-use Phpactor\Extension\LanguageServerCompletion\Model\Signature\CouldNotHelp;
+use Phpactor\Extension\LanguageServerCompletion\Util\PhpactorToLspSignature;
 use Phpactor\LanguageServer\Core\Handler\CanRegisterCapabilities;
 use Phpactor\LanguageServer\Core\Handler\Handler;
 use Phpactor\LanguageServer\Core\Session\Workspace;
@@ -48,17 +48,16 @@ class SignatureHelpHandler implements Handler, CanRegisterCapabilities
     public function signatureHelp(
         TextDocumentIdentifier $textDocument,
         Position $position
-    ): Generator
-    {
+    ): Generator {
         $textDocument = $this->workspace->get($textDocument->uri);
 
         $languageId = $textDocument->languageId ?: 'php';
 
         try {
-            yield $this->helper->signatureHelp(
+            yield PhpactorToLspSignature::toLspSignatureHelp($this->helper->signatureHelp(
                 TextDocumentBuilder::create($textDocument->text)->language($languageId)->uri($textDocument->uri)->build(),
                 ByteOffset::fromInt($position->toOffset($textDocument->text))
-            );
+            ));
         } catch (CouldNotHelpWithSignature $couldNotHelp) {
             yield new SignatureHelp();
         }

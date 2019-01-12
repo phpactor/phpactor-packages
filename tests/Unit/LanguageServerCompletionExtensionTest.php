@@ -7,17 +7,8 @@ use LanguageServerProtocol\Position;
 use LanguageServerProtocol\SignatureHelp;
 use LanguageServerProtocol\TextDocumentIdentifier;
 use LanguageServerProtocol\TextDocumentItem;
-use PHPUnit\Framework\TestCase;
-use Phpactor\Container\PhpactorContainer;
-use Phpactor\Extension\Completion\CompletionExtension;
-use Phpactor\Extension\LanguageServerCompletion\LanguageServerCompletionExtension;
 use Phpactor\Extension\LanguageServerCompletion\Tests\IntegrationTestCase;
-use Phpactor\Extension\LanguageServer\LanguageServerExtension;
-use Phpactor\Extension\Logger\LoggingExtension;
-use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 use Phpactor\LanguageServer\Core\Rpc\ResponseMessage;
-use Phpactor\LanguageServer\LanguageServerBuilder;
-use Phpactor\LanguageServer\Test\ServerTester;
 
 class LanguageServerCompletionExtensionTest extends IntegrationTestCase
 {
