@@ -7,18 +7,21 @@ use Phpactor\ClassFileConverter\Domain\FileToClass;
 use Phpactor\CodeTransform\Domain\ClassName;
 use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\CodeTransform\Domain\SourceCode;
+use Phpactor\Extension\Rpc\Response\EchoResponse;
+use Phpactor\Extension\Rpc\Response\Input\ConfirmInput;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\Rpc\Response\Input\TextInput;
 use Phpactor\Extension\Rpc\Response\Input\ChoiceInput;
 use Phpactor\Extension\Rpc\Handler\AbstractHandler;
 use Phpactor\Extension\Rpc\Response\ReplaceFileSourceResponse;
+use RuntimeException;
 
 abstract class AbstractClassGenerateHandler extends AbstractHandler
 {
     const PARAM_CURRENT_PATH = 'current_path';
     const PARAM_NEW_PATH = 'new_path';
-    const PARAM_OVERWRITE = 'overwrite';
     const PARAM_VARIANT = 'variant';
+    const PARAM_OVERWRITE_EXISTING = 'overwrite_existing';
 
     /**
      * @var Generators
@@ -41,6 +44,7 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
         $resolver->setDefaults([
             self::PARAM_NEW_PATH => null,
             self::PARAM_VARIANT => null,
+            self::PARAM_OVERWRITE_EXISTING => null,
         ]);
         $resolver->setRequired([
             self::PARAM_CURRENT_PATH
@@ -53,7 +57,9 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
 
     public function handle(array $arguments)
     {
-        $missingInputs = [];
+        if (false === $arguments[self::PARAM_OVERWRITE_EXISTING]) {
+            return EchoResponse::fromMessage('Cancelled');
+        }
 
         if (null === $arguments[self::PARAM_VARIANT]) {
             $this->requireInput(ChoiceInput::fromNameLabelChoicesAndDefault(
@@ -73,11 +79,25 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
             'file'
         ));
 
+        if (
+            $arguments[self::PARAM_NEW_PATH] &&
+            null === $arguments[self::PARAM_OVERWRITE_EXISTING] &&
+            file_exists($arguments[self::PARAM_NEW_PATH]) &&
+            0 !== filesize($arguments[self::PARAM_NEW_PATH])
+        ) {
+            $this->requireInput(ConfirmInput::fromNameAndLabel(
+                self::PARAM_OVERWRITE_EXISTING,
+                'File exists and is not empty, overwrite?'
+            ));
+        }
+
         if ($this->hasMissingArguments($arguments)) {
             return $this->createInputCallback($arguments);
         }
 
         $code = $this->generate($arguments);
+
+        $this->writeFileContents($arguments, $code);
 
         return ReplaceFileSourceResponse::fromPathAndSource(
             $code->path() ?: $arguments[self::PARAM_NEW_PATH],
@@ -89,5 +109,27 @@ abstract class AbstractClassGenerateHandler extends AbstractHandler
     {
         $candidates = $this->fileToClass->fileToClassCandidates(FilePath::fromString($path));
         return ClassName::fromString($candidates->best()->__toString());
+    }
+
+    private function writeFileContents(array $arguments, SourceCode $code): void
+    {
+        $newPath = $arguments[self::PARAM_NEW_PATH];
+        $dirName = dirname($newPath);
+        
+        if (!file_exists($dirName)) {
+            if (!@mkdir($dirName, 0777, true)) {
+                throw new RuntimeException(sprintf(
+                    'Could not create directory at "%s"',
+                    $dirName
+                ));
+            }
+        }
+        
+        if (!file_put_contents($newPath, (string) $code)) {
+            throw new RuntimeException(sprintf(
+                'Could not save file contents to "%s"',
+                $newPath
+            ));
+        }
     }
 }

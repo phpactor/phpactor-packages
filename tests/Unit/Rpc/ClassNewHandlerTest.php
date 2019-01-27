@@ -41,7 +41,7 @@ class ClassNewHandlerTest extends AbstractClassGenerateHandlerTest
     public function testGeneratesNewClass()
     {
         $this->fileToClass->fileToClassCandidates(
-            FilePath::fromString(self::EXAMPLE_NEW_PATH)
+            FilePath::fromString($this->exampleNewPath())
         )->willReturn(ClassNameCandidates::fromClassNames([
             $class1 = ConvertedClassName::fromString(self::EXAMPLE_CLASS_1)
         ]));
@@ -49,16 +49,17 @@ class ClassNewHandlerTest extends AbstractClassGenerateHandlerTest
         $this->generator->generateNew(
             ClassName::fromString(self::EXAMPLE_CLASS_1)
         )->willReturn(
-            SourceCode::fromStringAndPath('<?php', self::EXAMPLE_NEW_PATH)
+            SourceCode::fromStringAndPath('<?php', $this->exampleNewPath())
         );
 
         $response = $this->createTester()->handle(ClassNewHandler::NAME, [
             ClassInflectHandler::PARAM_CURRENT_PATH => self::EXAMPLE_PATH,
-            ClassInflectHandler::PARAM_NEW_PATH => self::EXAMPLE_NEW_PATH,
+            ClassInflectHandler::PARAM_NEW_PATH => $this->exampleNewPath(),
             ClassInflectHandler::PARAM_VARIANT => self::EXAMPLE_VARIANT,
         ]);
 
         $this->assertInstanceOf(ReplaceFileSourceResponse::class, $response);
-        $this->assertEquals(self::EXAMPLE_NEW_PATH, $response->path());
+        $this->assertEquals($this->exampleNewPath(), $response->path());
+        $this->assertFileExists($this->exampleNewPath());
     }
 }

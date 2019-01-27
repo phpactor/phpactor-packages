@@ -64,5 +64,6 @@ class ClassInflectHandlerTest extends AbstractClassGenerateHandlerTest
 
         $this->assertInstanceOf(ReplaceFileSourceResponse::class, $response);
         $this->assertEquals($this->exampleNewPath(), $response->path());
+        $this->assertFileExists($this->exampleNewPath());
     }
 }
