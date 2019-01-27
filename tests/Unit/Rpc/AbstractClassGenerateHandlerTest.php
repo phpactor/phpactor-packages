@@ -10,7 +10,9 @@ use Phpactor\Extension\Rpc\Response\InputCallbackResponse;
 use Phpactor\Extension\Rpc\Response\Input\ChoiceInput;
 use Phpactor\Extension\Rpc\Response\Input\TextInput;
 use Phpactor\Extension\Rpc\Test\HandlerTester;
+use Phpactor\TestUtils\Workspace;
 use Prophecy\Prophecy\ObjectProphecy;
+use Webmozart\PathUtil\Path;
 
 abstract class AbstractClassGenerateHandlerTest extends TestCase
 {
@@ -25,9 +27,19 @@ abstract class AbstractClassGenerateHandlerTest extends TestCase
      */
     protected $fileToClass;
 
+    /**
+     * @var Workspace
+     */
+    protected $workspace;
+
     public function setUp()
     {
         $this->fileToClass = $this->prophesize(FileToClass::class);
+        $this->workspace = Workspace::create(__DIR__ . '/../../Workspace');
+    }
+
+    public function testAsksToOverwriteExistingFile()
+    {
     }
 
     public function testAsksForVariant()
@@ -50,5 +62,10 @@ abstract class AbstractClassGenerateHandlerTest extends TestCase
     protected function createTester(): HandlerTester
     {
         return new HandlerTester($this->createHandler());
+    }
+
+    protected function exampleNewPath()
+    {
+        return Path::canonicalize($this->workspace->path(self::EXAMPLE_NEW_PATH));
     }
 }
