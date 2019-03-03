@@ -37,8 +37,8 @@ class ComposerVersionFinderTest extends IntegrationTestCase
     private function setupEnvironment()
     {
         $this->loadProject(
-                'Extension',
-                <<<'EOT'
+            'Extension',
+            <<<'EOT'
 // File: composer.json
 {
     "name": "test/extension",
