@@ -87,7 +87,10 @@ class ExtensionManagerExtension implements Extension
         $this->registerComposer($container);
         $this->registerModel($container);
         $this->registerService($container);
-        $this->registerRpc($container);
+
+        if (class_exists(RpcExtension::class)) {
+            $this->registerRpc($container);
+        }
     }
 
     private function registerCommands(ContainerBuilder $container)
