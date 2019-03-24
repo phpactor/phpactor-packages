@@ -7,6 +7,7 @@ use Phpactor\Completion\Bridge\TolerantParser\SourceCodeFilesystem\ScfClassCompl
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseClassAliasCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstantCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseConstructorCompletor;
+use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseDeclaredClassCompletor;
 use Phpactor\Completion\Bridge\TolerantParser\WorseReflection\WorseSignatureHelper;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\ClassFormatter;
 use Phpactor\Completion\Bridge\WorseReflection\Formatter\FunctionFormatter;
@@ -117,6 +118,13 @@ class CompletionWorseExtension implements Extension
         $container->register('completion_worse.completor.class_alias', function (Container $container) {
             return new WorseClassAliasCompletor(
                 $container->get(WorseReflectionExtension::SERVICE_REFLECTOR)
+            );
+        }, [ self::TAG_TOLERANT_COMPLETOR => []]);
+
+        $container->register('completion_worse.completor.class_alias', function (Container $container) {
+            return new WorseDeclaredClassCompletor(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR),
+                $container->get(CompletionExtension::SERVICE_FORMATTER)
             );
         }, [ self::TAG_TOLERANT_COMPLETOR => []]);
 
