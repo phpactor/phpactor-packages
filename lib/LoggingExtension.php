@@ -4,6 +4,7 @@ namespace Phpactor\Extension\Logger;
 
 use Monolog\Handler\NullHandler;
 use Monolog\Logger;
+use Phpactor\Extension\Logger\Formatter\FormatterRegistry;
 use Psr\Log\LogLevel;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\FingersCrossedHandler;
@@ -11,23 +12,30 @@ use Phpactor\Container\Container;
 use Phpactor\Container\Extension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Container\ContainerBuilder;
+use RuntimeException;
 
 class LoggingExtension implements Extension
 {
-    const SERVICE_LOGGER = 'logging.logger';
+    public const PARAM_ENABLED = 'logging.enabled';
+    public const PARAM_FINGERS_CROSSED = 'logging.fingers_crossed';
+    public const PARAM_FORMATTER = 'logging.formatter';
+    public const PARAM_LEVEL = 'logging.level';
+    public const PARAM_NAME = 'logger.name';
+    public const PARAM_PATH = 'logging.path';
+    public const SERVICE_LOGGER = 'logging.logger';
+    public const TAG_FORMATTER = 'logging.formatter';
 
-    const PARAM_PATH = 'logging.path';
-    const PARAM_LEVEL = 'logging.level';
-    const PARAM_ENABLED = 'logging.enabled';
-    const PARAM_FINGERS_CROSSED = 'logging.fingers_crossed';
+    private const SERVICE_FORMATTER_REGISTRY = 'logging.formatter_registry';
 
     public function configure(Resolver $schema)
     {
         $schema->setDefaults([
             self::PARAM_ENABLED => false,
             self::PARAM_FINGERS_CROSSED => false,
-            self::PARAM_PATH => 'phpactor.log',
+            self::PARAM_PATH => 'application.log',
             self::PARAM_LEVEL => LogLevel::WARNING,
+            self::PARAM_NAME => 'logger',
+            self::PARAM_FORMATTER => null,
         ]);
     }
 
@@ -46,13 +54,37 @@ class LoggingExtension implements Extension
                 $container->getParameter(self::PARAM_LEVEL)
             );
 
+            if ($formatter = $container->getParameter(self::PARAM_FORMATTER)) {
+                $handler->setFormatter(
+                    $container->get(
+                        self::SERVICE_FORMATTER_REGISTRY
+                    )->get($formatter)
+                );
+            }
+
             if ($container->getParameter(self::PARAM_FINGERS_CROSSED)) {
                 $handler = new FingersCrossedHandler($handler);
             }
 
             $logger->pushHandler($handler);
 
+
             return $logger;
+        });
+
+        $container->register(self::SERVICE_FORMATTER_REGISTRY, function (Container $container) {
+            $serviceMap = [];
+            foreach ($container->getServiceIdsForTag(self::TAG_FORMATTER) as $serviceId => $attrs) {
+                if (!isset($attrs['alias'])) {
+                    throw new RuntimeException(sprintf(
+                        'Logging service "%s" must provide an `alias` attribute',
+                        $serviceId
+                    ));
+                }
+                $serviceMap[$attrs['alias']] = $serviceId;
+            }
+
+            return new FormatterRegistry($container, $serviceMap);
         });
     }
 }

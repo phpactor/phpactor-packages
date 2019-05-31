@@ -2,14 +2,18 @@
 
 namespace Phpactor\Extension\Logger\Tests\Unit;
 
+use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\FingersCrossedHandler;
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Container\Container;
+use Phpactor\Container\ContainerBuilder;
+use Phpactor\Container\Extension;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Logger\LoggingExtension;
+use Phpactor\MapResolver\Resolver;
 
 class LoggingExtensionTest extends TestCase
 {
@@ -50,12 +54,50 @@ class LoggingExtensionTest extends TestCase
         $this->assertInstanceOf(FingersCrossedHandler::class, $handlers[0]);
     }
 
+    public function testCustomFormatter()
+    {
+        $fname = tempnam(sys_get_temp_dir(), 'phpactor_test');
+        $container = $this->create([
+            LoggingExtension::PARAM_FORMATTER => 'json',
+            LoggingExtension::PARAM_ENABLED => true,
+            LoggingExtension::PARAM_PATH => $fname,
+            LoggingExtension::PARAM_LEVEL => 'debug',
+        ]);
+        $logger = $container->get('logging.logger');
+        assert($logger instanceof Logger);
+        $logger->info('asd');
+        $result = json_decode(file_get_contents($fname));
+        $this->assertNotNull($result, 'Decoded JSON');
+        unlink($fname);
+    }
+
     private function create(array $options): Container
     {
         $container = PhpactorContainer::fromExtensions([
-            LoggingExtension::class
+            LoggingExtension::class,
+            ExampleExtension::class,
         ], $options);
 
         return $container;
+    }
+}
+
+class ExampleExtension implements Extension
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ContainerBuilder $container)
+    {
+        $container->register('json_formatter', function (Container $container) {
+            return new JsonFormatter();
+        }, [ LoggingExtension::TAG_FORMATTER => ['alias'=> 'json']]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(Resolver $schema)
+    {
     }
 }
