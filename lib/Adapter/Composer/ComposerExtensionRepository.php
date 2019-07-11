@@ -72,6 +72,8 @@ class ComposerExtensionRepository implements ExtensionRepository
                 $package = $this->packagistRepository->findPackage($packageInfo['name'], '*');
             }
 
+            assert($package instanceof CompletePackageInterface);
+
             return $this->extensionFactory->fromPackage(
                 $package,
                 $this->extensionState($package)

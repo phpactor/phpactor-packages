@@ -59,7 +59,7 @@ class ExtensionManagerExtension implements Extension
     const PARAM_REPOSITORIES = 'extension_manager.repositories';
     const PARAM_QUIET = 'extension_manager.quiet';
 
-    public function configure(Resolver $resolver): void
+    public function configure(Resolver $resolver)
     {
         $resolver->setRequired([
             self::PARAM_EXTENSION_VENDOR_DIR,

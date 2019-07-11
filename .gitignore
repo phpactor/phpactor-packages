@@ -1,11 +1,6 @@
 /vendor
-/extensions.json
-/extensions.lock
-/vendor-extension
-/.php_cs.cache
-/composer.lock
-/.phpactor.yml
-/.phpactor/*
-/.php_cs.cache
-/.phpunit.result.cache
 /tests/Workspace
+/tests/Assets/workspace
+/phpbench.json
+/composer.lock
+/.php_cs.cache
