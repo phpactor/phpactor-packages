@@ -2,7 +2,6 @@
 
 namespace Phpactor\Extension\Completion\Tests\Unit;
 
-use Closure;
 use PHPUnit\Framework\TestCase;
 use Phpactor\Completion\Core\Completor;
 use Phpactor\Completion\Core\Formatter\Formatter;
@@ -10,12 +9,9 @@ use Phpactor\Completion\Core\SignatureHelp;
 use Phpactor\Completion\Core\SignatureHelper;
 use Phpactor\Completion\Core\Suggestion;
 use Phpactor\Container\Container;
-use Phpactor\Container\ContainerBuilder;
-use Phpactor\Container\Extension;
 use Phpactor\Container\PhpactorContainer;
 use Phpactor\Extension\Completion\CompletionExtension;
 use Phpactor\Extension\Logger\LoggingExtension;
-use Phpactor\MapResolver\Resolver;
 use Phpactor\TextDocument\ByteOffset;
 use Phpactor\TextDocument\TextDocumentBuilder;
 use Prophecy\Prophecy\ObjectProphecy;

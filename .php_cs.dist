@@ -2,6 +2,10 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in('lib')
+    ->in('tests')
+    ->exclude([
+        
+    ])
 ;
 
 return PhpCsFixer\Config::create()
@@ -12,3 +16,4 @@ return PhpCsFixer\Config::create()
     ])
     ->setFinder($finder)
 ;
+
