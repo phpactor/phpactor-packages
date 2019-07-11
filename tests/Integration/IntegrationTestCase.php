@@ -10,6 +10,9 @@ use Phpactor\Extension\ExtensionManager\Tests\TestCase;
 use Phpactor\Extension\Logger\LoggingExtension;
 use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
 
+/**
+ * @runInSeparateProcess
+ */
 class IntegrationTestCase extends TestCase
 {
     protected function container(array $params = []): Container
