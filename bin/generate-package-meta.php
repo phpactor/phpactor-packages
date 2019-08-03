@@ -5,7 +5,7 @@ use Safe\json_decode;
 use Safe\file_get_contents;
 
 $meta = [];
-foreach (['packages', 'extensions'] as $dirName) {
+foreach (['library', 'extensions'] as $dirName) {
     foreach (array_filter(scandir($dirName), function (string $path) {
         return !in_array($path, ['.', '..']);
     }) as $packageName) {

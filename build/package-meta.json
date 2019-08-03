@@ -3,7 +3,7 @@
         "name": "phpactor/class-mover",
         "autoload": {
             "psr-4": {
-                "Phpactor\\ClassMover\\": "packages/class-mover/lib/"
+                "Phpactor\\ClassMover\\": "library/class-mover/lib/"
             }
         },
         "version": "dev-master"
@@ -12,7 +12,7 @@
         "name": "phpactor/class-to-file",
         "autoload": {
             "psr-4": {
-                "Phpactor\\ClassFileConverter\\": "packages/class-to-file/lib/"
+                "Phpactor\\ClassFileConverter\\": "library/class-to-file/lib/"
             }
         },
         "version": "0.2.0"
@@ -21,7 +21,7 @@
         "name": "phpactor/code-builder",
         "autoload": {
             "psr-4": {
-                "Phpactor\\CodeBuilder\\": "packages/code-builder/lib/"
+                "Phpactor\\CodeBuilder\\": "library/code-builder/lib/"
             }
         },
         "version": "0.2.0"
@@ -30,7 +30,7 @@
         "name": "phpactor/code-transform",
         "autoload": {
             "psr-4": {
-                "Phpactor\\CodeTransform\\": "packages/code-transform/lib/"
+                "Phpactor\\CodeTransform\\": "library/code-transform/lib/"
             }
         },
         "version": "0.1.1"
@@ -39,7 +39,7 @@
         "name": "phpactor/completion",
         "autoload": {
             "psr-4": {
-                "Phpactor\\Completion\\": "packages/completion/lib/"
+                "Phpactor\\Completion\\": "library/completion/lib/"
             }
         },
         "version": "0.2.1"
@@ -48,7 +48,7 @@
         "name": "phpactor/config-loader",
         "autoload": {
             "psr-4": {
-                "Phpactor\\ConfigLoader\\": "packages/config-loader/lib/"
+                "Phpactor\\ConfigLoader\\": "library/config-loader/lib/"
             }
         },
         "version": "0.1.0"
@@ -57,7 +57,7 @@
         "name": "phpactor/container",
         "autoload": {
             "psr-4": {
-                "Phpactor\\Container\\": "packages/container/lib/"
+                "Phpactor\\Container\\": "library/container/lib/"
             }
         },
         "version": "1.3.0"
@@ -66,7 +66,7 @@
         "name": "phpactor/docblock",
         "autoload": {
             "psr-4": {
-                "Phpactor\\Docblock\\": "packages/docblock/lib/"
+                "Phpactor\\Docblock\\": "library/docblock/lib/"
             }
         },
         "version": "0.3.0"
@@ -75,7 +75,7 @@
         "name": "phpactor/file-path-resolver",
         "autoload": {
             "psr-4": {
-                "Phpactor\\FilePathResolver\\": "packages/file-path-resolver/lib/"
+                "Phpactor\\FilePathResolver\\": "library/file-path-resolver/lib/"
             }
         },
         "version": "0.8.0"
@@ -84,7 +84,7 @@
         "name": "phpactor/map-resolver",
         "autoload": {
             "psr-4": {
-                "Phpactor\\MapResolver\\": "packages/map-resolver/lib/"
+                "Phpactor\\MapResolver\\": "library/map-resolver/lib/"
             }
         },
         "version": "1.2.0"
@@ -93,7 +93,7 @@
         "name": "phpactor/path-finder",
         "autoload": {
             "psr-4": {
-                "Phpactor\\ClassFileConverter\\": "packages/path-finder/lib/"
+                "Phpactor\\ClassFileConverter\\": "library/path-finder/lib/"
             }
         },
         "version": "dev-master"
@@ -102,7 +102,7 @@
         "name": "phpactor/reference-finder",
         "autoload": {
             "psr-4": {
-                "Phpactor\\ReferenceFinder\\": "packages/reference-finder/lib/"
+                "Phpactor\\ReferenceFinder\\": "library/reference-finder/lib/"
             }
         },
         "version": "0.1.0"
@@ -111,7 +111,7 @@
         "name": "phpactor/source-code-filesystem",
         "autoload": {
             "psr-4": {
-                "Phpactor\\Filesystem\\": "packages/source-code-filesystem/lib/"
+                "Phpactor\\Filesystem\\": "library/source-code-filesystem/lib/"
             }
         },
         "version": "0.1.0"
@@ -120,7 +120,7 @@
         "name": "phpactor/test-utils",
         "autoload": {
             "psr-4": {
-                "Phpactor\\TestUtils\\": "packages/test-utils/lib/"
+                "Phpactor\\TestUtils\\": "library/test-utils/lib/"
             }
         },
         "version": "1.0.0"
@@ -129,7 +129,7 @@
         "name": "phpactor/text-document",
         "autoload": {
             "psr-4": {
-                "Phpactor\\TextDocument\\": "packages/text-document/lib/"
+                "Phpactor\\TextDocument\\": "library/text-document/lib/"
             }
         },
         "version": "1.0.0"
@@ -138,7 +138,7 @@
         "name": "phpactor/worse-reference-finders",
         "autoload": {
             "psr-4": {
-                "Phpactor\\WorseReferenceFinder\\": "packages/worse-reference-finders/lib/"
+                "Phpactor\\WorseReferenceFinder\\": "library/worse-reference-finders/lib/"
             }
         },
         "version": "0.1.0"
@@ -147,7 +147,7 @@
         "name": "phpactor/worse-reflection",
         "autoload": {
             "psr-4": {
-                "Phpactor\\WorseReflection\\": "packages/worse-reflection/lib/"
+                "Phpactor\\WorseReflection\\": "library/worse-reflection/lib/"
             }
         },
         "version": "0.3.0"
