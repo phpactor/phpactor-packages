@@ -1,0 +1,41 @@
+{
+    "name": "phpactor/code-transform-extension",
+    "description": "Code transform base package",
+    "license": "MIT",
+    "type": "phpactor-extension",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {
+        "phpactor/container": "^1.0",
+        "phpactor/code-transform": "~0.1",
+        "phpactor/class-to-file-extension": "~0.1"
+    },
+    "require-dev": {
+        "phpactor/rpc-extension": "^0.1.0@dev",
+        "phpstan/phpstan": "~0.11.0",
+        "phpunit/phpunit": "~7.0",
+        "friendsofphp/php-cs-fixer": "~2.15.0",
+        "phpactor/test-utils": "^1.0@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\Extension\\CodeTransform\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\Extension\\CodeTransform\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "phpactor.extension_class": "Phpactor\\Extension\\CodeTransform\\CodeTransformExtension",
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
