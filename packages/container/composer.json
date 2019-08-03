@@ -1,0 +1,31 @@
+{
+    "name": "phpactor/container",
+    "description": "Phpactor's DI Container",
+    "type": "library",
+    "require": {
+        "psr/container": "^1.0",
+        "phpactor/map-resolver": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~7.0",
+        "friendsofphp/php-cs-fixer": "~2.15.0",
+        "phpstan/phpstan": "~0.11.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\Container\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\Container\\Tests\\": "tests/"
+        }
+    }
+}
