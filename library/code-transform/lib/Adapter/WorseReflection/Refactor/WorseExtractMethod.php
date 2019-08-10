@@ -22,6 +22,7 @@ use Phpactor\CodeBuilder\Domain\Builder\MethodBuilder;
 use Phpactor\CodeTransform\Domain\Exception\TransformException;
 use Phpactor\CodeTransform\Domain\Utils\TextUtils;
 use Phpactor\WorseReflection\Core\Reflection\ReflectionMethod;
+use RuntimeException;
 
 class WorseExtractMethod implements ExtractMethod
 {
@@ -182,7 +183,16 @@ class WorseExtractMethod implements ExtractMethod
         }
 
         // returns the method that the offset is within
-        return $methods->belongingTo($className)->atOffset($offsetEnd)->first();
+        $method = $methods->belongingTo($className)->atOffset($offsetEnd)->first();
+
+        if (!$method instanceof ReflectionMethod) {
+            throw new RuntimeException(sprintf(
+                'Expected class member to be a method, but its a "%s"',
+                get_class($method)
+            ));
+        }
+
+        return $method;
     }
 
     private function addParametersAndGetArgs(array $freeVariables, $methodBuilder, SourceCodeBuilder $builder): array
