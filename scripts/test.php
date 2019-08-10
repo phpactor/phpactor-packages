@@ -91,6 +91,7 @@ foreach ($fails as [ $packageName, $script, $stdOut, $stdErr ]) {
     fwrite(STDOUT, str_repeat('=', strlen($line)).PHP_EOL.PHP_EOL);
     fwrite(STDOUT, $stdOut);
     fwrite(STDOUT, $stdErr);
+    fwrite(STDOUT, PHP_EOL.PHP_EOL);
 }
 
 exit($exitSum);
