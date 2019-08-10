@@ -105,5 +105,8 @@
         "symfony/console": "^4.1",
         "composer/composer": "^1.7",
         "monolog/monolog": "^1.23"
+    },
+    "scripts": {
+        "test": "php scripts/test.php"
     }
 }
