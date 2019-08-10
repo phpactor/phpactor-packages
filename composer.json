@@ -11,7 +11,12 @@
     ],
     "minimum-stability": "stable",
     "require-dev": {
-        "thecodingmachine/safe": "^0.1.16"
+        "thecodingmachine/safe": "^0.1.16",
+        "phpunit/phpunit": "~7.0",
+        "friendsofphp/php-cs-fixer": "~2.15.0",
+        "phpstan/phpstan": "~0.11.0",
+        "phpbench/phpbench": "dev-master",
+        "symfony/yaml": "^4.2"
     },
     "autoload": {
         "psr-4": {

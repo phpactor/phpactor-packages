@@ -19,6 +19,8 @@ foreach (['library', 'extensions'] as $dirName) {
         $packageMeta['autoload'] = autoload_data($path, $composerData['autoload']);
         $packageMeta['version'] = git_version($packageName);
         $packageMeta['require'] = $composerData['require'] ?? [];
+        $packageMeta['require-dev'] = $composerData['require-dev'] ?? [];
+        $packageMeta['path'] = $path;
         $meta[$packageName] = $packageMeta;
     }
 }
