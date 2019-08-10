@@ -17,7 +17,7 @@ $exitSum = 0;
 $fails = [];
 
 foreach ($packageMetas as $packageMeta) {
-    echo sprintf('Trying to run travis scripts for "%s"', $packageMeta['name']).PHP_EOL;
+    echo sprintf('Enqueuing travis scripts for "%s"', $packageMeta['name']).PHP_EOL;
 
     $travisPath = $packageMeta['path'] . '/.travis.yml';
 
@@ -67,6 +67,7 @@ while ($queues) {
         $exitSum += $process->getExitCode();
 
         if ($process->getExitCode() !== 0) {
+            unset($queues[$packageName]);
             $fails[] = [ $packageName, $process->getCommandLine()];
         }
 
@@ -92,8 +93,9 @@ function start_process(array $processes, array &$scripts, string $packageName, a
 
     $script = array_shift($scripts);
     fwrite(STDOUT, sprintf('// [%s] %s', $packageName, $script).PHP_EOL);
-    $process = new Process($script, $packageMeta['path']);
+    $process = new Process($script, getcwd() . '/' . $packageMeta['path']);
     $process->start(function ($type, $data) {
+        echo $data;
     });
     $processes[$packageName] = $process;
 
