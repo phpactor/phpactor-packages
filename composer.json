@@ -107,6 +107,7 @@
         "monolog/monolog": "^1.23"
     },
     "scripts": {
-        "test": "php scripts/test.php"
+        "test": "php scripts/test.php",
+        "build": "php scripts/build.php"
     }
 }
