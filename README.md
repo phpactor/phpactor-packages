@@ -1,6 +1,8 @@
 Phpactor Packages
 =================
 
+[![Build Status](https://travis-ci.org/phpactor/phpactor-packages.svg?branch=master)](https://travis-ci.org/phpactor/phpactor-packages)
+
 This repository contains all Phpactor libraries and extensions in addition to
 a `bin/phpactor` binary which integrates all of the extensions in this
 mono-repository.
