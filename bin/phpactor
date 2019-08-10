@@ -1,0 +1,51 @@
+#!/usr/bin/env php
+<?php
+
+use Acme\Extension\StupidCompletion\StupidCompletionExtension;
+use Phpactor\Container\PhpactorContainer;
+use Phpactor\Extension\ClassToFile\ClassToFileExtension;
+use Phpactor\Extension\CodeTransform\CodeTransformExtension;
+use Phpactor\Extension\CompletionRpc\CompletionRpcExtension;
+use Phpactor\Extension\CompletionWorse\CompletionWorseExtension;
+use Phpactor\Extension\Completion\CompletionExtension;
+use Phpactor\Extension\ComposerAutoloader\ComposerAutoloaderExtension;
+use Phpactor\Extension\Console\ConsoleExtension;
+use Phpactor\Extension\ExtensionManager\ExtensionManagerExtension;
+use Phpactor\Extension\Logger\LoggingExtension;
+use Phpactor\Extension\ReferenceFinderRpc\ReferenceFinderRpcExtension;
+use Phpactor\Extension\ReferenceFinder\ReferenceFinderExtension;
+use Phpactor\Extension\Rpc\RpcExtension;
+use Phpactor\Extension\SourceCodeFilesystem\SourceCodeFilesystemExtension;
+use Phpactor\Extension\WorseReferenceFinder\WorseReferenceFinderExtension;
+use Phpactor\Extension\WorseReflection\WorseReflectionExtension;
+use Phpactor\FilePathResolverExtension\FilePathResolverExtension;
+use Symfony\Component\Console\Application;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$container = PhpactorContainer::fromExtensions([
+    ClassToFileExtension::class,
+    CodeTransformExtension::class,
+    CompletionExtension::class,
+    CompletionRpcExtension::class,
+    CompletionWorseExtension::class,
+    ComposerAutoloaderExtension::class,
+    ConsoleExtension::class,
+    ExtensionManagerExtension::class,
+    FilePathResolverExtension::class,
+    LoggingExtension::class,
+    ReferenceFinderExtension::class,
+    ReferenceFinderRpcExtension::class,
+    RpcExtension::class,
+    SourceCodeFilesystemExtension::class,
+    WorseReferenceFinderExtension::class,
+    WorseReflectionExtension::class,
+], [
+    FilePathResolverExtension::PARAM_APPLICATION_ROOT => __DIR__ . '/..'
+]);
+
+$application = new Application();
+$application->setCommandLoader(
+    $container->get(ConsoleExtension::SERVICE_COMMAND_LOADER)
+);
+$application->run();

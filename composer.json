@@ -1,5 +1,5 @@
 {
-    "name": "phpactor/phpactor-library",
+    "name": "phpactor/phpactor-packages",
     "description": "Monorepo for Phpactor Packages",
     "type": "library",
     "license": "MIT",
@@ -95,6 +95,7 @@
         "webmozart/path-util": "^2.3",
         "twig/twig": "^2.4",
         "dnoegel/php-xdg-base-dir": "^0.1.0",
+        "symfony/yaml": "^4.2",
         "psr/container": "^1.0",
         "jetbrains/phpstorm-stubs": "*",
         "symfony/console": "^4.1",
