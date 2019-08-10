@@ -17,6 +17,7 @@ foreach (['library', 'extensions'] as $dirName) {
         $packageMeta['name'] = 'phpactor/'.$packageName;
         $packageMeta['autoload'] = autoload_data($path, $composerData['autoload']);
         $packageMeta['version'] = git_version($packageName);
+        $packageMeta['require'] = $composerData['require'] ?? [];
         $meta[$packageName] = $packageMeta;
     }
 }

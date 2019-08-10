@@ -86,5 +86,19 @@
         "phpactor/source-code-filesystem-extension": "0.1.2",
         "phpactor/worse-reference-finder-extension": "dev-master",
         "phpactor/worse-reflection-extension": "0.2.1"
+    },
+    "require": {
+        "php": "^7.1",
+        "symfony/filesystem": "^2.7|^3.0",
+        "microsoft/tolerant-php-parser": "~0.0",
+        "psr/log": "^1.0",
+        "webmozart/path-util": "^2.3",
+        "twig/twig": "^2.4",
+        "dnoegel/php-xdg-base-dir": "^0.1.0",
+        "psr/container": "^1.0",
+        "jetbrains/phpstorm-stubs": "*",
+        "symfony/console": "^4.1",
+        "composer/composer": "^1.7",
+        "monolog/monolog": "^1.23"
     }
 }
