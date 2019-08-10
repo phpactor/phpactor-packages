@@ -9,7 +9,7 @@
             "email": "daniel@dantleech.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require-dev": {
         "thecodingmachine/safe": "^0.1.16"
     },
@@ -52,54 +52,173 @@
             "Phpactor\\Extension\\WorseReflection\\": "extensions/worse-reflection-extension/lib/"
         }
     },
-    "replace": {
-        "phpactor/class-mover": "dev-master",
-        "phpactor/class-to-file": "0.2.0",
-        "phpactor/code-builder": "0.2.0",
-        "phpactor/code-transform": "0.1.1",
-        "phpactor/completion": "0.2.1",
-        "phpactor/config-loader": "0.1.0",
-        "phpactor/container": "1.3.0",
-        "phpactor/docblock": "0.3.0",
-        "phpactor/file-path-resolver": "0.8.0",
-        "phpactor/map-resolver": "1.2.0",
-        "phpactor/path-finder": "dev-master",
-        "phpactor/reference-finder": "0.1.0",
-        "phpactor/source-code-filesystem": "0.1.0",
-        "phpactor/test-utils": "1.0.0",
-        "phpactor/text-document": "1.0.0",
-        "phpactor/worse-reference-finders": "0.1.0",
-        "phpactor/worse-reflection": "0.3.0",
-        "phpactor/class-to-file-extension": "0.1.0",
-        "phpactor/code-transform-extension": "dev-master",
-        "phpactor/completion-extension": "0.1.0",
-        "phpactor/completion-rpc-extension": "0.1.0",
-        "phpactor/completion-worse-extension": "0.1.1",
-        "phpactor/composer-autoloader-extension": "dev-master",
-        "phpactor/console-extension": "0.1.1",
-        "phpactor/extension-manager-extension": "0.8.0",
-        "phpactor/file-path-resolver-extension": "0.3.0",
-        "phpactor/logging-extension": "0.3.1",
-        "phpactor/reference-finder-extension": "0.1.1",
-        "phpactor/reference-finder-rpc-extension": "0.1.1",
-        "phpactor/rpc-extension": "0.1.1",
-        "phpactor/source-code-filesystem-extension": "0.1.2",
-        "phpactor/worse-reference-finder-extension": "dev-master",
-        "phpactor/worse-reflection-extension": "0.2.1"
-    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "library/class-mover"
+        },
+        {
+            "type": "path",
+            "url": "library/class-to-file"
+        },
+        {
+            "type": "path",
+            "url": "library/code-builder"
+        },
+        {
+            "type": "path",
+            "url": "library/code-transform"
+        },
+        {
+            "type": "path",
+            "url": "library/completion"
+        },
+        {
+            "type": "path",
+            "url": "library/config-loader"
+        },
+        {
+            "type": "path",
+            "url": "library/container"
+        },
+        {
+            "type": "path",
+            "url": "library/docblock"
+        },
+        {
+            "type": "path",
+            "url": "library/file-path-resolver"
+        },
+        {
+            "type": "path",
+            "url": "library/map-resolver"
+        },
+        {
+            "type": "path",
+            "url": "library/path-finder"
+        },
+        {
+            "type": "path",
+            "url": "library/reference-finder"
+        },
+        {
+            "type": "path",
+            "url": "library/source-code-filesystem"
+        },
+        {
+            "type": "path",
+            "url": "library/test-utils"
+        },
+        {
+            "type": "path",
+            "url": "library/text-document"
+        },
+        {
+            "type": "path",
+            "url": "library/worse-reference-finders"
+        },
+        {
+            "type": "path",
+            "url": "library/worse-reflection"
+        },
+        {
+            "type": "path",
+            "url": "extensions/class-to-file-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/code-transform-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/completion-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/completion-rpc-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/completion-worse-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/composer-autoloader-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/console-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/extension-manager-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/file-path-resolver-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/logging-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/reference-finder-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/reference-finder-rpc-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/rpc-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/source-code-filesystem-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/worse-reference-finder-extension"
+        },
+        {
+            "type": "path",
+            "url": "extensions/worse-reflection-extension"
+        }
+    ],
     "require": {
-        "php": "^7.1",
-        "symfony/filesystem": "^2.7|^3.0",
-        "microsoft/tolerant-php-parser": "~0.0",
-        "psr/log": "^1.0",
-        "webmozart/path-util": "^2.3",
-        "twig/twig": "^2.4",
-        "dnoegel/php-xdg-base-dir": "^0.1.0",
-        "symfony/yaml": "^4.2",
-        "psr/container": "^1.0",
-        "jetbrains/phpstorm-stubs": "*",
-        "symfony/console": "^4.1",
-        "composer/composer": "^1.7",
-        "monolog/monolog": "^1.23"
+        "phpactor/class-mover": "dev-master",
+        "phpactor/class-to-file": "~0.2",
+        "phpactor/code-builder": "~0.2",
+        "phpactor/code-transform": "~0.1",
+        "phpactor/completion": "~0.2",
+        "phpactor/config-loader": "~0.1",
+        "phpactor/container": "~1.3",
+        "phpactor/docblock": "~0.3",
+        "phpactor/file-path-resolver": "~0.8",
+        "phpactor/map-resolver": "~1.2",
+        "phpactor/path-finder": "dev-master",
+        "phpactor/reference-finder": "~0.1",
+        "phpactor/source-code-filesystem": "~0.1",
+        "phpactor/test-utils": "~1.0",
+        "phpactor/text-document": "~1.0",
+        "phpactor/worse-reference-finders": "~0.1",
+        "phpactor/worse-reflection": "~0.3",
+        "phpactor/class-to-file-extension": "~0.1",
+        "phpactor/code-transform-extension": "dev-master",
+        "phpactor/completion-extension": "~0.1",
+        "phpactor/completion-rpc-extension": "~0.1",
+        "phpactor/completion-worse-extension": "~0.1",
+        "phpactor/composer-autoloader-extension": "dev-master",
+        "phpactor/console-extension": "~0.1",
+        "phpactor/extension-manager-extension": "~0.8",
+        "phpactor/file-path-resolver-extension": "~0.3",
+        "phpactor/logging-extension": "~0.3",
+        "phpactor/reference-finder-extension": "~0.1",
+        "phpactor/reference-finder-rpc-extension": "~0.1",
+        "phpactor/rpc-extension": "~0.1",
+        "phpactor/source-code-filesystem-extension": "~0.1",
+        "phpactor/worse-reference-finder-extension": "dev-master",
+        "phpactor/worse-reflection-extension": "~0.2"
     }
 }
