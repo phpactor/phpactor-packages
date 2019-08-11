@@ -20,4 +20,5 @@ before_script:
     - composer build
 
 script:
-    - composer test-per-package-composer
+    - if [ "${TRAVIS_BRANCH}" == "master" ]; then composer test-per-package-composer; fi;
+    - if [ "${TRAVIS_BRANCH}" != "master" ]; then composer test-all; fi;
