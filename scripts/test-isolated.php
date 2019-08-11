@@ -76,7 +76,7 @@ while ($queues) {
             $process->getExitCode() === 0 ? '32' : '31',
             $process->getExitCode(),
             $packageName,
-            $process->getCommandLine(),
+            $process->getCommandLine()
         ).PHP_EOL);
         $exitSum += $process->getExitCode();
 
