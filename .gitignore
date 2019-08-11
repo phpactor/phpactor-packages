@@ -4,3 +4,6 @@
 /build
 composer.lock
 /library/completion/cache/
+.php_cs.cache
+_storage
+/library/worse-reflection/smoke_test.log
