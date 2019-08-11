@@ -107,7 +107,47 @@
         "monolog/monolog": "^1.23"
     },
     "scripts": {
-        "test": "php scripts/test.php",
+        "test-per-package-composer": "php scripts/test-isolated.php",
+        "test-all": "php scripts/test-all.php",
         "build": "php scripts/build.php"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\ClassMover\\Tests\\": "library/class-mover/tests/",
+            "Phpactor\\ClassFileConverter\\Tests\\": [
+                "library/class-to-file/tests/",
+                "library/path-finder/tests/"
+            ],
+            "Phpactor\\CodeBuilder\\Tests\\": "library/code-builder/tests/",
+            "Phpactor\\CodeTransform\\Tests\\": "library/code-transform/tests/",
+            "Phpactor\\Completion\\Tests\\": "library/completion/tests/",
+            "Phpactor\\ConfigLoader\\Tests\\": "library/config-loader/tests/",
+            "Phpactor\\Container\\Tests\\": "library/container/tests/",
+            "Phpactor\\Docblock\\Tests\\": "library/docblock/tests/",
+            "Phpactor\\FilePathResolver\\Tests\\": "library/file-path-resolver/tests/",
+            "Phpactor\\MapResolver\\Tests\\": "library/map-resolver/tests/",
+            "Phpactor\\ReferenceFinder\\Tests\\": "library/reference-finder/tests/",
+            "Phpactor\\Filesystem\\Tests\\": "library/source-code-filesystem/tests/",
+            "Phpactor\\TestUtils\\Tests\\": "library/test-utils/tests/",
+            "Phpactor\\TextDocument\\Tests\\": "library/text-document/tests/",
+            "Phpactor\\WorseReferenceFinder\\Tests\\": "library/worse-reference-finders/tests/",
+            "Phpactor\\WorseReflection\\Tests\\": "library/worse-reflection/tests/",
+            "Phpactor\\Extension\\ClassToFile\\Tests\\": "extensions/class-to-file-extension/tests/",
+            "Phpactor\\Extension\\CodeTransform\\Tests\\": "extensions/code-transform-extension/tests/",
+            "Phpactor\\Extension\\Completion\\Tests\\": "extensions/completion-extension/tests/",
+            "Phpactor\\Extension\\CompletionRpc\\Tests\\": "extensions/completion-rpc-extension/tests/",
+            "Phpactor\\Extension\\CompletionWorse\\Tests\\": "extensions/completion-worse-extension/tests/",
+            "Phpactor\\Extension\\ComposerAutoloader\\Tests\\": "extensions/composer-autoloader-extension/tests/",
+            "Phpactor\\Extension\\Console\\Tests\\": "extensions/console-extension/tests/",
+            "Phpactor\\Extension\\ExtensionManager\\Tests\\": "extensions/extension-manager-extension/tests/",
+            "Phpactor\\FilePathResolverExtension\\Tests\\": "extensions/file-path-resolver-extension/tests/",
+            "Phpactor\\Extension\\Logger\\Tests\\": "extensions/logging-extension/tests/",
+            "Phpactor\\Extension\\ReferenceFinder\\Tests\\": "extensions/reference-finder-extension/tests/",
+            "Phpactor\\Extension\\ReferenceFinderRpc\\Tests\\": "extensions/reference-finder-rpc-extension/tests/",
+            "Phpactor\\Extension\\Rpc\\Tests\\": "extensions/rpc-extension/tests/",
+            "Phpactor\\Extension\\SourceCodeFilesystem\\Tests\\": "extensions/source-code-filesystem-extension/tests/",
+            "Phpactor\\Extension\\WorseReferenceFinder\\Tests\\": "extensions/worse-reference-finder-extension/tests/",
+            "Phpactor\\Extension\\WorseReflection\\Tests\\": "extensions/worse-reflection-extension/tests/"
+        }
     }
 }

@@ -5,6 +5,7 @@ require __DIR__ .'/../vendor/autoload.php';
 use Composer\Semver\Semver;
 use Safe\json_decode;
 use Safe\file_get_contents;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Yaml\Yaml;
 
@@ -18,6 +19,12 @@ $fails = [];
 
 foreach ($packageMetas as $packageName => $packageMeta) {
     echo sprintf('Enqueuing travis scripts for "%s"', $packageMeta['name']).PHP_EOL;
+    $vendorPath = $packageMeta['path'] . '/vendor';
+
+    if (file_exists($vendorPath)) {
+        $filesystem = new Filesystem();
+        $filesystem->remove($vendorPath);
+    }
 
     $travisPath = $packageMeta['path'] . '/.travis.yml';
 
@@ -65,16 +72,19 @@ while ($queues) {
 
         // process stopped
         fwrite(STDOUT, sprintf(
-            '// [%s] %s EXITED %s',
+            "// \e[%sm%s [%s] %s\e[0m",
+            $process->getExitCode() === 0 ? '32' : '31',
+            $process->getExitCode(),
             $packageName,
             $process->getCommandLine(),
-            $process->getExitCode()
         ).PHP_EOL);
         $exitSum += $process->getExitCode();
 
         if ($process->getExitCode() !== 0) {
             unset($queues[$packageName]);
             $fails[] = [ $packageName, $process->getCommandLine(), $process->getOutput(), $process->getErrorOutput()];
+            echo $process->getOutput().PHP_EOL;
+            echo $process->getErrorOutput().PHP_EOL;
         }
 
         unset($processes[$packageName]);
