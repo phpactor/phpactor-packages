@@ -2,10 +2,9 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in('lib')
-    ->in('tests')
-    ->exclude([
-        'Integration/Composer/project'
-    ])
+    ->in('tests/Unit')
+    ->in('tests/Integration')
+    ->exclude('Composer/project')
 ;
 
 return PhpCsFixer\Config::create()

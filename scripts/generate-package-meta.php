@@ -17,6 +17,7 @@ foreach (['library', 'extensions'] as $dirName) {
         $packageMeta['type'] = $dirName;
         $packageMeta['name'] = 'phpactor/'.$packageName;
         $packageMeta['autoload'] = autoload_data($path, $composerData['autoload']);
+        $packageMeta['autoload-dev'] = autoload_data($path, $composerData['autoload-dev']);
         $packageMeta['version'] = git_version($packageName);
         $packageMeta['require'] = $composerData['require'] ?? [];
         $packageMeta['require-dev'] = $composerData['require-dev'] ?? [];

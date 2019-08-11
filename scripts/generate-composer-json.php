@@ -11,6 +11,7 @@ $packageMetas = json_decode(file_get_contents(__DIR__ . '/../build/package-meta.
 
 $replace = [];
 $autoload = [];
+$autoloadDev = [];
 $scripts = [];
 
 $require = build_require('require', $packageMetas);
@@ -18,10 +19,12 @@ $require = build_require('require', $packageMetas);
 foreach ($packageMetas as $shortName => $packageMeta) {
     $replace[$packageMeta['name']] = $packageMeta['version'];
     $autoload = array_merge_recursive($autoload, $packageMeta['autoload']);
+    $autoloadDev = array_merge_recursive($autoloadDev, $packageMeta['autoload-dev'] ?? []);
 }
 
 $composer['require'] = $require;
 $composer['autoload'] = $autoload;
+$composer['autoload-dev'] = $autoloadDev;
 $composer['replace'] = $replace;
 
 echo json_encode($composer, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
