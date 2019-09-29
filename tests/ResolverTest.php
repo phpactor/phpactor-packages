@@ -55,6 +55,15 @@ class ResolverTest extends TestCase
         $resolver->resolve(['two' => 3]);
     }
 
+    public function testCallingRequiredMultipleTimesMergesRequiredKeys()
+    {
+        $resolver = new Resolver();
+        $resolver->setRequired(['one']);
+        $resolver->setRequired(['two']);
+        $result = $resolver->resolve(['one' => 1, 'two' => 3]);
+        $this->assertEquals(['one' => 1, 'two' => 3], $result);
+    }
+
     public function testThrowsExceptionOnInvalidType()
     {
         $this->expectException(InvalidMap::class);
