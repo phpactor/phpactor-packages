@@ -33,7 +33,7 @@ class Resolver
 
     public function setRequired(array $fields)
     {
-        $this->required = $fields;
+        $this->required = array_merge($this->required, $fields);
     }
 
     public function setDefaults(array $defaults)
