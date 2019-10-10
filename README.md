@@ -22,7 +22,7 @@ $pathResolver = new PathResolver([
         new ValueExpander('%my_token%', 'my_value'),
         new XdgCacheExpander('%xdg_cache%'),
         new XdgConfigExpander('%xdg_conifg%'),
-        new CallbackExpander('%callback%, function () {
+        new CallbackExpander('%callback%', function () {
             return 'hello from callback';
         });
     ])
