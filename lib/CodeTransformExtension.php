@@ -2,6 +2,7 @@
 
 namespace Phpactor\Extension\CodeTransform;
 
+use Phpactor\CodeTransform\Adapter\WorseReflection\Helper\WorseInterestingOffsetFinder;
 use Phpactor\CodeTransform\CodeTransform;
 use Phpactor\CodeTransform\Domain\Generators;
 use Phpactor\CodeTransform\Domain\Transformers;
@@ -10,10 +11,12 @@ use Phpactor\Container\ContainerBuilder;
 use Phpactor\Container\Extension;
 use Phpactor\Extension\ClassToFile\ClassToFileExtension;
 use Phpactor\Extension\Rpc\RpcExtension;
+use Phpactor\Extension\WorseReflection\WorseReflectionExtension;
 use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ClassNewHandler;
 use Phpactor\Extension\CodeTransform\Rpc\TransformHandler;
+use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
 use RuntimeException;
 
 class CodeTransformExtension implements Extension
@@ -25,6 +28,7 @@ class CodeTransformExtension implements Extension
     const SERVICE_CLASS_GENERATORS = 'code_transform.new_class_generators';
     const SERVICE_CODE_TRANSFORM = 'code_transform.transform';
     const SERVICE_CLASS_INFLECTORS = 'code_transform.from_existing_generators';
+    const SERVICE_CLASS_INTERESTING_OFFSET_FINDER = 'code_transform.interestsing_offset_finder';
 
     /**
      * {@inheritDoc}
@@ -38,6 +42,7 @@ class CodeTransformExtension implements Extension
         $this->registerTransformers($container);
         $this->registerGenerators($container);
         $this->registerRpc($container);
+        $this->registerFinders($container);
     }
 
     private function registerTransformers(ContainerBuilder $container)
@@ -110,6 +115,15 @@ class CodeTransformExtension implements Extension
                 $container->get(self::SERVICE_CODE_TRANSFORM)
             );
         }, [ RpcExtension::TAG_RPC_HANDLER => ['name' => TransformHandler::NAME] ]);
+    }
+
+    private function registerFinders(ContainerBuilder $container)
+    {
+        $container->register(self::SERVICE_CLASS_INTERESTING_OFFSET_FINDER, function (Container $container) {
+            return new WorseInterestingOffsetFinder(
+                $container->get(WorseReflectionExtension::SERVICE_REFLECTOR)
+            );
+        });
     }
 
     private function assertNameAttribute($attrs, $serviceId)
