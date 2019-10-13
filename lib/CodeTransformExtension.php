@@ -16,7 +16,6 @@ use Phpactor\MapResolver\Resolver;
 use Phpactor\Extension\CodeTransform\Rpc\ClassInflectHandler;
 use Phpactor\Extension\CodeTransform\Rpc\ClassNewHandler;
 use Phpactor\Extension\CodeTransform\Rpc\TransformHandler;
-use Phpactor\WorseReflection\Core\Reflector\SourceCodeReflector;
 use RuntimeException;
 
 class CodeTransformExtension implements Extension
