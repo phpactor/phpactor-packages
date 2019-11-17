@@ -1,0 +1,39 @@
+{
+    "name": "phpactor/code-transform",
+    "description": "Applies introspective transformations on source code",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {
+        "phpactor/code-builder": "~0.3",
+        "webmozart/path-util": "~2.3",
+        "phpactor/class-to-file": "~0.3"
+    },
+    "require-dev": {
+        "phpactor/worse-reflection": "~0.3",
+        "phpactor/test-utils": "^1.0@dev",
+        "phpstan/phpstan": "~0.11.0",
+        "phpunit/phpunit": "~7.0",
+        "friendsofphp/php-cs-fixer": "~2.15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\CodeTransform\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\CodeTransform\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    }
+}
