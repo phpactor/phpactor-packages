@@ -1,6 +1,6 @@
 {
   "name": "phpactor/language-server-completion-extension",
-  "type": "package",
+  "prototype": "default",
   "args": {
     "url": "git@github.com:phpactor/language-server-completion-extension"
   },
