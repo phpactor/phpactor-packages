@@ -1,6 +1,6 @@
 {
   "name": "logging-extension",
-  "prototype": "library",
+  "prototype": "extension",
   "args": {},
   "vars": {
     "version": "0.3.2"

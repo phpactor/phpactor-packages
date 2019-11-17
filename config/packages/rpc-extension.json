@@ -1,6 +1,6 @@
 {
   "name": "rpc-extension",
-  "prototype": "library",
+  "prototype": "extension",
   "args": {},
   "vars": {
     "version": "0.2.0"
