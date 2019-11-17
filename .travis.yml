@@ -1,12 +1,6 @@
 language: php
 
-env:
-    global:
-        - COMPOSER_PROCESS_TIMEOUT=0
-
 php:
-    - 7.1
-    - 7.2
     - 7.3
     
 sudo: false
@@ -17,8 +11,6 @@ cache:
 
 before_script:
     - composer install
-    - composer build
 
 script:
-    - if [ "${TRAVIS_BRANCH}" == "master" ]; then composer test-per-package-composer; fi;
-    - if [ "${TRAVIS_BRANCH}" != "master" ]; then composer test-all; fi;
+    - ./bin/phpactor
