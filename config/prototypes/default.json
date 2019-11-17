@@ -4,5 +4,18 @@
     "args": {
         "name": "%_name%",
         "url": "git@github.com:%_name%"
+    },
+    "vars": {
+        "package": "%_name%",
+        "version": "%version%"
+    },
+    "nodes": {
+        "package": {
+            "type": "package",
+            "args": {
+                "name": "%package%",
+                "version": "%version%"
+            }
+        }
     }
 }

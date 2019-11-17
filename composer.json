@@ -16,7 +16,8 @@
         "friendsofphp/php-cs-fixer": "~2.15.0",
         "phpstan/phpstan": "~0.11.0",
         "phpbench/phpbench": "dev-master",
-        "symfony/yaml": "^4.2"
+        "symfony/yaml": "^4.2",
+        "dantleech/maestro": "@dev"
     },
     "autoload": {
         "psr-4": {
