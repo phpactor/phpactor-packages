@@ -1,8 +1,0 @@
-{
-    "storage": "xml",
-    "bootstrap": "vendor/autoload.php",
-    "path": "tests/Benchmarks",
-    "extensions": [
-        "PhpBench\\Extensions\\XDebug\\XDebugExtension"
-    ]
-}
