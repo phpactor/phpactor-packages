@@ -1,0 +1,41 @@
+{
+    "name": "phpactor/completion",
+    "minimum-stability": "dev",
+    "description": "Completion library for Worse Reflection",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "phpactor/worse-reflection": "~0.2",
+        "phpactor/source-code-filesystem": "~0.1",
+        "phpactor/class-to-file": "~0.3",
+        "phpactor/text-document": "^1.0"
+    },
+    "require-dev": {
+        "phpbench/phpbench": "^1.0@dev",
+        "phpunit/phpunit": "~7.0",
+        "phpactor/test-utils": "^1.0@dev",
+        "phpstan/phpstan": "~0.11.0",
+        "friendsofphp/php-cs-fixer": "~2.15.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\Completion\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\Completion\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.3.x-dev"
+        }
+    }
+}
