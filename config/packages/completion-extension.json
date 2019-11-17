@@ -1,6 +1,6 @@
 {
   "name": "phpactor/completion-extension",
-  "prototype": "default",
+  "prototype": "extension",
   "args": {},
   "vars": {
     "version": "0.2.1"

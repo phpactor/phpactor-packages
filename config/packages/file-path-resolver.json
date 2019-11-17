@@ -1,6 +1,6 @@
 {
   "name": "phpactor/file-path-resolver",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.8.1"

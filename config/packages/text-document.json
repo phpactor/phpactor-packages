@@ -1,6 +1,6 @@
 {
   "name": "phpactor/text-document",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "1.1.0"

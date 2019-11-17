@@ -1,6 +1,6 @@
 {
   "name": "phpactor/phpspec-extension",
-  "prototype": "default",
+  "prototype": "extension",
   "args": {
     "url": "git@github.com:phpactor/phpspec-extension"
   },

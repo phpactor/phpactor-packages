@@ -1,6 +1,6 @@
 {
   "name": "phpactor/phpunit-extension",
-  "prototype": "default",
+  "prototype": "extension",
   "args": {
     "url": "git@github.com:phpactor/phpunit-extension"
   },

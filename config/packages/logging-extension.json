@@ -1,6 +1,6 @@
 {
   "name": "phpactor/logging-extension",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.3.2"

@@ -1,6 +1,6 @@
 {
   "name": "phpactor/reference-finder",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.1.1"

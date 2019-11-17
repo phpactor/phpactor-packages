@@ -1,6 +1,6 @@
 {
   "name": "phpactor/worse-reference-finders",
-  "prototype": "default",
+  "prototype": "library",
   "args": {
       "url": "git@github.com:phpactor/worse-reference-finder"
   },

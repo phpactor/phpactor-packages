@@ -1,6 +1,6 @@
 {
   "name": "phpactor/language-server-hover-extension",
-  "prototype": "default",
+  "prototype": "extension",
   "args": {
     "url": "git@github.com:phpactor/language-server-hover-extension"
   },

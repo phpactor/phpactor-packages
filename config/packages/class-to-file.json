@@ -3,6 +3,6 @@
   "vars": {
     "version": "0.3.1"
   },
-  "prototype": "default",
+  "prototype": "library",
   "args": {}
 }

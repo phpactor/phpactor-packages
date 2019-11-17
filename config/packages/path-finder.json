@@ -1,6 +1,6 @@
 {
   "name": "phpactor/path-finder",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.1.0"

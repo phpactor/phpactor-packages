@@ -1,6 +1,6 @@
 {
   "name": "phpactor/test-utils",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "1.0.1"

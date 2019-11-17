@@ -1,6 +1,6 @@
 {
   "name": "phpactor/rpc-extension",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.2.0"

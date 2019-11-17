@@ -1,6 +1,6 @@
 {
   "name": "phpactor/completion",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "0.3.0"

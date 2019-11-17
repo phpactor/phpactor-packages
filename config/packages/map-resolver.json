@@ -1,6 +1,6 @@
 {
   "name": "phpactor/map-resolver",
-  "prototype": "default",
+  "prototype": "library",
   "args": {},
   "vars": {
     "version": "1.2.1"
