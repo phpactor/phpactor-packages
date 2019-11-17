@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/text-document",
+  "name": "text-document",
   "prototype": "library",
   "args": {},
   "vars": {

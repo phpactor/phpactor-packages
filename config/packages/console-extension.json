@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/console-extension",
+  "name": "console-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

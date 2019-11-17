@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/language-server",
+  "name": "language-server",
   "prototype": "library",
   "args": {},
   "vars": {

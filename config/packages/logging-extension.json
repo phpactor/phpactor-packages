@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/logging-extension",
+  "name": "logging-extension",
   "prototype": "library",
   "args": {},
   "vars": {

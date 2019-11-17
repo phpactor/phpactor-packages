@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/source-code-filesystem",
+  "name": "source-code-filesystem",
   "vars": {
     "version": "0.1.1"
   },

@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/composer-autoloader-extension",
+  "name": "composer-autoloader-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

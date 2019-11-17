@@ -3,10 +3,10 @@
     "type": "vcsWorkspace",
     "args": {
         "name": "%_name%",
-        "url": "git@github.com:%_name%"
+        "url": "git@github.com:phpactor/%_name%"
     },
     "vars": {
-        "package": "%_name%",
+        "package": "phpactor/%_name%",
         "version": "%version%"
     },
     "nodes": {

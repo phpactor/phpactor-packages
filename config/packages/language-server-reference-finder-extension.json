@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/language-server-reference-finder-extension",
+  "name": "language-server-reference-finder-extension",
   "prototype": "extension",
   "args": {
     "url": "git@github.com:phpactor/language-server-reference-finder-extension"

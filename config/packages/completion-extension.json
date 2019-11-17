@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/completion-extension",
+  "name": "completion-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

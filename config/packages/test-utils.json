@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/test-utils",
+  "name": "test-utils",
   "prototype": "library",
   "args": {},
   "vars": {

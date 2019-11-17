@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/code-builder",
+  "name": "code-builder",
   "vars": {
     "version": "0.3.0"
   },

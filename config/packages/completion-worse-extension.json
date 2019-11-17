@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/completion-worse-extension",
+  "name": "completion-worse-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/rpc-extension",
+  "name": "rpc-extension",
   "prototype": "library",
   "args": {},
   "vars": {

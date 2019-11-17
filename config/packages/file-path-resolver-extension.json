@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/file-path-resolver-extension",
+  "name": "file-path-resolver-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

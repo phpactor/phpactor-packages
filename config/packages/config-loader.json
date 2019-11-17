@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/config-loader",
+  "name": "config-loader",
   "prototype": "library",
   "args": {},
   "vars": {

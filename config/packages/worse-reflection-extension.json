@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/worse-reflection-extension",
+  "name": "worse-reflection-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

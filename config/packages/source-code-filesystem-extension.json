@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/source-code-filesystem-extension",
+  "name": "source-code-filesystem-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

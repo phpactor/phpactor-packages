@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/completion",
+  "name": "completion",
   "prototype": "library",
   "args": {},
   "vars": {

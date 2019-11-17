@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/completion-rpc-extension",
+  "name": "completion-rpc-extension",
   "prototype": "extension",
   "args": {},
   "vars": {

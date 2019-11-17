@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/path-finder",
+  "name": "path-finder",
   "prototype": "library",
   "args": {},
   "vars": {

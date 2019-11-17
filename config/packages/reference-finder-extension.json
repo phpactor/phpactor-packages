@@ -1,5 +1,5 @@
 {
-  "name": "phpactor/reference-finder-extension",
+  "name": "reference-finder-extension",
   "prototype": "extension",
   "args": {},
   "vars": {
