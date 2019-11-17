@@ -1,0 +1,5 @@
+suites:
+    default:
+        src_path: lib
+        namespace: "Phpactor\\Extension\\PhpSpec\\Tests\\"
+        psr4_prefix: "Phpactor\\Extension\\PhpSpec\\Tests\\"

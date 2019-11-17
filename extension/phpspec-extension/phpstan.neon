@@ -1,0 +1,4 @@
+parameters:
+    paths: [ lib ]
+    ignoreErrors:
+        - '#Static call to instance method .*::fromString()#'
