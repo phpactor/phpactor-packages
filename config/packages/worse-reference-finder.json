@@ -1,0 +1,7 @@
+{
+  "name": "worse-reference-finder",
+  "prototype": "library",
+  "vars": {
+    "version": "0.1.0"
+  }
+}
