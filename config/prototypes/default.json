@@ -3,7 +3,8 @@
     "type": "vcsWorkspace",
     "args": {
         "name": "%_name%",
-        "url": "git@github.com:phpactor/%_name%"
+        "url": "git@github.com:phpactor/%_name%",
+        "update": false
     },
     "vars": {
         "package": "phpactor/%_name%",
@@ -15,6 +16,11 @@
             "args": {
                 "name": "%package%",
                 "version": "%version%"
+            },
+            "nodes": {
+                "survey": {
+                    "type": "survey"
+                }
             }
         }
     }
