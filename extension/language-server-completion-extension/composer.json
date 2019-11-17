@@ -1,0 +1,40 @@
+{
+    "name": "phpactor/language-server-completion-extension",
+    "description": "Phpactor Language Server Handlers",
+    "license": "MIT",
+    "type": "phpactor-extension",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Daniel Leech",
+            "email": "daniel@dantleech.com"
+        }
+    ],
+
+    "require": {
+        "phpactor/container": "^1.0",
+        "phpactor/language-server-extension": "~0.2",
+        "phpactor/completion-extension": "~0.1"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.10.7",
+        "phpunit/phpunit": "^7.5",
+        "friendsofphp/php-cs-fixer": "^2.13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Phpactor\\Extension\\LanguageServerCompletion\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Phpactor\\Extension\\LanguageServerCompletion\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "phpactor.extension_class": "Phpactor\\Extension\\LanguageServerCompletion\\LanguageServerCompletionExtension",
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
