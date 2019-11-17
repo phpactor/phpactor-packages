@@ -1,0 +1,8 @@
+{
+    "nodes": {
+        "include": "config/packages/*.json"
+    },
+    "prototypes": {
+        "include": "config/prototypes/*.json"
+    }
+}

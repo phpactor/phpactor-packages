@@ -1,0 +1,8 @@
+{
+    "name": "default",
+    "type": "vcsWorkspace",
+    "args": {
+        "name": "%_name%",
+        "url": "git@github.com:%_name%"
+    }
+}
