@@ -1,9 +1,6 @@
 {
   "name": "behat-extension",
   "prototype": "extension",
-  "args": {
-    "url": "git@github.com:phpactor/behat-extension"
-  },
   "vars": {
     "version": "0.2.1"
   }

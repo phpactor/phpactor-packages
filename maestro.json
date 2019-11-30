@@ -1,4 +1,9 @@
 {
+    "name": "packages",
+    "type": "cwdWorkspace",
+    "args": {
+        "name": "monorepo"
+    },
     "nodes": {
         "include": "config/packages/*.json"
     },

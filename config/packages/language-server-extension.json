@@ -1,9 +1,6 @@
 {
   "name": "language-server-extension",
   "prototype": "extension",
-  "args": {
-    "url": "git@github.com:phpactor/language-server-extension"
-  },
   "vars": {
     "version": "0.2.0"
   }

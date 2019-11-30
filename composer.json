@@ -107,11 +107,6 @@
         "composer/composer": "^1.7",
         "monolog/monolog": "^1.23"
     },
-    "scripts": {
-        "test-per-package-composer": "php scripts/test-isolated.php",
-        "test-all": "php scripts/test-all.php",
-        "build": "php scripts/build.php"
-    },
     "autoload-dev": {
         "psr-4": {
             "Phpactor\\ClassMover\\Tests\\": "library/class-mover/tests/",

@@ -1,5 +1,59 @@
 {
     "name": "library",
     "include": "default.json",
-    "tags": ["library"]
+    "tags": ["library"],
+    "nodes": {
+        "mounted": {
+            "type": "mountedWorkspace",
+            "args": {
+                "name": "mounted-%name%",
+                "host": "monorepo",
+                "path": "library/%name%"
+            },
+            "nodes": {
+                "composer": {
+                    "type": "script",
+                    "args": {
+                        "script": "composer install"
+                    },
+                    "nodes": {
+                        "phpunit": {
+                            "type": "script",
+                            "args": {
+                                "script": "./vendor/bin/phpunit"
+                            }
+                        }
+                    }
+                },
+                "subtree push": {
+                    "type": "script",
+                    "args": {
+                        "script": "git subtree push --prefix library/%package% git@github.com:phpactor/%package%",
+                        "workspace": "monorepo"
+                    }
+                }
+            }
+        },
+        "upstream": {
+            "type": "vcsWorkspace",
+            "args": {
+                "name": "upstream-%name%",
+                "url": "git@github.com:%package%"
+            },
+            "nodes": {
+                "package": {
+                    "type": "package",
+                    "args": {
+                        "name": "%package%",
+                        "version": "%version%"
+                    },
+                    "nodes": {
+                        "survey": {
+                            "type": "survey"
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
