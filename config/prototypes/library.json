@@ -28,7 +28,7 @@
                 "subtree push": {
                     "type": "script",
                     "args": {
-                        "script": "git subtree push --prefix library/%package% git@github.com:phpactor/%package%",
+                        "script": "git subtree push --prefix library/%name% git@github.com:phpactor/%name% master",
                         "workspace": "monorepo"
                     }
                 }
