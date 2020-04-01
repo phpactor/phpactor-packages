@@ -37,7 +37,7 @@ class ReferenceFinderExtension implements Extension
             }
 
             throw new RuntimeException(sprintf(
-                'At least one implementation must be registered with tag "%s"',
+                'At least one implementation finder must be registered with tag "%s"',
                 self::TAG_IMPLEMENTATION_FINDER
             ));
         });
